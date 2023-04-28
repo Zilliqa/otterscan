@@ -647,6 +647,22 @@ export const useHasCode = (
   return data as boolean | undefined;
 };
 
+export const useGetCode = (
+  provider: JsonRpcProvider | undefined,
+  address: ChecksummedAddress | undefined,
+  blockTag: BlockTag = "latest"
+): string | undefined => {
+  const fetcher = providerFetcher(provider);
+  const { data, error } = useSWRImmutable(
+    ["eth_getCode", address, blockTag],
+    fetcher
+  );
+  if (error) {
+    return undefined;
+  }
+  return data as string | undefined;
+};
+
 const ERC20_PROTOTYPE = new Contract(AddressZero, erc20);
 
 const tokenMetadataFetcher =
