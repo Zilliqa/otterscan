@@ -6,6 +6,9 @@ import { imagetools } from "vite-imagetools";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  define: {
+    global: "globalThis"
+  },
   plugins: [
     react(),
     viteCompression(),
