@@ -45,6 +45,7 @@ jobs:
         with:
           images: |
             zilliqa/otterscan
+            ghcr.io/zilliqa/otterscan
 
       - name: Build and push by digest
         id: build
