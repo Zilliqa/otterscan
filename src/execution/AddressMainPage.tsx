@@ -25,15 +25,20 @@ import { useHasCode } from "../useErigonHooks";
 import { useAddressOrENS } from "../useResolvedAddresses";
 import { useSourcifyMetadata } from "../sourcify/useSourcify";
 import { ChecksummedAddress } from "../types";
+import { fromBech32Address } from '@zilliqa-js/crypto'
+import { validation } from '@zilliqa-js/util'
 
 type AddressMainPageProps = {};
 
 const AddressMainPage: React.FC<AddressMainPageProps> = () => {
-  const { addressOrName, direction } = useParams();
-  if (addressOrName === undefined) {
+  const { unchecked_addressOrName, direction } = useParams();
+  if (unchecked_addressOrName === undefined) {
     throw new Error("addressOrName couldn't be undefined here");
   }
 
+  const addressOrName = validation.isBech32(unchecked_addressOrName) ?
+    fromBech32Address(unchecked_addressOrName).toLowerCase() : unchecked_addressOrName;
+  
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const urlFixer = useCallback(
