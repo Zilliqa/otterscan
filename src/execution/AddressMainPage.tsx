@@ -30,15 +30,20 @@ import AddressWithdrawals from "./address/AddressWithdrawals";
 import BlocksRewarded from "./address/BlocksRewarded";
 import Contracts from "./address/Contracts";
 import ReadContract from "./address/contract/ReadContract";
+import { fromBech32Address } from '@zilliqa-js/crypto'
+import { validation } from '@zilliqa-js/util'
 
 type AddressMainPageProps = {};
 
 const AddressMainPage: React.FC<AddressMainPageProps> = () => {
-  const { addressOrName, direction } = useParams();
-  if (addressOrName === undefined) {
+  const { uncheckedAddressOrName, direction } = useParams();
+  if (uncheckedAddressOrName === undefined) {
     throw new Error("addressOrName couldn't be undefined here");
   }
 
+  const addressOrName = validation.isBech32(uncheckedAddressOrName) ?
+    fromBech32Address(uncheckedAddressOrName).toLowerCase() : uncheckedAddressOrName;
+  
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const urlFixer = useCallback(
