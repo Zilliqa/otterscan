@@ -25,8 +25,8 @@ const AddressTransactionResults: FC<AddressAwareComponentProps> = ({
   const { provider } = useContext(RuntimeContext);
   const [feeDisplay, feeDisplayToggler] = useFeeToggler();
 
-  const { unchecked_addressOrName, direction } = useParams();
-  if (unchecked_addressOrName === undefined) {
+  const { uncheckedAddressOrName, direction } = useParams();
+  if (uncheckedAddressOrName === undefined) {
     throw new Error("addressOrName couldn't be undefined here");
   }
 

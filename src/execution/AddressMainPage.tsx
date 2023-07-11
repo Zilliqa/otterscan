@@ -31,13 +31,13 @@ import { validation } from '@zilliqa-js/util'
 type AddressMainPageProps = {};
 
 const AddressMainPage: React.FC<AddressMainPageProps> = () => {
-  const { unchecked_addressOrName, direction } = useParams();
-  if (unchecked_addressOrName === undefined) {
+  const { uncheckedAddressOrName, direction } = useParams();
+  if (uncheckedAddressOrName === undefined) {
     throw new Error("addressOrName couldn't be undefined here");
   }
 
-  const addressOrName = validation.isBech32(unchecked_addressOrName) ?
-    fromBech32Address(unchecked_addressOrName).toLowerCase() : unchecked_addressOrName;
+  const addressOrName = validation.isBech32(uncheckedAddressOrName) ?
+    fromBech32Address(uncheckedAddressOrName).toLowerCase() : uncheckedAddressOrName;
   
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
