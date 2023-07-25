@@ -40,6 +40,7 @@ const Contracts: React.FC<ContractsProps> = ({ checksummedAddress, match }) => {
     }
   }, [code]);
   usePageTitle(`Contract | ${checksummedAddress}`);
+  const code = useGetCode(provider, checksummedAddress);
 
   const [selected, setSelected] = useState<string>();
   useEffect(() => {
@@ -171,6 +172,15 @@ const Contracts: React.FC<ContractsProps> = ({ checksummedAddress, match }) => {
           <ScillaContract content={scillaCode} />
         )}
         {!scillaCode && code && (
+          <>
+            <div className="pb-2">Contract Bytecode</div>
+            <StandardTextarea value={code} />
+          </>
+        )}
+      </div>
+      <div className="py-5">
+        {code === undefined && <span>Getting contract bytecode...</span>}
+        {code && (
           <>
             <div className="pb-2">Contract Bytecode</div>
             <StandardTextarea value={code} />
