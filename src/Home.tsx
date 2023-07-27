@@ -10,6 +10,7 @@ import { useLatestBlockHeader } from "./useLatestBlock";
 import { blockURL, slotURL } from "./url";
 import { useGenericSearch } from "./search/search";
 import { useFinalizedSlotNumber, useSlotTimestamp } from "./useConsensus";
+import Header from "./Header";
 
 const CameraScanner = lazy(() => import("./search/CameraScanner"));
 
@@ -20,51 +21,13 @@ const Home: FC = () => {
   const latestBlock = useLatestBlockHeader(provider);
   const finalizedSlotNumber = useFinalizedSlotNumber();
   const slotTime = useSlotTimestamp(finalizedSlotNumber);
-  const [isScanning, setScanning] = useState<boolean>(false);
 
   document.title = "Home | Otterscan";
 
   return (
-    <div className="flex grow flex-col items-center pb-5">
-      {isScanning && <CameraScanner turnOffScan={() => setScanning(false)} />}
-      <div className="mt-5 mb-10 flex max-h-64 grow items-end">
-        <Logo />
-      </div>
-      <form
-        className="flex w-1/3 flex-col"
-        onSubmit={handleSubmit}
-        autoComplete="off"
-        spellCheck={false}
-      >
-        <div className="mb-10 flex">
-          <input
-            className="w-full rounded-l border-l border-t border-b px-2 py-1 focus:outline-none"
-            type="text"
-            size={50}
-            placeholder={`Search by address / txn hash / block number${
-              provider?.network.ensAddress ? " / ENS name" : ""
-            }`}
-            onChange={handleChange}
-            ref={searchRef}
-            autoFocus
-          />
-          <button
-            className="flex items-center justify-center rounded-r border bg-skin-button-fill px-2 py-1 text-base text-skin-button hover:bg-skin-button-hover-fill focus:outline-none"
-            type="button"
-            onClick={() => setScanning(true)}
-            title="Scan an ETH address using your camera"
-          >
-            <FontAwesomeIcon icon={faQrcode} />
-          </button>
-        </div>
-        <button
-          className="mx-auto mb-10 rounded bg-skin-button-fill px-3 py-1 hover:bg-skin-button-hover-fill focus:outline-none"
-          type="submit"
-        >
-          Search
-        </button>
-      </form>
-      <div className="text-lg font-bold text-link-blue hover:text-link-blue-hover">
+    <>
+      <Header sourcifyPresent= {false} />
+      <div className="flex grow flex-col items-center pb-5 text-lg font-bold text-link-blue hover:text-link-blue-hover">
         {provider?.network.chainId !== 11155111 && (
           <NavLink to="/special/london">
             <div className="flex items-baseline space-x-2 text-orange-500 hover:text-orange-700 hover:underline">
@@ -97,7 +60,7 @@ const Home: FC = () => {
           {slotTime && <Timestamp value={slotTime} />}
         </NavLink>
       )}
-    </div>
+    </>
   );
 };
 

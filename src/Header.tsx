@@ -10,8 +10,9 @@ import { useGenericSearch } from "./search/search";
 import Otter from "./otter.png?w=64&h=64&webp";
 
 const CameraScanner = lazy(() => import("./search/CameraScanner"));
+type HeaderProps = {sourcifyPresent : boolean };
 
-const Header: FC = () => {
+const Header: FC<HeaderProps> = ({sourcifyPresent}) => {
   const { provider } = useContext(RuntimeContext);
   const [searchRef, handleChange, handleSubmit] = useGenericSearch();
   const [isScanning, setScanning] = useState<boolean>(false);
@@ -66,7 +67,7 @@ const Header: FC = () => {
               Search
             </button>
           </form>
-          <SourcifyMenu />
+          {sourcifyPresent && <SourcifyMenu/>} 
         </div>
       </div>
     </>
