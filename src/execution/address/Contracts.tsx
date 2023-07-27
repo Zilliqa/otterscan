@@ -1,4 +1,9 @@
 import React, { useState, useEffect, useContext, useMemo } from "react";
+import { commify } from "@ethersproject/units";
+import { Menu } from "@headlessui/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Menu } from "@headlessui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
@@ -15,7 +20,7 @@ import ContractFromRepo from "./ContractFromRepo";
 import ContractABI from "./contract/ContractABI";
 import { useGetCode } from "../../useErigonHooks";
 import StandardTextarea from "../../components/StandardTextarea";
-import { toUtf8String } from "ethers";
+import { toUtf8String } from "ethers/lib/utils";
 import ScillaContract from "./ScillaContract";
 
 type ContractsProps = {
@@ -41,6 +46,19 @@ const Contracts: React.FC<ContractsProps> = ({ checksummedAddress, match }) => {
   }, [code]);
   usePageTitle(`Contract | ${checksummedAddress}`);
   const code = useGetCode(provider, checksummedAddress);
+  const scillaCode = useMemo(() => {
+    try {
+      if (code) {
+        let s = toUtf8String(code);
+        if (s.startsWith("scilla_version")) {
+          return s;
+        }
+      }
+    } catch (err) {
+      // Silently ignore on purpose
+      return undefined;
+    }
+  }, [code]);
 
   const [selected, setSelected] = useState<string>();
   useEffect(() => {
@@ -118,7 +136,7 @@ const Contracts: React.FC<ContractsProps> = ({ checksummedAddress, match }) => {
                         <ExternalLink
                           href={openInRemixURL(
                             checksummedAddress,
-                            provider._network.chainId
+                            provider.network.chainId
                           )}
                         >
                           Open in Remix
@@ -154,7 +172,7 @@ const Contracts: React.FC<ContractsProps> = ({ checksummedAddress, match }) => {
                     ) : (
                       <ContractFromRepo
                         checksummedAddress={checksummedAddress}
-                        networkId={provider!._network.chainId}
+                        networkId={provider!.network.chainId}
                         filename={selected}
                         type={match.type}
                       />
@@ -172,15 +190,6 @@ const Contracts: React.FC<ContractsProps> = ({ checksummedAddress, match }) => {
           <ScillaContract content={scillaCode} />
         )}
         {!scillaCode && code && (
-          <>
-            <div className="pb-2">Contract Bytecode</div>
-            <StandardTextarea value={code} />
-          </>
-        )}
-      </div>
-      <div className="py-5">
-        {code === undefined && <span>Getting contract bytecode...</span>}
-        {code && (
           <>
             <div className="pb-2">Contract Bytecode</div>
             <StandardTextarea value={code} />
