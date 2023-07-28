@@ -2,8 +2,8 @@ import { FC, memo } from "react";
 import ContentFrame from "../../components/ContentFrame";
 import StandardSelectionBoundary from "../../selection/StandardSelectionBoundary";
 import SearchResultNavBar from "../../search/SearchResultNavBar";
-import ResultHeader from "../../search/ResultHeader";
-import PendingResults from "../../search/PendingResults";
+import TransactionResultHeader from "../../search/TransactionResultHeader";
+import PendingTransactionResults from "../../search/PendingTransactionResults";
 import TransactionItem from "../../search/TransactionItem";
 import { useFeeToggler } from "../../search/useFeeToggler";
 import { totalTransactionsFormatter } from "../../search/messages";
@@ -33,7 +33,7 @@ const BlockTransactionResults: FC<BlockTransactionResultsProps> = ({
         total={total}
         totalFormatter={totalTransactionsFormatter}
       />
-      <ResultHeader
+      <TransactionResultHeader
         feeDisplay={feeDisplay}
         feeDisplayToggler={feeDisplayToggler}
       />
@@ -50,7 +50,7 @@ const BlockTransactionResults: FC<BlockTransactionResultsProps> = ({
           />
         </StandardSelectionBoundary>
       ) : (
-        <PendingResults />
+        <PendingTransactionResults />
       )}
     </ContentFrame>
   );

@@ -1,22 +1,19 @@
-import { useState, useContext, lazy, FC, memo } from "react";
+import { useContext, FC, memo } from "react";
 import { NavLink } from "react-router-dom";
 import { commify } from "@ethersproject/units";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBurn, faQrcode } from "@fortawesome/free-solid-svg-icons";
-import Logo from "./Logo";
+import { faBurn } from "@fortawesome/free-solid-svg-icons";
 import Timestamp from "./components/Timestamp";
 import { RuntimeContext } from "./useRuntime";
 import { useLatestBlockHeader } from "./useLatestBlock";
 import { blockURL, slotURL } from "./url";
-import { useGenericSearch } from "./search/search";
 import { useFinalizedSlotNumber, useSlotTimestamp } from "./useConsensus";
 import Header from "./Header";
+import RecentBlocks from "./execution/block/recentBlocks";
 
-const CameraScanner = lazy(() => import("./search/CameraScanner"));
 
 const Home: FC = () => {
   const { provider } = useContext(RuntimeContext);
-  const [searchRef, handleChange, handleSubmit] = useGenericSearch();
 
   const latestBlock = useLatestBlockHeader(provider);
   const finalizedSlotNumber = useFinalizedSlotNumber();
@@ -27,6 +24,7 @@ const Home: FC = () => {
   return (
     <>
       <Header sourcifyPresent= {false} />
+      <RecentBlocks />
       <div className="flex grow flex-col items-center pb-5 text-lg font-bold text-link-blue hover:text-link-blue-hover">
         {provider?.network.chainId !== 11155111 && (
           <NavLink to="/special/london">
