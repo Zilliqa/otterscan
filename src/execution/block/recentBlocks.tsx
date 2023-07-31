@@ -9,7 +9,7 @@ import { RECENT_SIZE } from "../../params";
 import BlockItem from "../../search/BlockItem";
 import BlockResultHeader from "../../search/BlockResultHeader";
 import PendingBlockResults from "../../search/PendingBlockResults";
-
+import RecentNavBar from "../../search/RecentNavBar";
 
 
 const RecentBlocks: FC = () => {
@@ -29,6 +29,7 @@ const RecentBlocks: FC = () => {
   // Return a table with rows containing the basic information of the most recent RECENT_SIZE blocks
   return (
     <ContentFrame isLoading={isLoading}>
+      <RecentNavBar isLoading={ data === undefined }/>
       <BlockResultHeader
         feeDisplay={feeDisplay}
         feeDisplayToggler={feeDisplayToggler}

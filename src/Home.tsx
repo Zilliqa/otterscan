@@ -9,7 +9,7 @@ import { useLatestBlockHeader } from "./useLatestBlock";
 import { blockURL, slotURL } from "./url";
 import { useFinalizedSlotNumber, useSlotTimestamp } from "./useConsensus";
 import Header from "./Header";
-import RecentBlocks from "./execution/block/recentBlocks";
+import RecentBlocks from "./execution/block/RecentBlocks";
 
 
 const Home: FC = () => {
