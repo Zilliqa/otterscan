@@ -15,7 +15,7 @@ import BlockResultHeader from "../search/BlockResultHeader";
 import { totalBlocksFormatter } from "../search/messages";
 import SearchResultNavBar from "../search/SearchResultNavBar";
 
-const BlockTransactions: React.FC = () => {
+const BlockList: React.FC = () => {
   const { provider } = useContext(RuntimeContext);
   
   const latestBlock = useLatestBlockHeader(provider);
@@ -70,4 +70,4 @@ const BlockTransactions: React.FC = () => {
   );
 };
 
-export default BlockTransactions;
+export default BlockList;
