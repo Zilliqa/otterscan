@@ -1,9 +1,7 @@
 import React, { useContext } from "react";
 import { useSearchParams } from "react-router-dom";
 import StandardFrame from "../components/StandardFrame";
-import BlockTransactionResults from "./block/BlockTransactionResults";
 import { PAGE_SIZE } from "../params";
-import { useBlockTransactionsPageTitle } from "../useTitle";
 import { RuntimeContext } from "../useRuntime";
 import StandardSubtitle from "../components/StandardSubtitle";
 import { useLatestBlockHeader } from "../useLatestBlock";
@@ -14,7 +12,8 @@ import StandardSelectionBoundary from "../selection/StandardSelectionBoundary";
 import { useFeeToggler } from "../search/useFeeToggler";
 import ContentFrame from "../components/ContentFrame";
 import BlockResultHeader from "../search/BlockResultHeader";
-import RecentNavBar from "../search/RecentNavBar";
+import { totalBlocksFormatter } from "../search/messages";
+import SearchResultNavBar from "../search/SearchResultNavBar";
 
 const BlockTransactions: React.FC = () => {
   const { provider } = useContext(RuntimeContext);
@@ -37,6 +36,7 @@ const BlockTransactions: React.FC = () => {
   const { data, isLoading } = useRecentBlocks(
     provider,
     latestBlockNum,
+    pageNumber - 1,
     PAGE_SIZE
   );
 
@@ -46,7 +46,12 @@ const BlockTransactions: React.FC = () => {
         <div className="flex items-baseline space-x-1">Block List</div>
       </StandardSubtitle>
       <ContentFrame isLoading={isLoading}>
-        <RecentNavBar isLoading={ data === undefined }/>
+      <SearchResultNavBar
+        pageNumber={pageNumber}
+        pageSize={PAGE_SIZE}
+        total={latestBlockNum}
+        totalFormatter={totalBlocksFormatter}
+      />
         <BlockResultHeader
             feeDisplay={feeDisplay}
             feeDisplayToggler={feeDisplayToggler}

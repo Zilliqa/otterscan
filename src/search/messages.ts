@@ -7,3 +7,8 @@ export const totalTransactionsFormatter = (total: number) =>
 
 export const totalContractsFormatter = (total: number) =>
   `A total of ${commify(total)} ${total > 1 ? "contracts" : "contract"} found`;
+
+export const totalBlocksFormatter = (total: number) =>
+  `A total of ${commify(total)} ${
+    total > 1 ? "blocks" : "block"
+  } found`;

@@ -23,6 +23,7 @@ const RecentBlocks: FC = () => {
   const { data, isLoading } = useRecentBlocks(
     provider,
     latestBlockNum,
+    0,
     RECENT_SIZE
   );
 
