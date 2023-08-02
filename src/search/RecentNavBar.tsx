@@ -1,4 +1,4 @@
-import { FC, ReactNode, memo } from "react";
+import { FC, memo } from "react";
 import { NavLink } from "react-router-dom";
 
 type RecentNavBarProps = {
