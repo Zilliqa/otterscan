@@ -4,7 +4,7 @@ import StandardFrame from "../components/StandardFrame";
 import { PAGE_SIZE } from "../params";
 import { RuntimeContext } from "../useRuntime";
 import StandardSubtitle from "../components/StandardSubtitle";
-import { useLatestBlockHeader } from "../useLatestBlock";
+import { useLatestBlockNumber } from "../useLatestBlock";
 import { useRecentBlocks } from "../useErigonHooks";
 import BlockItem from "../search/BlockItem";
 import { PendingBlockResults } from "../search/PendingResults";
@@ -18,10 +18,8 @@ import SearchResultNavBar from "../search/SearchResultNavBar";
 const BlockList: React.FC = () => {
   const { provider } = useContext(RuntimeContext);
   
-  const latestBlock = useLatestBlockHeader(provider);
-
+  const latestBlockNum = useLatestBlockNumber(provider);
   const [feeDisplay, feeDisplayToggler] = useFeeToggler();
-  const latestBlockNum = latestBlock?.number;
   
 
   const [searchParams] = useSearchParams();
