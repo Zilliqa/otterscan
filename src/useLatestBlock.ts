@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 import { Block } from "@ethersproject/abstract-provider";
 import { JsonRpcProvider } from "@ethersproject/providers";
+import { Zilliqa } from "@zilliqa-js/zilliqa"; 
+import { BlockchainInfo } from '@zilliqa-js/core/dist/types/src/types'
+import { useBlockChainInfo } from "./useZilliqaHooks";
+
+const refreshRate = 30000 // In milliseconds
 
 /**
  * Returns the latest block header AND hook an internal listener
@@ -76,4 +81,40 @@ export const useLatestBlockNumber = (provider?: JsonRpcProvider) => {
   }, [provider]);
 
   return latestBlock;
+};
+
+/**
+ * Returns the latest chain information AND hoook an internal listener
+ * that'll update and trigger a component reder as a side effect every
+ * the poll returns a different value
+ */
+
+export const useLatestBlockChainInfo = (zilliqa?: Zilliqa) 
+: BlockchainInfo | undefined => {
+  const [latestBlockChainInfo, setLatestBlockChainInfo] = useState<BlockchainInfo>();
+
+  useEffect(() => {
+    // TODO: Is this necessary to check whether the hook has been removed
+    let isCancelled = false
+    if (!zilliqa) {
+      return;
+    }
+
+    const getData = async () => {
+      const blockChainInfo = await zilliqa.blockchain.getBlockChainInfo();
+      if (!isCancelled && blockChainInfo) {
+        setLatestBlockChainInfo(blockChainInfo.result);
+      }
+    }
+    getData()
+    const getDataTimer = setInterval(async () => {
+      await getData()
+    }, refreshRate)
+    return () => {
+      isCancelled = true
+      clearInterval(getDataTimer)
+    }
+  }, [zilliqa]);
+
+  return latestBlockChainInfo;
 };
