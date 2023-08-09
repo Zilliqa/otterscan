@@ -7,7 +7,7 @@ import NativeTokenAmountAndFiat from "../../components/NativeTokenAmountAndFiat"
 import { balancePreset } from "../../components/FiatValue";
 import TransactionAddressWithCopy from "../components/TransactionAddressWithCopy";
 import TransactionLink from "../../components/TransactionLink";
-import PendingTransactionResults from "../../search/PendingTransactionResults";
+import { PendingTransactionResults } from "../../search/PendingResults";
 import TransactionResultHeader from "../../search/TransactionResultHeader";
 import { SearchController } from "../../search/search";
 import TransactionItem from "../../search/TransactionItem";

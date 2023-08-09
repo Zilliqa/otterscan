@@ -7,7 +7,7 @@ import StandardSubtitle from "../components/StandardSubtitle";
 import { useLatestBlockHeader } from "../useLatestBlock";
 import { useRecentBlocks } from "../useErigonHooks";
 import BlockItem from "../search/BlockItem";
-import PendingBlockResults from "../search/PendingBlockResults";
+import { PendingBlockResults } from "../search/PendingResults";
 import StandardSelectionBoundary from "../selection/StandardSelectionBoundary";
 import { useFeeToggler } from "../search/useFeeToggler";
 import ContentFrame from "../components/ContentFrame";
