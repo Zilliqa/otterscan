@@ -1,3 +1,6 @@
+import { getAddressFromPublicKey, toBech32Address } from "@zilliqa-js/crypto";
+import { validation } from "@zilliqa-js/util";
+
 export const ageString = (durationInSecs: number) => {
   if (durationInSecs === 0) {
     return "now";
@@ -44,3 +47,17 @@ export const ageString = (durationInSecs: number) => {
 export const zilliqaToOtterscanTimestamp = (timestamp: string) : number => {
   return Math.trunc(parseInt(timestamp, 10) / 1000000)
 };
+
+export const stripHexPrefix: (inputHex: string) => string = (
+  inputHex: string
+) => {
+  if (inputHex.substring(0, 2) === "0x") return inputHex.substring(2);
+  return inputHex;
+};
+
+export const pubKeyToAddr: (k: string) => string = (pubKey: string) => {
+  const strippedPubKey = stripHexPrefix(pubKey);
+  if (!validation.isPubKey(strippedPubKey)) return "Invalid public key";
+  else return getAddressFromPublicKey(strippedPubKey).toLowerCase();
+};
+

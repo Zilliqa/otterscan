@@ -2,7 +2,7 @@ import { FC, useContext, memo } from "react";
 import ContentFrame from "../../components/ContentFrame";
 import StandardSelectionBoundary from "../../selection/StandardSelectionBoundary";
 import { RuntimeContext } from "../../useRuntime";
-import { useDSBlockData } from "../../useZilliqaHooks";
+import { useDSBlocksData } from "../../useZilliqaHooks";
 import { RECENT_SIZE } from "../../params";
 import RecentDSBlockItem from "../../search/RecentDSBlockItem";
 import { PendingRecentDSBlockResults } from "../../search/PendingResults";
@@ -18,7 +18,7 @@ const RecentDSBlocks: FC = () => {
   const latestBlockNum = latestBlockChainInfo?.CurrentDSEpoch;
 
   // Uses hook to get the most recent blocks
-  const { data, isLoading } = useDSBlockData(
+  const { data, isLoading } = useDSBlocksData(
     zilliqa,
     latestBlockNum !== undefined ? parseInt(latestBlockNum, 10) : undefined,
     0,

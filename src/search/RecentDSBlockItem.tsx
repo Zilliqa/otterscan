@@ -1,4 +1,4 @@
-import BlockLink from "../components/BlockLink";
+import DSBlockLink from "../components/DSBlockLink";
 import TimestampAge from "../components/TimestampAge";
 import { DsBlockObj } from '@zilliqa-js/core/dist/types/src/types'
 import { commify } from "ethers/lib/utils";
@@ -16,7 +16,7 @@ const RecentDSBlockItem: React.FC<DSBlockItemProps> = ({ block }) => {
     hover:bg-skin-table-hover px-2 py-3"
     >
     <span>
-    <BlockLink blockTag={block.header.BlockNum} />
+    <DSBlockLink blockTag={block.header.BlockNum} />
     </span>
     <span>
       {commify(block.header.Difficulty)}

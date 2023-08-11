@@ -1,5 +1,8 @@
-import { useState, useEffect, useMemo } from "react";
-import useSWR, { Fetcher } from "swr";
+// TODO: Once devex is completely depricated we can alter the zilliqa APIs so
+// values are returned in a format that is easier to handle in Otterscan such
+// as Timestamp
+
+import { Fetcher } from "swr";
 import useSWRImmutable from "swr/immutable";
 import useSWRInfinite from "swr/infinite";
 import { DsBlockObj, BlockchainInfo } from '@zilliqa-js/core/dist/types/src/types'
@@ -17,6 +20,23 @@ const dsBlockDataFetcher: Fetcher<
 };
 
 export const useDSBlockData = (
+  zilliqa: Zilliqa | undefined,
+  blockNumberOrHash: string | undefined
+): { data: DsBlockObj | null | undefined; isLoading: boolean } => {
+  const { data, error, isLoading } = useSWRImmutable(
+    zilliqa !== undefined && blockNumberOrHash !== undefined
+      ? [zilliqa, blockNumberOrHash]
+      : null,
+    dsBlockDataFetcher,
+    { keepPreviousData: true }
+  );
+  if (error) {
+    return { data: undefined, isLoading: false };
+  }
+  return { data, isLoading };
+};
+
+export const useDSBlocksData = (
   zilliqa : Zilliqa | undefined,
   blockNumber: number | undefined,
   pageNumber: number,
