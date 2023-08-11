@@ -40,3 +40,7 @@ export const ageString = (durationInSecs: number) => {
 
   return desc;
 };
+
+export const zilliqaToOtterscanTimestamp = (timestamp: string) : number => {
+  return Math.trunc(parseInt(timestamp, 10) / 1000000)
+};

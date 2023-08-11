@@ -2,6 +2,7 @@ import BlockLink from "../components/BlockLink";
 import TimestampAge from "../components/TimestampAge";
 import { DsBlockObj } from '@zilliqa-js/core/dist/types/src/types'
 import { commify } from "ethers/lib/utils";
+import { zilliqaToOtterscanTimestamp } from "../utils/utils";
 
 type DSBlockItemProps = {
   block: DsBlockObj, 
@@ -23,7 +24,7 @@ const RecentDSBlockItem: React.FC<DSBlockItemProps> = ({ block }) => {
     <span>
       {commify(block.header.DifficultyDS)}
     </span>
-    <TimestampAge timestamp={parseInt(block.header.Timestamp, 10)}/>
+    <TimestampAge timestamp={zilliqaToOtterscanTimestamp(block.header.Timestamp)}/>
     </div>
   );
 };
