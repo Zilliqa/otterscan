@@ -14,7 +14,7 @@ const RecentDSNavBar: FC<RecentNavBarProps> = ({ isLoading }) => (
     </div>
     <NavLink
         className={"text-link-blue hover:text-link-blue-hover truncate"}
-        to={`/blocklist`}
+        to={`/dsblocklist`}
         title={"View All"}
       >
         {"View All"}

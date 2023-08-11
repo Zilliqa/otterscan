@@ -13,6 +13,7 @@ const Block = lazy(() => import("./execution/Block"));
 const BlockTransactions = lazy(() => import("./execution/BlockTransactions"));
 const DSBlock = lazy(() => import("./execution/DSBlock"));
 const BlockList = lazy(() => import("./execution/BlockList"));
+const DSBlockList = lazy(() => import("./execution/DSBlockList"));
 const Address = lazy(() => import("./execution/Address"));
 const Transaction = lazy(() => import("./execution/Transaction"));
 const AllContracts = lazy(() => import("./token/AllContracts"));
@@ -69,6 +70,9 @@ const App = () => {
                     />
                     <Route
                       path="blocklist" element={ <BlockList/>}
+                    />
+                    <Route
+                      path="dsblocklist" element={ <DSBlockList/>}
                     />
                     <Route path="tx/:txhash/*" element={<Transaction />} />
                     <Route

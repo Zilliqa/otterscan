@@ -41,7 +41,7 @@ const BlockList: React.FC = () => {
   return (
     <StandardFrame>
       <StandardSubtitle>
-        <div className="flex items-baseline space-x-1">Block List</div>
+        <div className="flex items-baseline space-x-1">Tx Block List</div>
       </StandardSubtitle>
       <ContentFrame isLoading={isLoading}>
       <SearchResultNavBar

@@ -55,6 +55,14 @@ export const stripHexPrefix: (inputHex: string) => string = (
   return inputHex;
 };
 
+// Add hex prefix if not already
+export const addHexPrefix: (inputHex: string) => string = (
+  inputHex: string
+) => {
+  if (inputHex.substring(0, 2) !== "0x") return "0x" + inputHex;
+  return inputHex;
+};
+
 export const pubKeyToAddr: (k: string) => string = (pubKey: string) => {
   const strippedPubKey = stripHexPrefix(pubKey);
   if (!validation.isPubKey(strippedPubKey)) return "Invalid public key";
