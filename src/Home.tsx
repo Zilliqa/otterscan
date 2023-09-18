@@ -10,6 +10,7 @@ import { blockURL, slotURL } from "./url";
 import { useFinalizedSlotNumber, useSlotTimestamp } from "./useConsensus";
 import Header from "./Header";
 import RecentBlocks from "./execution/block/RecentBlocks";
+import RecentDSBlocks from "./execution/block/RecentDSBlocks";
 
 
 const Home: FC = () => {
@@ -24,7 +25,14 @@ const Home: FC = () => {
   return (
     <>
       <Header sourcifyPresent= {false} />
-      <RecentBlocks />
+      <div className="grid grid-cols-5 gap-x-1 mx-1">
+        <span className="col-span-2">
+          <RecentDSBlocks />
+        </span>
+        <span className="col-span-3">
+            <RecentBlocks />
+        </span>
+      </div>
       <div className="flex grow flex-col items-center pb-5 text-lg font-bold text-link-blue hover:text-link-blue-hover">
         {provider?.network.chainId !== 11155111 && (
           <NavLink to="/special/london">

@@ -45,8 +45,8 @@ const Header: FC<HeaderProps> = ({sourcifyPresent}) => {
             <input
               className="w-full rounded-l border-t border-b border-l px-2 py-1 text-sm focus:outline-none"
               type="text"
-              size={60}
-              placeholder={`Type "/" to search by address / txn hash / block number${
+              size={80}
+              placeholder={`Type "/" to search by address / txn hash / block number / # ds block number${
                 provider?.network.ensAddress ? " / ENS name" : ""
               }`}
               onChange={handleChange}
