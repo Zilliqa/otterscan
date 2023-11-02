@@ -67,11 +67,12 @@ const LogEntry: FC<LogEntryProps> = ({ log }) => {
     // Scilla logs are encoded as a single JSON string.
     try {
       const data = JSON.parse(AbiCoder.defaultAbiCoder().decode(["string"], log.data)[0]);
-      return {
-        eventName: data._eventname,
-        address: data.address,
-        params: data.params
-      }
+      const params: any[] = data.params;
+      return new LogDescription(
+        EventFragment.from({type: "event", name: data._eventname, inputs: params.map(p => ({ name: p.vname, type: p.type }))}),
+        "",
+        Result.fromItems(params.map(p => (p.value)), params.map(p=> (p.name)))
+      );
     } catch (err) {
       // Silently ignore on purpose
       return undefined;
@@ -145,11 +146,22 @@ const LogEntry: FC<LogEntryProps> = ({ log }) => {
             </TwoColumnPanel>
           </Tab.List>
           <Tab.Panels as={React.Fragment}>
-      <Tab.Panel>
-      ({ scillaLogDesc !== undefined && scillaLogDesc !== null ?
-        <ScillaLogDisplay scillaLogDesc={scillaLogDesc} /> :
-        <EvmLogDisplay resolvedLogDesc={resolvedLogDesc} />})
-      </Tab.Panel>
+            <Tab.Panel>
+              {resolvedLogDesc === undefined ? (
+                <TwoColumnPanel>Waiting for data...</TwoColumnPanel>
+              ) : resolvedLogDesc === null ? (
+                <TwoColumnPanel>Can't decode data</TwoColumnPanel>
+              ) : (
+                <TwoColumnPanel>
+                  <DecodedLogSignature event={resolvedLogDesc.fragment} />
+                  <DecodedParamsTable
+                    args={resolvedLogDesc.args}
+                    paramTypes={resolvedLogDesc.fragment.inputs}
+                    hasParamNames={resolvedLogDesc === logDesc || resolvedLogDesc === scillaLogDesc}
+                  />
+                </TwoColumnPanel>
+              )}
+            </Tab.Panel>
             <Tab.Panel as={React.Fragment}>
               <RawLog topics={log.topics} data={log.data} />
             </Tab.Panel>
