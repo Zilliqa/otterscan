@@ -29,7 +29,7 @@
     "@types/react-syntax-highlighter": "^15.5.9",
     "@zilliqa-js/zilliqa" : "^3.4.3",
     "chart.js": "^4.4.0",
-    "ethers": "^6.8.0",
+    "ethers": "zilliqa/ethers.js#ethers-zq",
     "highlightjs-solidity": "^2.0.6",
     "prettier-plugin-organize-imports": "^3.2.3",
     "react": "^18.2.0",
