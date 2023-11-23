@@ -31,6 +31,7 @@
     "ethers": "zilliqa/ethers.js#ethers-zq",
     "chart.js": "^4.4.1",
     "@zilliqa-js/zilliqa" : "^3.5.0",
+    "ethers": "zilliqa/ethers.js#ethers-zq",
     "highlightjs-solidity": "^2.0.6",
     "prettier-plugin-organize-imports": "^3.2.4",
     "react": "^18.2.0",
