@@ -31,8 +31,11 @@ const AddressSubtitle: FC<AddressSubtitleProps> = ({
           seed={address.toLowerCase()}
           scale={3}
         />
-        <span>Address</span>
-        <AddressSwap addr={address} />
+      <span>Address</span>
+      <span data-test="address">
+      <AddressSwap addr={address} />
+    </span>
+      <Copy value={address} rounded />
         {/* Only display faucets for testnets who actually have any */}
         {faucets && faucets.length > 0 && <Faucet address={address} rounded />}
         {isENS && (
