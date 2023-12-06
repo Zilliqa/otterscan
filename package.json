@@ -27,7 +27,7 @@
     "@types/react-dom": "^18.2.17",
     "@types/react-highlight": "^0.12.8",
     "@zilliqa-js/zilliqa" : "^3.4.3",
-    "@types/react-syntax-highlighter": "^15.5.10",
+    "@types/react-syntax-highlighter": "^15.5.11",
     "chart.js": "^4.4.0",
     "ethers": "zilliqa/ethers.js#ethers-zq",
     "highlightjs-solidity": "^2.0.6",
