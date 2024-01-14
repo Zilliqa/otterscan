@@ -18,6 +18,7 @@ import { ProcessedTransaction } from "../../types";
 import { BlockNumberContext } from "../../useBlockTagContext";
 import { useAddressBalance, useContractCreator } from "../../useErigonHooks";
 import { RuntimeContext } from "../../useRuntime";
+import { usePageTitle } from "../../useTitle";
 import DecoratedAddressLink from "../components/DecoratedAddressLink";
 import TransactionAddressWithCopy from "../components/TransactionAddressWithCopy";
 import { AddressAwareComponentProps } from "../types";
@@ -33,6 +34,8 @@ const AddressTransactionResults: FC<AddressAwareComponentProps> = ({
   if (uncheckedAddressOrName === undefined) {
     throw new Error("addressOrName couldn't be undefined here");
   }
+
+  usePageTitle(`Address ${addressOrName}`);
 
   const [searchParams] = useSearchParams();
   const hash = searchParams.get("h");
