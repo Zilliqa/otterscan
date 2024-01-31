@@ -1,21 +1,21 @@
-import { useMemo, useContext, FC } from "react";
+import { commify } from "@ethersproject/units";
+import { FC, useContext } from "react";
 import { useParams } from "react-router-dom";
-import { commify }  from "@ethersproject/units";
+import BlockLink from "../components/BlockLink";
+import BlockNotFound from "../components/BlockNotFound";
+import ContentFrame from "../components/ContentFrame";
+import InfoRow from "../components/InfoRow";
+import NavBlock from "../components/NavBlock";
 import StandardFrame from "../components/StandardFrame";
 import StandardSubtitle from "../components/StandardSubtitle";
-import NavBlock from "../components/NavBlock";
-import ContentFrame from "../components/ContentFrame";
-import BlockNotFound from "../components/BlockNotFound";
-import InfoRow from "../components/InfoRow";
 import Timestamp from "../components/Timestamp";
-import BlockLink from "../components/BlockLink";
-import DecoratedAddressLink from "./components/DecoratedAddressLink";
-import { RuntimeContext } from "../useRuntime";
-import { useLatestBlockChainInfo } from "../useLatestBlock";
 import { dsBlockURL } from "../url";
+import { useLatestBlockChainInfo } from "../useLatestBlock";
+import { RuntimeContext } from "../useRuntime";
 import { useBlockPageTitle } from "../useTitle";
 import { useDSBlockData } from "../useZilliqaHooks";
 import { pubKeyToAddr, zilliqaToOtterscanTimestamp } from "../utils/utils";
+import DecoratedAddressLink from "./components/DecoratedAddressLink";
 
 // TODO: Figure out what we want to do with the previous Hash field
 const DSBlock: FC = () => {
@@ -25,7 +25,10 @@ const DSBlock: FC = () => {
     throw new Error("dsBlockNumberOrHash couldn't be undefined here");
   }
 
-  const { data: dsBlock, isLoading } = useDSBlockData(zilliqa, dsBlockNumberOrHash);
+  const { data: dsBlock, isLoading } = useDSBlockData(
+    zilliqa,
+    dsBlockNumberOrHash,
+  );
   useBlockPageTitle(parseInt(dsBlockNumberOrHash));
 
   const latestBlockChainInfo = useLatestBlockChainInfo(zilliqa);
@@ -36,11 +39,17 @@ const DSBlock: FC = () => {
       <StandardSubtitle>
         <div className="flex items-baseline space-x-1">
           <span>DS Block</span>
-          <span className="text-base text-gray-500">#{dsBlockNumberOrHash}</span>
+          <span className="text-base text-gray-500">
+            #{dsBlockNumberOrHash}
+          </span>
           {dsBlock && (
             <NavBlock
               entityNum={parseInt(dsBlock.header.BlockNum)}
-              latestEntityNum={latestDSBlockNum !== undefined ? parseInt(latestDSBlockNum) : undefined}
+              latestEntityNum={
+                latestDSBlockNum !== undefined
+                  ? parseInt(latestDSBlockNum)
+                  : undefined
+              }
               urlBuilder={dsBlockURL}
             />
           )}
@@ -57,13 +66,20 @@ const DSBlock: FC = () => {
       {dsBlock && (
         <ContentFrame isLoading={isLoading}>
           <InfoRow title="Block Height">
-            <span className="font-bold">{commify(dsBlock.header.BlockNum)}</span>
+            <span className="font-bold">
+              {commify(dsBlock.header.BlockNum)}
+            </span>
           </InfoRow>
           <InfoRow title="Timestamp">
-            <Timestamp value={zilliqaToOtterscanTimestamp(dsBlock.header.Timestamp)} />
+            <Timestamp
+              value={zilliqaToOtterscanTimestamp(dsBlock.header.Timestamp)}
+            />
           </InfoRow>
           <InfoRow title="DS Leader">
-            <DecoratedAddressLink address={pubKeyToAddr(dsBlock.header.LeaderPubKey)} miner />
+            <DecoratedAddressLink
+              address={pubKeyToAddr(dsBlock.header.LeaderPubKey)}
+              miner
+            />
           </InfoRow>
           <InfoRow title="Gas Used/Limit">
             {commify(dsBlock.header.GasPrice)}

@@ -34,4 +34,3 @@ export const getTotalFormatter = (
       return (total: number) => `A total of ${total} found`;
   }
 };
-

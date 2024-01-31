@@ -1,5 +1,4 @@
 import React from "react";
-import { FeeDisplay } from "./useFeeToggler";
 
 const DSBlockResultHeader: React.FC = () => (
   <div className="grid grid-cols-12 gap-x-1 border-t border-b border-gray-200 bg-gray-100 px-2 py-2 text-sm font-bold text-gray-500">

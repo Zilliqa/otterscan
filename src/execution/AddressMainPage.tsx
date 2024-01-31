@@ -2,6 +2,8 @@ import { faQuestionCircle } from "@fortawesome/free-regular-svg-icons";
 import { faCircleNotch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Tab } from "@headlessui/react";
+import { fromBech32Address } from "@zilliqa-js/crypto";
+import { validation } from "@zilliqa-js/util";
 import React, { useCallback, useContext } from "react";
 import {
   Route,
@@ -29,8 +31,6 @@ import AddressWithdrawals from "./address/AddressWithdrawals";
 import BlocksRewarded from "./address/BlocksRewarded";
 import Contracts from "./address/Contracts";
 import ReadContract from "./address/contract/ReadContract";
-import { fromBech32Address } from '@zilliqa-js/crypto'
-import { validation } from '@zilliqa-js/util'
 
 type AddressMainPageProps = {};
 
@@ -40,9 +40,10 @@ const AddressMainPage: React.FC<AddressMainPageProps> = () => {
     throw new Error("addressOrName couldn't be undefined here");
   }
 
-  const addressOrName = validation.isBech32(uncheckedAddressOrName) ?
-    fromBech32Address(uncheckedAddressOrName).toLowerCase() : uncheckedAddressOrName;
-  
+  const addressOrName = validation.isBech32(uncheckedAddressOrName)
+    ? fromBech32Address(uncheckedAddressOrName).toLowerCase()
+    : uncheckedAddressOrName;
+
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const urlFixer = useCallback(

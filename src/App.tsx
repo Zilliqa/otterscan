@@ -32,7 +32,6 @@ const London = lazy(() => import("./special/london/London"));
 const Faucets = lazy(() => import("./Faucets"));
 const PageNotFound = lazy(() => import("./PageNotFound"));
 
-
 const App = () => {
   const runtime = useRuntime();
   // TODO: fix internal hack
@@ -71,12 +70,8 @@ const App = () => {
                       path="dsblock/:dsBlockNumberOrHash"
                       element={<DSBlock />}
                     />
-                    <Route
-                      path="blocklist" element={ <BlockList/>}
-                    />
-                    <Route
-                      path="dsblocklist" element={ <DSBlockList/>}
-                    />
+                    <Route path="blocklist" element={<BlockList />} />
+                    <Route path="dsblocklist" element={<DSBlockList />} />
                     <Route
                       path="block/:blockNumberOrHash/tx/:txIndex"
                       element={<BlockTransactionByIndex />}

@@ -16,8 +16,8 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import useSWR, { Fetcher } from "swr";
 import useSWRImmutable from "swr/immutable";
-import erc20 from "./erc20.json";
 import useSWRInfinite from "swr/infinite";
+import erc20 from "./erc20.json";
 import {
   ChecksummedAddress,
   InternalOperation,
@@ -28,8 +28,6 @@ import {
   TransactionData,
 } from "./types";
 import { formatter } from "./utils/formatter";
-import { DsBlockObj } from '@zilliqa-js/core/dist/types/src/types'
-import { Zilliqa } from "@zilliqa-js/zilliqa";
 
 const TRANSFER_TOPIC =
   "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
@@ -99,7 +97,7 @@ const blockTransactionsFetcher: Fetcher<
   ]);
   const _block = formatter.blockParamsWithTransactions(result.fullblock);
   const _receipts = result.receipts;
-  
+
   const rawTxs = _block.transactions
     .map((t: TransactionResponseParams, i: number): ProcessedTransaction => {
       const _rawReceipt = _receipts[i];
@@ -192,31 +190,44 @@ export const useRecentBlocks = (
   provider: JsonRpcApiProvider | undefined,
   blockNumber: number | undefined,
   pageNumber: number,
-  pageSize: number
+  pageSize: number,
 ): { data: (ExtendedBlock | null)[] | undefined; isLoading: boolean } => {
-  const startBlockNum : number | undefined = blockNumber ? blockNumber - ( pageSize * pageNumber) : undefined;
+  const startBlockNum: number | undefined = blockNumber
+    ? blockNumber - pageSize * pageNumber
+    : undefined;
 
   // This function is used by SWR to get the key which we pass to the fetcher function
-  // It also searches the cache for the presence of this key and if found returns the 
+  // It also searches the cache for the presence of this key and if found returns the
   // cached value. The pageSize differenciates the cache between components so that different components
   // do not display incorrect number of displays
-  const getKey = (pageIndex : number) 
-  : [ JsonRpcApiProvider , string, number] | null =>  {
-    if((provider == undefined || startBlockNum == undefined) 
-    || (startBlockNum - pageIndex < 0)) return null;
+  const getKey = (
+    pageIndex: number,
+  ): [JsonRpcApiProvider, string, number] | null => {
+    if (
+      provider == undefined ||
+      startBlockNum == undefined ||
+      startBlockNum - pageIndex < 0
+    )
+      return null;
 
-    return [provider, (startBlockNum - pageIndex).toString(), pageSize]
-  }
+    return [provider, (startBlockNum - pageIndex).toString(), pageSize];
+  };
 
   // Calls the fetcher to fetch the most recent pageNumber of blocks in parallel
-  const { data, error, isLoading, isValidating } = useSWRInfinite(getKey,
+  const { data, error, isLoading, isValidating } = useSWRInfinite(
+    getKey,
     blockDataFetcher,
-    { keepPreviousData: true, revalidateFirstPage : false, initialSize : pageSize, parallel : true }
+    {
+      keepPreviousData: true,
+      revalidateFirstPage: false,
+      initialSize: pageSize,
+      parallel: true,
+    },
   );
   if (error) {
     return { data: undefined, isLoading: false };
   }
-  return { data, isLoading :  isLoading || isValidating};
+  return { data, isLoading: isLoading || isValidating };
 };
 
 export const useBlockDataFromTransaction = (
@@ -239,7 +250,6 @@ export const useTxData = (
   const [txData, setTxData] = useState<TransactionData | undefined | null>();
 
   useEffect(() => {
-
     if (!provider) {
       return;
     }
@@ -280,7 +290,7 @@ export const useTxData = (
                   fee: _response.gasPrice! * _receipt.gasUsed,
                   gasUsed: _receipt.gasUsed,
                   logs: Array.from(_receipt.logs),
-              }
+                },
         });
       } catch (err) {
         console.error(err);
@@ -332,7 +342,7 @@ export const useInternalOperations = (
     }
 
     const _t: InternalOperation[] = [];
-    if(data){
+    if (data) {
       for (const t of data) {
         _t.push({
           type: t.type,
@@ -397,7 +407,7 @@ export const useTraceTransaction = (
 
       // null here means there was no trace
       if (results == null) {
-        results = [ ]
+        results = [];
       }
       // Implement better formatter
       for (let i = 0; i < results.length; i++) {
@@ -700,7 +710,7 @@ export const useHasCode = (
   //       This is also rather horrific in that we lie about the contents of a block
   //       because ZQ1 is not capable of time travel and we need to query eg.
   //       the state of a contract at the block a txn took place :-(
-  blockTag = 0
+  blockTag = 0;
 
   const { data, error } = useSWRImmutable(
     ["ots_hasCode", address, blockTag],
@@ -719,7 +729,7 @@ export const useGetRawReceipt = (
   const fetcher = providerFetcher(provider);
   const { data, error } = useSWRImmutable(
     ["eth_getTransactionReceipt", address],
-    fetcher
+    fetcher,
   );
   if (error) {
     return undefined;
@@ -730,12 +740,12 @@ export const useGetRawReceipt = (
 export const useGetCode = (
   provider: JsonRpcApiProvider | undefined,
   address: ChecksummedAddress | undefined,
-  blockTag: BlockTag = "latest"
+  blockTag: BlockTag = "latest",
 ): string | undefined => {
   const fetcher = providerFetcher(provider);
   const { data, error } = useSWRImmutable(
     ["eth_getCode", address, blockTag],
-    fetcher
+    fetcher,
   );
   if (error) {
     return undefined;

@@ -1,6 +1,5 @@
 import { FC, useContext } from "react";
 import Blockies from "react-blockies";
-import Copy from "../../components/Copy";
 import AddressSwap from "../../components/AddressSwap";
 import Faucet from "../../components/Faucet";
 import StandardSubtitle from "../../components/StandardSubtitle";
@@ -8,7 +7,6 @@ import { useChainInfo } from "../../useChainInfo";
 import { RuntimeContext } from "../../useRuntime";
 import { AddressAwareComponentProps } from "../types";
 import AddressAttributes from "./AddressAttributes";
-import { validation } from '@zilliqa-js/util'
 
 type AddressSubtitleProps = AddressAwareComponentProps & {
   isENS: boolean | undefined;
@@ -31,10 +29,10 @@ const AddressSubtitle: FC<AddressSubtitleProps> = ({
           seed={address.toLowerCase()}
           scale={3}
         />
-      <span>Address</span>
-      <span data-test="address">
-      <AddressSwap addr={address} />
-      </span>
+        <span>Address</span>
+        <span data-test="address">
+          <AddressSwap addr={address} />
+        </span>
         {/* Only display faucets for testnets who actually have any */}
         {faucets && faucets.length > 0 && <Faucet address={address} rounded />}
         {isENS && (
@@ -42,7 +40,7 @@ const AddressSubtitle: FC<AddressSubtitleProps> = ({
             ENS: {addressOrName}
           </span>
         )}
-    {config?.experimental && <AddressAttributes address={address} full />}
+        {config?.experimental && <AddressAttributes address={address} full />}
       </div>
     </StandardSubtitle>
   );

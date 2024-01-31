@@ -10,9 +10,9 @@ import { RuntimeContext } from "./useRuntime";
 import Otter from "./otter.png?w=128&h=128&webp";
 
 const CameraScanner = lazy(() => import("./search/CameraScanner"));
-type HeaderProps = {sourcifyPresent : boolean };
+type HeaderProps = { sourcifyPresent: boolean };
 
-const Header: FC<HeaderProps> = ({sourcifyPresent}) => {
+const Header: FC<HeaderProps> = ({ sourcifyPresent }) => {
   const { config, provider } = useContext(RuntimeContext);
   const [searchRef, handleChange, handleSubmit] = useGenericSearch();
   const [isScanning, setScanning] = useState<boolean>(false);
@@ -41,7 +41,7 @@ const Header: FC<HeaderProps> = ({sourcifyPresent}) => {
             </div>
           </Link>
           <div className="inline sm:hidden">
-            { sourcifyPresent && <SourcifyMenu /> }
+            {sourcifyPresent && <SourcifyMenu />}
           </div>
         </div>
         <div className="flex items-baseline gap-x-3">
@@ -59,8 +59,13 @@ const Header: FC<HeaderProps> = ({sourcifyPresent}) => {
             <input
               className="w-full rounded-l border-b border-l border-t px-2 py-1 text-sm focus:outline-none"
               type="text"
-              placeholder={`Type "/" to search by address / txn hash / # ds block number ${ provider?._network.getPlugin(
-                            "org.ethers.plugins.network.Ens",) !== null ? " / ENS name" : ""}`}
+              placeholder={`Type "/" to search by address / txn hash / # ds block number ${
+                provider?._network.getPlugin(
+                  "org.ethers.plugins.network.Ens",
+                ) !== null
+                  ? " / ENS name"
+                  : ""
+              }`}
               size={80}
               onChange={handleChange}
               ref={searchRef}
@@ -81,11 +86,11 @@ const Header: FC<HeaderProps> = ({sourcifyPresent}) => {
             </button>
           </form>
           <div className="hidden sm:inline self-stretch">
-            { sourcifyPresent && <SourcifyMenu  /> }
+            {sourcifyPresent && <SourcifyMenu />}
           </div>
         </div>
       </div>
-      </>
+    </>
   );
 };
 

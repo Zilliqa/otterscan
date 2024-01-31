@@ -1,22 +1,22 @@
-import React, { useState, useEffect, useContext, useMemo } from "react";
-import { Menu } from "@headlessui/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Menu } from "@headlessui/react";
+import { toUtf8String } from "ethers";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import ContentFrame from "../../components/ContentFrame";
 import ExternalLink from "../../components/ExternalLink";
 import InfoRow from "../../components/InfoRow";
+import StandardTextarea from "../../components/StandardTextarea";
 import { Match, MatchType } from "../../sourcify/useSourcify";
 import { openInRemixURL } from "../../url";
+import { useGetCode } from "../../useErigonHooks";
 import { RuntimeContext } from "../../useRuntime";
 import { usePageTitle } from "../../useTitle";
 import { commify } from "../../utils/utils";
 import Contract from "./Contract";
 import ContractFromRepo from "./ContractFromRepo";
-import ContractABI from "./contract/ContractABI";
-import { useGetCode } from "../../useErigonHooks";
-import StandardTextarea from "../../components/StandardTextarea";
-import { toUtf8String } from "ethers";
 import ScillaContract from "./ScillaContract";
+import ContractABI from "./contract/ContractABI";
 
 type ContractsProps = {
   checksummedAddress: string;
@@ -117,7 +117,7 @@ const Contracts: React.FC<ContractsProps> = ({ checksummedAddress, match }) => {
                         <ExternalLink
                           href={openInRemixURL(
                             checksummedAddress,
-                            provider._network.chainId
+                            provider._network.chainId,
                           )}
                         >
                           Open in Remix
@@ -167,9 +167,7 @@ const Contracts: React.FC<ContractsProps> = ({ checksummedAddress, match }) => {
       )}
       <div className="py-5">
         {code === undefined && <span>Getting contract bytecode...</span>}
-        {scillaCode && (
-          <ScillaContract content={scillaCode} />
-        )}
+        {scillaCode && <ScillaContract content={scillaCode} />}
         {!scillaCode && code && (
           <>
             <div className="pb-2">Contract Bytecode</div>

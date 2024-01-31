@@ -52,8 +52,8 @@ const Transaction: FC = () => {
                       {` (${txData.confirmedData?.logs?.length ?? 0})`}
                     </NavTab>
                   )}
-              <NavTab href="trace">Trace</NavTab>
-              <NavTab href="receipt">Receipt</NavTab>
+                  <NavTab href="trace">Trace</NavTab>
+                  <NavTab href="receipt">Receipt</NavTab>
                 </Tab.List>
               </Tab.Group>
               <Suspense fallback={null}>
@@ -63,8 +63,8 @@ const Transaction: FC = () => {
                     path="logs"
                     element={<Logs logs={txData.confirmedData?.logs} />}
                   />
-              <Route path="trace" element={<Trace txData={txData} />} />
-              <Route path="receipt" element={<Receipt txData={txData} />} />
+                  <Route path="trace" element={<Trace txData={txData} />} />
+                  <Route path="receipt" element={<Receipt txData={txData} />} />
                 </Routes>
               </Suspense>
             </StandardSelectionBoundary>

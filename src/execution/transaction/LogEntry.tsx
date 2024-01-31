@@ -1,21 +1,27 @@
 import { Tab } from "@headlessui/react";
-import { Fragment, Interface, Log, Result } from "ethers";
+import {
+  AbiCoder,
+  Fragment,
+  Interface,
+  Log,
+  LogDescription,
+  keccak256,
+  toUtf8Bytes,
+} from "ethers";
 import React, { FC, memo, useContext, useMemo } from "react";
 import ModeTab from "../../components/ModeTab";
 import { useSourcifyMetadata } from "../../sourcify/useSourcify";
 import { RuntimeContext } from "../../useRuntime";
+import { useTopic0 } from "../../useTopic0";
 import TransactionAddressWithCopy from "../components/TransactionAddressWithCopy";
 import DecodedLogSignature from "./decoder/DecodedLogSignature";
 import DecodedParamsTable from "./decoder/DecodedParamsTable";
-import DecodedScillaLogSignature  from "./decoder/DecodedScillaLogSignature";
-import DecodedScillaEncaps  from "./decoder/DecodedScillaEncaps";
+import DecodedScillaEncaps from "./decoder/DecodedScillaEncaps";
+import DecodedScillaLogSignature from "./decoder/DecodedScillaLogSignature";
 import DecodedScillaParamsTable from "./decoder/DecodedScillaParamsTable";
 import LogIndex from "./log/LogIndex";
 import RawLog from "./log/RawLog";
 import TwoColumnPanel from "./log/TwoColumnPanel";
-import { useTopic0 } from "../../useTopic0";
-import { useGetCode } from "../../useErigonHooks";
-import { getBytes, EventFragment, LogDescription, AbiCoder, keccak256, toUtf8Bytes, toUtf8String } from "ethers";
 
 type LogEntryProps = {
   log: Log;
@@ -28,73 +34,89 @@ type ScillaLog = {
 };
 
 type ScillaEncapsLog = {
-  kind: string,
-  description: string
+  kind: string;
+  description: string;
 };
 
 type LogDescProps = {
-  resolvedLogDesc : LogDescription
+  resolvedLogDesc: LogDescription;
 };
 
-const EvmLogDisplay: FC<LogDescProps> = ( { resolvedLogDesc } ) => {
-  return (   <div>  {resolvedLogDesc === undefined ? (
-    <TwoColumnPanel>Waiting for data...</TwoColumnPanel>
-  ) : (resolvedLogDesc === null || resolvedLogDesc.fragment === undefined) ? (
-    <TwoColumnPanel>Cannot decode data</TwoColumnPanel>
-) : (
-   <TwoColumnPanel>
-      <DecodedLogSignature event={resolvedLogDesc.fragment} />
-      <DecodedParamsTable
-    args={resolvedLogDesc.args}
-    paramTypes={resolvedLogDesc.fragment?.inputs}
-    hasParamNames={true}
-      />
-      </TwoColumnPanel>
-  )
-              } </div>);
+const EvmLogDisplay: FC<LogDescProps> = ({ resolvedLogDesc }) => {
+  return (
+    <div>
+      {" "}
+      {resolvedLogDesc === undefined ? (
+        <TwoColumnPanel>Waiting for data...</TwoColumnPanel>
+      ) : resolvedLogDesc === null || resolvedLogDesc.fragment === undefined ? (
+        <TwoColumnPanel>Cannot decode data</TwoColumnPanel>
+      ) : (
+        <TwoColumnPanel>
+          <DecodedLogSignature event={resolvedLogDesc.fragment} />
+          <DecodedParamsTable
+            args={resolvedLogDesc.args}
+            paramTypes={resolvedLogDesc.fragment?.inputs}
+            hasParamNames={true}
+          />
+        </TwoColumnPanel>
+      )}{" "}
+    </div>
+  );
 };
 
 /// Display a scilla log; if the log were null, we would have defaulted to
 ///  EvmLogDisplay, so no need to handle undefined or null.
-const ScillaLogDisplay: FC<ScillaLog> = ( scillaLogDesc ) => {
-  return (  <div> <TwoColumnPanel> 
-    <DecodedScillaLogSignature name={scillaLogDesc.eventName} address={scillaLogDesc.address} />
-    <DecodedScillaParamsTable params={ scillaLogDesc.params as any } />
-     </TwoColumnPanel>
+const ScillaLogDisplay: FC<ScillaLog> = (scillaLogDesc) => {
+  return (
+    <div>
+      {" "}
+      <TwoColumnPanel>
+        <DecodedScillaLogSignature
+          name={scillaLogDesc.eventName}
+          address={scillaLogDesc.address}
+        />
+        <DecodedScillaParamsTable params={scillaLogDesc.params as any} />
+      </TwoColumnPanel>
     </div>
-    )
-}
+  );
+};
 
-const ScillaEncapsDisplay: FC<ScillaEncapsLog> = ( scillaEncaps ) => {
-  return (<div> <TwoColumnPanel>
-    <DecodedScillaEncaps kind={scillaEncaps.kind} description={scillaEncaps.description} />
-    </TwoColumnPanel>
+const ScillaEncapsDisplay: FC<ScillaEncapsLog> = (scillaEncaps) => {
+  return (
+    <div>
+      {" "}
+      <TwoColumnPanel>
+        <DecodedScillaEncaps
+          kind={scillaEncaps.kind}
+          description={scillaEncaps.description}
+        />
+      </TwoColumnPanel>
     </div>
-    )
-}
-
+  );
+};
 
 const LogEntry: FC<LogEntryProps> = ({ log }) => {
   const { provider } = useContext(RuntimeContext);
   const match = useSourcifyMetadata(log.address, provider?._network.chainId);
 
-  const scillaLogDesc : ScillaLog | undefined = useMemo(() => {
+  const scillaLogDesc: ScillaLog | undefined = useMemo(() => {
     // Scilla logs are encoded as a single JSON string.
     try {
-      const data = JSON.parse(AbiCoder.defaultAbiCoder().decode(["string"], log.data)[0]);
+      const data = JSON.parse(
+        AbiCoder.defaultAbiCoder().decode(["string"], log.data)[0],
+      );
       return {
         eventName: data._eventname,
         address: data.address,
-        params: data.params
-      }
+        params: data.params,
+      };
     } catch (err) {
       // Silently ignore on purpose
       return undefined;
     }
   }, [log]);
 
-  const logDesc =
-    useMemo(() => {
+  const logDesc = useMemo(() => {
     if (!match) {
       return match;
     }
@@ -118,19 +140,23 @@ const LogEntry: FC<LogEntryProps> = ({ log }) => {
   // Don't use id() here - the semantics we want are precisely those of the ZIP.
   // - rrw 2023-12-18
   const scillaErrorTopic = keccak256(toUtf8Bytes("ScillaError(string)"));
-  const scillaExceptionTopic = keccak256(toUtf8Bytes("ScillaException(string)"));
+  const scillaExceptionTopic = keccak256(
+    toUtf8Bytes("ScillaException(string)"),
+  );
   const topic0ScillaEncapsLogDesc = useMemo(() => {
-    const byteTopic0= rawTopic0.toLowerCase();
+    const byteTopic0 = rawTopic0.toLowerCase();
 
-    if (byteTopic0 == scillaExceptionTopic ||
-      byteTopic0 == scillaErrorTopic) {
+    if (byteTopic0 == scillaExceptionTopic || byteTopic0 == scillaErrorTopic) {
       try {
-        let kind = (byteTopic0 == scillaExceptionTopic) ? "Forwarded_Scilla_Exception" : "Forwarded_Scilla_Error";
+        let kind =
+          byteTopic0 == scillaExceptionTopic
+            ? "Forwarded_Scilla_Exception"
+            : "Forwarded_Scilla_Error";
         let parsed = AbiCoder.defaultAbiCoder().decode(["string"], log.data);
         return {
           kind,
           description: parsed[0],
-        }
+        };
       } catch (err) {
         console.log(`Failed to parse Scilla error ${err}`);
         return undefined;
@@ -139,7 +165,7 @@ const LogEntry: FC<LogEntryProps> = ({ log }) => {
     return undefined;
   }, [rawTopic0, log]);
 
-  const topic0 = rawTopic0 ? useTopic0(rawTopic0): "";
+  const topic0 = rawTopic0 ? useTopic0(rawTopic0) : "";
 
   const topic0LogDesc = useMemo(() => {
     if (!topic0) {
@@ -187,15 +213,25 @@ const LogEntry: FC<LogEntryProps> = ({ log }) => {
             </TwoColumnPanel>
           </Tab.List>
           <Tab.Panels as={React.Fragment}>
-      <Tab.Panel>
-      { (resolvedLogDesc !== undefined && resolvedLogDesc !== null) ?
-        <EvmLogDisplay resolvedLogDesc={resolvedLogDesc} /> :
-        ((scillaLogDesc !== null && scillaLogDesc !== undefined) ?
-          <ScillaLogDisplay eventName={scillaLogDesc.eventName} address={scillaLogDesc.address} params={scillaLogDesc.params} /> :
-         ( topic0ScillaEncapsLogDesc !== null && topic0ScillaEncapsLogDesc !== undefined ?
-           <ScillaEncapsDisplay kind={topic0ScillaEncapsLogDesc.kind} description={topic0ScillaEncapsLogDesc.description} /> :
-           <div /> ))}
-      </Tab.Panel>
+            <Tab.Panel>
+              {resolvedLogDesc !== undefined && resolvedLogDesc !== null ? (
+                <EvmLogDisplay resolvedLogDesc={resolvedLogDesc} />
+              ) : scillaLogDesc !== null && scillaLogDesc !== undefined ? (
+                <ScillaLogDisplay
+                  eventName={scillaLogDesc.eventName}
+                  address={scillaLogDesc.address}
+                  params={scillaLogDesc.params}
+                />
+              ) : topic0ScillaEncapsLogDesc !== null &&
+                topic0ScillaEncapsLogDesc !== undefined ? (
+                <ScillaEncapsDisplay
+                  kind={topic0ScillaEncapsLogDesc.kind}
+                  description={topic0ScillaEncapsLogDesc.description}
+                />
+              ) : (
+                <div />
+              )}
+            </Tab.Panel>
             <Tab.Panel as={React.Fragment}>
               <RawLog topics={log.topics} data={log.data} />
             </Tab.Panel>
