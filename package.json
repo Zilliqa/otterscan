@@ -27,7 +27,7 @@
     "@types/react-dom": "^18.2.18",
     "@types/react-highlight": "^0.12.8",
     "@types/react-syntax-highlighter": "^15.5.11",
-    "ethers": "file:///home/rrw/work/zilliqa/src/ethers.js",
+    "ethers": "zilliqa/ethers.js#ethers-zq",
     "@zilliqa-js/zilliqa" : "^3.5.0",
     "highlightjs-solidity": "^2.0.6",
     "prettier-plugin-organize-imports": "^3.2.4",
