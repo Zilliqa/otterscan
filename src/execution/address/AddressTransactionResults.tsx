@@ -35,7 +35,7 @@ const AddressTransactionResults: FC<AddressAwareComponentProps> = ({
     throw new Error("addressOrName couldn't be undefined here");
   }
 
-  usePageTitle(`Address ${addressOrName}`);
+  usePageTitle(`Address ${uncheckedAddressOrName}`);
 
   const [searchParams] = useSearchParams();
   const hash = searchParams.get("h");
