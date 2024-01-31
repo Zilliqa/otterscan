@@ -28,7 +28,7 @@ const AddressSwap: React.FC<AddressSwapProps> = ({addr}) => {
     addrPair &&
     <>
       <span className="font-address text-base text-gray-500">
-        {addrPair[toggle]}
+      {addrPair[toggle]}&nbsp;
     </span>
       <button
        className={`space-x-1 text-gray-500 focus:outline-none 

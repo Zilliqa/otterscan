@@ -393,8 +393,12 @@ export const useTraceTransaction = (
     }
 
     const traceTx = async () => {
-      const results = await provider.send("ots_traceTransaction", [txHash]);
+      let results = await provider.send("ots_traceTransaction", [txHash]);
 
+      // null here means there was no trace
+      if (results == null) {
+        results = [ ]
+      }
       // Implement better formatter
       for (let i = 0; i < results.length; i++) {
         results[i].from = formatter.address(results[i].from);
@@ -482,9 +486,14 @@ export const useTransactionError = (
       ])) as string;
 
       // Empty or success
-      if (result === "0x") {
+      if (result === "0x" || result == null) {
         setErrorMsg(undefined);
-        setData(result);
+        if (result == null) {
+          // Avoid problems later :-)
+          setData("0x");
+        } else {
+          setData(result);
+        }
         setCustomError(false);
         return;
       }
@@ -686,6 +695,13 @@ export const useHasCode = (
   blockTag: BlockTag = "latest",
 ): boolean | undefined => {
   const fetcher = providerFetcher(provider);
+  // @todo Zilliqa 1  ignores the blockTag and so we set it to 0 if it is "latest".
+  //       When ZQ2 comes along, we will need to remember that this is ZQ2.
+  //       This is also rather horrific in that we lie about the contents of a block
+  //       because ZQ1 is not capable of time travel and we need to query eg.
+  //       the state of a contract at the block a txn took place :-(
+  blockTag = 0
+
   const { data, error } = useSWRImmutable(
     ["ots_hasCode", address, blockTag],
     fetcher,
