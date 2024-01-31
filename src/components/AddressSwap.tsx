@@ -25,13 +25,13 @@ const AddressSwap: React.FC<AddressSwapProps> = ({addr}) => {
   }, [addr])
 
   return (
-    addrPair && 
+    addrPair &&
     <>
       <span className="font-address text-base text-gray-500">
         {addrPair[toggle]}
-      </span>
+    </span>
       <button
-        className={`self-center flex flex-no-wrap justify-center items-center space-x-1 text-gray-500 focus:outline-none 
+       className={`space-x-1 text-gray-500 focus:outline-none 
         transition-colors transition-shadows bg-gray-200 hover:bg-gray-500 hover:text-gray-200 hover:shadow w-7 h-7 rounded-full text-xs`}
         title="Switch Address Form"
         onClick={() => {

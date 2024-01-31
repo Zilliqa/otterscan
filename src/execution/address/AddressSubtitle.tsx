@@ -34,8 +34,7 @@ const AddressSubtitle: FC<AddressSubtitleProps> = ({
       <span>Address</span>
       <span data-test="address">
       <AddressSwap addr={address} />
-    </span>
-      <Copy value={address} rounded />
+      </span>
         {/* Only display faucets for testnets who actually have any */}
         {faucets && faucets.length > 0 && <Faucet address={address} rounded />}
         {isENS && (
@@ -43,7 +42,7 @@ const AddressSubtitle: FC<AddressSubtitleProps> = ({
             ENS: {addressOrName}
           </span>
         )}
-        {config?.experimental && <AddressAttributes address={address} full />}
+    {config?.experimental && <AddressAttributes address={address} full />}
       </div>
     </StandardSubtitle>
   );

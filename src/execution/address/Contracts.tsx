@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext, useMemo } from "react";
 import { Menu } from "@headlessui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ContentFrame from "../../components/ContentFrame";
 import ExternalLink from "../../components/ExternalLink";
 import InfoRow from "../../components/InfoRow";
@@ -16,7 +15,7 @@ import ContractFromRepo from "./ContractFromRepo";
 import ContractABI from "./contract/ContractABI";
 import { useGetCode } from "../../useErigonHooks";
 import StandardTextarea from "../../components/StandardTextarea";
-import { toUtf8String } from "ethers/lib/utils";
+import { toUtf8String } from "ethers";
 import ScillaContract from "./ScillaContract";
 
 type ContractsProps = {
@@ -41,20 +40,6 @@ const Contracts: React.FC<ContractsProps> = ({ checksummedAddress, match }) => {
     }
   }, [code]);
   usePageTitle(`Contract | ${checksummedAddress}`);
-  const code = useGetCode(provider, checksummedAddress);
-  const scillaCode = useMemo(() => {
-    try {
-      if (code) {
-        let s = toUtf8String(code);
-        if (s.startsWith("scilla_version")) {
-          return s;
-        }
-      }
-    } catch (err) {
-      // Silently ignore on purpose
-      return undefined;
-    }
-  }, [code]);
 
   const [selected, setSelected] = useState<string>();
   useEffect(() => {

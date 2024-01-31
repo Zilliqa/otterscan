@@ -9,9 +9,6 @@ import { ProcessedTransaction } from "../../types";
 import { PAGE_SIZE } from "../../params";
 import ResultHeader from "../../search/ResultHeader";
 import SearchResultNavBar from "../../search/SearchResultNavBar";
-import TransactionItem from "../../search/TransactionItem";
-import { totalTransactionsFormatter } from "../../search/messages";
-import { useFeeToggler } from "../../search/useFeeToggler";
 import StandardSelectionBoundary from "../../selection/StandardSelectionBoundary";
 
 type BlockTransactionResultsProps = {
