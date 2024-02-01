@@ -16,8 +16,8 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import useSWR, { Fetcher } from "swr";
 import useSWRImmutable from "swr/immutable";
-import erc20 from "./erc20.json";
 import useSWRInfinite from "swr/infinite";
+import erc20 from "./erc20.json";
 import {
   ChecksummedAddress,
   InternalOperation,
@@ -28,8 +28,6 @@ import {
   TransactionData,
 } from "./types";
 import { formatter } from "./utils/formatter";
-import { DsBlockObj } from '@zilliqa-js/core/dist/types/src/types'
-import { Zilliqa } from "@zilliqa-js/zilliqa";
 
 const TRANSFER_TOPIC =
   "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
@@ -99,7 +97,7 @@ const blockTransactionsFetcher: Fetcher<
   ]);
   const _block = formatter.blockParamsWithTransactions(result.fullblock);
   const _receipts = result.receipts;
-  
+
   const rawTxs = _block.transactions
     .map((t: TransactionResponseParams, i: number): ProcessedTransaction => {
       const _rawReceipt = _receipts[i];
@@ -192,31 +190,44 @@ export const useRecentBlocks = (
   provider: JsonRpcApiProvider | undefined,
   blockNumber: number | undefined,
   pageNumber: number,
-  pageSize: number
+  pageSize: number,
 ): { data: (ExtendedBlock | null)[] | undefined; isLoading: boolean } => {
-  const startBlockNum : number | undefined = blockNumber ? blockNumber - ( pageSize * pageNumber) : undefined;
+  const startBlockNum: number | undefined = blockNumber
+    ? blockNumber - pageSize * pageNumber
+    : undefined;
 
   // This function is used by SWR to get the key which we pass to the fetcher function
-  // It also searches the cache for the presence of this key and if found returns the 
+  // It also searches the cache for the presence of this key and if found returns the
   // cached value. The pageSize differenciates the cache between components so that different components
   // do not display incorrect number of displays
-  const getKey = (pageIndex : number) 
-  : [ JsonRpcApiProvider , string, number] | null =>  {
-    if((provider == undefined || startBlockNum == undefined) 
-    || (startBlockNum - pageIndex < 0)) return null;
+  const getKey = (
+    pageIndex: number,
+  ): [JsonRpcApiProvider, string, number] | null => {
+    if (
+      provider == undefined ||
+      startBlockNum == undefined ||
+      startBlockNum - pageIndex < 0
+    )
+      return null;
 
-    return [provider, (startBlockNum - pageIndex).toString(), pageSize]
-  }
+    return [provider, (startBlockNum - pageIndex).toString(), pageSize];
+  };
 
   // Calls the fetcher to fetch the most recent pageNumber of blocks in parallel
-  const { data, error, isLoading, isValidating } = useSWRInfinite(getKey,
+  const { data, error, isLoading, isValidating } = useSWRInfinite(
+    getKey,
     blockDataFetcher,
-    { keepPreviousData: true, revalidateFirstPage : false, initialSize : pageSize, parallel : true }
+    {
+      keepPreviousData: true,
+      revalidateFirstPage: false,
+      initialSize: pageSize,
+      parallel: true,
+    },
   );
   if (error) {
     return { data: undefined, isLoading: false };
   }
-  return { data, isLoading :  isLoading || isValidating};
+  return { data, isLoading: isLoading || isValidating };
 };
 
 export const useBlockDataFromTransaction = (
@@ -239,7 +250,6 @@ export const useTxData = (
   const [txData, setTxData] = useState<TransactionData | undefined | null>();
 
   useEffect(() => {
-
     if (!provider) {
       return;
     }
@@ -332,7 +342,7 @@ export const useInternalOperations = (
     }
 
     const _t: InternalOperation[] = [];
-    if(data){
+    if (data) {
       for (const t of data) {
         _t.push({
           type: t.type,
@@ -393,8 +403,12 @@ export const useTraceTransaction = (
     }
 
     const traceTx = async () => {
-      const results = await provider.send("ots_traceTransaction", [txHash]);
+      let results = await provider.send("ots_traceTransaction", [txHash]);
 
+      // null here means there was no trace
+      if (results == null) {
+        results = [];
+      }
       // Implement better formatter
       for (let i = 0; i < results.length; i++) {
         results[i].from = formatter.address(results[i].from);
@@ -482,9 +496,14 @@ export const useTransactionError = (
       ])) as string;
 
       // Empty or success
-      if (result === "0x") {
+      if (result === "0x" || result == null) {
         setErrorMsg(undefined);
-        setData(result);
+        if (result == null) {
+          // Avoid problems later :-)
+          setData("0x");
+        } else {
+          setData(result);
+        }
         setCustomError(false);
         return;
       }
@@ -686,6 +705,13 @@ export const useHasCode = (
   blockTag: BlockTag = "latest",
 ): boolean | undefined => {
   const fetcher = providerFetcher(provider);
+  // @todo Zilliqa 1  ignores the blockTag and so we set it to 0 if it is "latest".
+  //       When ZQ2 comes along, we will need to remember that this is ZQ2.
+  //       This is also rather horrific in that we lie about the contents of a block
+  //       because ZQ1 is not capable of time travel and we need to query eg.
+  //       the state of a contract at the block a txn took place :-(
+  blockTag = 0;
+
   const { data, error } = useSWRImmutable(
     ["ots_hasCode", address, blockTag],
     fetcher,
@@ -696,15 +722,30 @@ export const useHasCode = (
   return data as boolean | undefined;
 };
 
+export const useGetRawReceipt = (
+  provider: JsonRpcApiProvider | undefined,
+  address: ChecksummedAddress | undefined,
+): string | undefined => {
+  const fetcher = providerFetcher(provider);
+  const { data, error } = useSWRImmutable(
+    ["eth_getTransactionReceipt", address],
+    fetcher,
+  );
+  if (error) {
+    return undefined;
+  }
+  return data as string | undefined;
+};
+
 export const useGetCode = (
   provider: JsonRpcApiProvider | undefined,
   address: ChecksummedAddress | undefined,
-  blockTag: BlockTag = "latest"
+  blockTag: BlockTag = "latest",
 ): string | undefined => {
   const fetcher = providerFetcher(provider);
   const { data, error } = useSWRImmutable(
     ["eth_getCode", address, blockTag],
-    fetcher
+    fetcher,
   );
   if (error) {
     return undefined;

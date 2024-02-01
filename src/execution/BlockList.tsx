@@ -1,26 +1,31 @@
 import React, { useContext } from "react";
 import { useSearchParams } from "react-router-dom";
-import StandardFrame from "../components/StandardFrame";
-import { PAGE_SIZE } from "../params";
-import { RuntimeContext } from "../useRuntime";
-import StandardSubtitle from "../components/StandardSubtitle";
-import { useLatestBlockNumber } from "../useLatestBlock";
-import { useRecentBlocks } from "../useErigonHooks";
-import BlockItem from "../search/BlockItem";
-import { PendingBlockResults } from "../search/PendingResults";
-import StandardSelectionBoundary from "../selection/StandardSelectionBoundary";
-import { useFeeToggler } from "../search/useFeeToggler";
 import ContentFrame from "../components/ContentFrame";
+import StandardFrame from "../components/StandardFrame";
+import StandardSubtitle from "../components/StandardSubtitle";
+import { PAGE_SIZE } from "../params";
+import BlockItem from "../search/BlockItem";
 import BlockResultHeader from "../search/BlockResultHeader";
-import { totalBlocksFormatter } from "../search/messages";
+import { PendingBlockResults } from "../search/PendingResults";
 import SearchResultNavBar from "../search/SearchResultNavBar";
+import { totalBlocksFormatter } from "../search/messages";
+import {
+  EmptyBlocksDisplay,
+  useEmptyBlocksToggler,
+} from "../search/useEmptyBlocksToggler";
+import { useFeeToggler } from "../search/useFeeToggler";
+import StandardSelectionBoundary from "../selection/StandardSelectionBoundary";
+import { useRecentBlocks } from "../useErigonHooks";
+import { useLatestBlockNumber } from "../useLatestBlock";
+import { RuntimeContext } from "../useRuntime";
 
 const BlockList: React.FC = () => {
   const { provider } = useContext(RuntimeContext);
-  
+
   const latestBlockNum = useLatestBlockNumber(provider);
   const [feeDisplay, feeDisplayToggler] = useFeeToggler();
-  
+  const [emptyBlocksDisplay, emptyBlocksDisplayToggler] =
+    useEmptyBlocksToggler();
 
   const [searchParams] = useSearchParams();
   let pageNumber = 1;
@@ -35,7 +40,7 @@ const BlockList: React.FC = () => {
     provider,
     latestBlockNum,
     pageNumber - 1,
-    PAGE_SIZE
+    PAGE_SIZE,
   );
 
   return (
@@ -44,26 +49,38 @@ const BlockList: React.FC = () => {
         <div className="flex items-baseline space-x-1">Tx Block List</div>
       </StandardSubtitle>
       <ContentFrame isLoading={isLoading}>
-      <SearchResultNavBar
-        pageNumber={pageNumber}
-        pageSize={PAGE_SIZE}
-        total={latestBlockNum}
-        totalFormatter={totalBlocksFormatter}
-      />
+        <SearchResultNavBar
+          pageNumber={pageNumber}
+          pageSize={PAGE_SIZE}
+          total={latestBlockNum}
+          totalFormatter={totalBlocksFormatter}
+        />
         <BlockResultHeader
-            feeDisplay={feeDisplay}
-            feeDisplayToggler={feeDisplayToggler}
+          feeDisplay={feeDisplay}
+          feeDisplayToggler={feeDisplayToggler}
+          emptyBlocksDisplay={emptyBlocksDisplay}
+          emptyBlocksDisplayToggler={emptyBlocksDisplayToggler}
         />
         {data ? (
-            <StandardSelectionBoundary>
-            {data.map((block) => (
-                block ? <BlockItem key={block.number} block={block} feeDisplay={feeDisplay} /> : <></> 
-            ))}
-            </StandardSelectionBoundary>
+          <StandardSelectionBoundary>
+            {data
+              .map((block) =>
+                block &&
+                (emptyBlocksDisplay === EmptyBlocksDisplay.SHOW_EMPTY_BLOCKS ||
+                  block.transactionCount != 0) ? (
+                  <BlockItem
+                    key={block.number}
+                    block={block}
+                    feeDisplay={feeDisplay}
+                  />
+                ) : undefined,
+              )
+              .filter((blk) => blk !== undefined)}
+          </StandardSelectionBoundary>
         ) : (
-            <PendingBlockResults />
+          <PendingBlockResults />
         )}
-    </ContentFrame>
+      </ContentFrame>
     </StandardFrame>
   );
 };

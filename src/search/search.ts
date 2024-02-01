@@ -250,9 +250,9 @@ const doSearch = async (q: string, navigate: NavigateFunction) => {
   }
 
   // DS Block number?
-  if(q.charAt(0) === "#"){
+  if (q.charAt(0) === "#") {
     const dsBlockNumber = parseInt(q.substring(1));
-    if(!isNaN(dsBlockNumber)) {
+    if (!isNaN(dsBlockNumber)) {
       navigate(`/dsblock/${dsBlockNumber}`);
       return;
     }

@@ -14,6 +14,7 @@ import ExpanderSwitch from "../../components/ExpanderSwitch";
 import ExternalLink from "../../components/ExternalLink";
 import { feePreset } from "../../components/FiatValue";
 import FormattedBalance from "../../components/FormattedBalance";
+import HelpButton from "../../components/HelpButton";
 import InfoRow from "../../components/InfoRow";
 import InternalTransactionOperation from "../../components/InternalTransactionOperation";
 import MethodName from "../../components/MethodName";
@@ -69,7 +70,7 @@ const Details: FC<DetailsProps> = ({ txData }) => {
 
   const fourBytes =
     txData.to !== null ? extract4Bytes(txData.data) ?? "0x" : "0x";
-  const fourBytesEntry = use4Bytes(fourBytes);
+  const fourBytesEntry = use4Bytes(fourBytes, txData.to ?? undefined);
   const fourBytesTxDesc = useTransactionDescription(
     fourBytesEntry,
     txData.data,
@@ -113,12 +114,15 @@ const Details: FC<DetailsProps> = ({ txData }) => {
     ? devDoc?.errors?.[errorDescription.signature]?.[0]
     : undefined;
   const [expanded, setExpanded] = useState<boolean>(false);
+  const [showFunctionHelp, setShowFunctionHelp] = useState<boolean>(false);
 
   return (
     <ContentFrame tabs>
       <InfoRow title="Transaction Hash">
         <div className="flex items-baseline space-x-2">
-          <span className="font-hash">{txData.transactionHash}</span>
+          <span className="font-hash" data-test="tx-hash">
+            {txData.transactionHash}
+          </span>
           <Copy value={txData.transactionHash} />
         </div>
       </InfoRow>
@@ -132,7 +136,7 @@ const Details: FC<DetailsProps> = ({ txData }) => {
               icon={faCheckCircle}
               size="1x"
             />
-            <span>Success</span>
+            <span data-test="status">Success</span>
           </span>
         ) : (
           <>
@@ -282,7 +286,32 @@ const Details: FC<DetailsProps> = ({ txData }) => {
       </InfoRow>
       {txData.to && (
         <InfoRow title="Transaction Action">
-          <MethodName data={txData.data} />
+          <div className="flex space-x-1">
+            <MethodName data={txData.data} to={txData.to} />{" "}
+            {(userMethod || devMethod) && (
+              <HelpButton
+                checked={showFunctionHelp}
+                onChange={setShowFunctionHelp}
+              />
+            )}
+          </div>
+          {(userMethod || devMethod) && showFunctionHelp && (
+            <div className="mt-1 text-gray-800">
+              {userMethod && userMethod.notice && (
+                <div className="col-span-12 gap-x-2 pt-1 px-1 font-normal">
+                  {userMethod.notice}
+                </div>
+              )}
+              {devMethod && devMethod.details && (
+                <div className="col-span-12 gap-x-2 pt-1 px-1 font-normal">
+                  <span className="font-bold italic text-xs mr-2 select-none">
+                    dev{" "}
+                  </span>
+                  {devMethod.details}
+                </div>
+              )}
+            </div>
+          )}
         </InfoRow>
       )}
       {tokenTransfers && tokenTransfers.length > 0 && (

@@ -14,7 +14,9 @@ export const totalBlocksFormatter = (total: number) =>
   `A total of ${commify(total)} ${total === 1 ? "block" : "blocks"} found`;
 
 export const totalContractsFormatter = (total: number) =>
-  `A total of ${commify(total)} ${total > 1 ? "contracts" : "contract"} found`;
+  `A total of ${commify(total)} ${
+    total === 1 ? "contract" : "contracts"
+  } found`;
 
 export const getTotalFormatter = (
   typeName: string,
@@ -32,4 +34,3 @@ export const getTotalFormatter = (
       return (total: number) => `A total of ${total} found`;
   }
 };
-

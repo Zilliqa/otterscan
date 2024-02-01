@@ -1,9 +1,9 @@
+import { Zilliqa } from "@zilliqa-js/zilliqa";
 import { JsonRpcApiProvider, JsonRpcProvider, Network } from "ethers";
 import { createContext, useMemo } from "react";
 import { ConnectionStatus } from "./types";
 import { OtterscanConfig, useConfig } from "./useConfig";
 import { useProvider } from "./useProvider";
-import { Zilliqa } from "@zilliqa-js/zilliqa";
 import { useZilliqa } from "./useZilliqa";
 
 /**
@@ -28,9 +28,9 @@ export type OtterscanRuntime = {
   provider?: JsonRpcApiProvider;
 
   /**
-    * Zilliqa object; may be undefined if not ready because of config fetching,
-    * probing occurring, etc.
-  */
+   * Zilliqa object; may be undefined if not ready because of config fetching,
+   * probing occurring, etc.
+   */
   zilliqa?: Zilliqa;
 };
 
@@ -71,7 +71,7 @@ export const useRuntime = (): OtterscanRuntime => {
         provider: new JsonRpcProvider(effectiveConfig.erigonURL, network, {
           staticNetwork: network,
         }),
-        zilliqa : zilliqa,
+        zilliqa: zilliqa,
       };
     }
     return { config: effectiveConfig, connStatus, provider, zilliqa };

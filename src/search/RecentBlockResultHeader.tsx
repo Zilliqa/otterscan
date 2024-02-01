@@ -2,13 +2,13 @@ import React from "react";
 import { FeeDisplay } from "./useFeeToggler";
 
 export type ResultHeaderProps = {
-    feeDisplay: FeeDisplay,
-    feeDisplayToggler: () => void
+  feeDisplay: FeeDisplay;
+  feeDisplayToggler: () => void;
 };
 
 const RecentBlockResultHeader: React.FC<ResultHeaderProps> = ({
-    feeDisplay,
-    feeDisplayToggler
+  feeDisplay,
+  feeDisplayToggler,
 }) => (
   <div className="grid grid-cols-5 gap-x-1 border-t border-b border-gray-200 bg-gray-100 px-2 py-2 text-sm font-bold text-gray-500">
     <div>Height</div>

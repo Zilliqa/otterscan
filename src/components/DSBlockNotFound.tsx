@@ -5,9 +5,13 @@ type DSBlockNotFoundProps = {
   blockNumberOrHash: string;
 };
 
-const DSBlockNotFound: React.FC<DSBlockNotFoundProps> = ({ blockNumberOrHash }) => (
+const DSBlockNotFound: React.FC<DSBlockNotFoundProps> = ({
+  blockNumberOrHash,
+}) => (
   <ContentFrame>
-    <div className="py-4 text-sm">DS Block "{blockNumberOrHash}" not found.</div>
+    <div className="py-4 text-sm">
+      DS Block "{blockNumberOrHash}" not found.
+    </div>
   </ContentFrame>
 );
 

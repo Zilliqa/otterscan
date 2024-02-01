@@ -6,18 +6,18 @@ import InfoRow from "../../components/InfoRow";
 import NativeTokenAmountAndFiat from "../../components/NativeTokenAmountAndFiat";
 import TransactionLink from "../../components/TransactionLink";
 import { useProxyAttributes } from "../../ots2/usePrototypeTransferHooks";
-import ResultHeader from "../../search/ResultHeader";
 import { PendingTransactionResults } from "../../search/PendingResults";
-import TransactionResultHeader from "../../search/TransactionResultHeader";
-import { SearchController } from "../../search/search";
 import TransactionItem from "../../search/TransactionItem";
+import TransactionResultHeader from "../../search/TransactionResultHeader";
 import UndefinedPageControl from "../../search/UndefinedPageControl";
+import { SearchController } from "../../search/search";
 import { useFeeToggler } from "../../search/useFeeToggler";
 import StandardSelectionBoundary from "../../selection/StandardSelectionBoundary";
 import { ProcessedTransaction } from "../../types";
 import { BlockNumberContext } from "../../useBlockTagContext";
 import { useAddressBalance, useContractCreator } from "../../useErigonHooks";
 import { RuntimeContext } from "../../useRuntime";
+import { usePageTitle } from "../../useTitle";
 import DecoratedAddressLink from "../components/DecoratedAddressLink";
 import TransactionAddressWithCopy from "../components/TransactionAddressWithCopy";
 import { AddressAwareComponentProps } from "../types";
@@ -33,6 +33,8 @@ const AddressTransactionResults: FC<AddressAwareComponentProps> = ({
   if (uncheckedAddressOrName === undefined) {
     throw new Error("addressOrName couldn't be undefined here");
   }
+
+  usePageTitle(`Address ${uncheckedAddressOrName}`);
 
   const [searchParams] = useSearchParams();
   const hash = searchParams.get("h");
@@ -114,13 +116,15 @@ const AddressTransactionResults: FC<AddressAwareComponentProps> = ({
           </InfoRow>
           {creator && (
             <InfoRow title="Contract creator">
-              <div className="flex divide-x-2 divide-dotted divide-gray-300">
+              <div className="flex flex-col md:flex-row divide-x-2 divide-dotted divide-gray-300">
                 <TransactionAddressWithCopy
                   address={creator.creator}
                   showCodeIndicator
                 />
-                <div className="ml-3 flex items-baseline pl-3">
-                  <TransactionLink txHash={creator.hash} />
+                <div className="md:ml-3 flex items-baseline pl-3 truncate">
+                  <div className="truncate">
+                    <TransactionLink txHash={creator.hash} />
+                  </div>
                 </div>
               </div>
             </InfoRow>
@@ -170,7 +174,10 @@ const NavBar: FC<NavBarProps> = ({ address, page, controller }) => (
       {page === undefined ? (
         <>Waiting for search results...</>
       ) : (
-        <>{page.length} transactions on this page</>
+        <>
+          <span data-test="page-count">{page.length}</span> transactions on this
+          page
+        </>
       )}
     </div>
     <UndefinedPageControl
