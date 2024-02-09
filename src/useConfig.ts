@@ -159,7 +159,7 @@ export const useConfig = (
         );
       }
     }
-    _config.version = "1.0.0";
+    _config.version = "zq1.0.0";
     return _config;
   }, [data]);
 
