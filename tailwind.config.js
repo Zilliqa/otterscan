@@ -17,15 +17,18 @@ export default {
         "link-blue-hover": "#0468ab",
         "verified-contract": "#2b50aa",
         "verified-contract-hover": "#26007b",
+        "zq-darkblue": "#2B9297",
+        "zq-lightblue": "#4DBBBA",
+        "zq-whitetext": "#F0F0F0"
       },
       fontFamily: {
-        sans: ["Roboto"],
-        title: ["Space Grotesk"],
-        address: ["Roboto Mono"],
+        sans: ["Montserrat"],
+        title: ["Montserrat"],
+        address: ["Montserrat"],
         hash: ["Roboto Mono"],
         data: ["Roboto Mono"],
         balance: ["Fira Code"],
-        blocknum: ["Roboto"],
+        blocknum: ["Montserrat"],
         code: ["Fira Code"],
       },
       borderColor: {

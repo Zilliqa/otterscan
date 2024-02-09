@@ -155,6 +155,7 @@ export const useConfig = (
         );
       }
     }
+    _config.version = "1.0.0";
     return _config;
   }, [data]);
 

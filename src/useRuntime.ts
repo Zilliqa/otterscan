@@ -32,6 +32,7 @@ export type OtterscanRuntime = {
    * probing occurring, etc.
    */
   zilliqa?: Zilliqa;
+
 };
 
 export const useRuntime = (): OtterscanRuntime => {
@@ -74,6 +75,7 @@ export const useRuntime = (): OtterscanRuntime => {
         zilliqa: zilliqa,
       };
     }
+
     return { config: effectiveConfig, connStatus, provider, zilliqa };
   }, [effectiveConfig, connStatus, provider, zilliqa]);
 

@@ -53,7 +53,7 @@ const PriceBox: React.FC = () => {
       {latestPriceData && (
         <div
           className={`flex space-x-2 rounded-lg px-2 py-1 ${
-            maybeOutdated ? "bg-orange-200" : "bg-gray-100"
+            maybeOutdated ? "bg-zq-lightblue" : "bg-gray-100"
           } font-sans text-xs text-gray-800`}
         >
           <span
