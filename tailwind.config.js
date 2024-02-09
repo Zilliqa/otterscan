@@ -19,7 +19,7 @@ export default {
         "verified-contract-hover": "#26007b",
         "zq-darkblue": "#2B9297",
         "zq-lightblue": "#4DBBBA",
-        "zq-whitetext": "#F0F0F0"
+        "zq-whitetext": "#F0F0F0",
       },
       fontFamily: {
         sans: ["Montserrat"],

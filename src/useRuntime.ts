@@ -32,7 +32,6 @@ export type OtterscanRuntime = {
    * probing occurring, etc.
    */
   zilliqa?: Zilliqa;
-
 };
 
 export const useRuntime = (): OtterscanRuntime => {

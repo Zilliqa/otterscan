@@ -43,8 +43,7 @@ const ConnectionErrorPanel: React.FC<ConnectionErrorPanelProps> = ({
             <Step
               type="error"
               msg="It does not seem to contain up-to-date Otterscan patches"
-            >
-            </Step>
+            ></Step>
           </>
         )}
       </div>
