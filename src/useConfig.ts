@@ -116,6 +116,10 @@ export type OtterscanConfig = {
    * "central_server" whose values are their respective root URLs.
    */
   sourcifySources?: { [key: string]: string };
+
+  /** Version number
+   */
+  version: string;
 };
 
 /**
