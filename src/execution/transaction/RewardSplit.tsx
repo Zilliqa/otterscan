@@ -39,7 +39,7 @@ const RewardSplit: React.FC<RewardSplitProps> = ({ txData }) => {
           textColor="text-orange-800"
         />
         <div className="flex items-baseline space-x-1">
-          <span className="flex space-x-1 text-orange-500">
+          <span className="flex space-x-1 text-black">
             <span title="Burnt fees">
               <FontAwesomeIcon icon={faBurn} size="1x" />
             </span>

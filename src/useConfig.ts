@@ -116,6 +116,10 @@ export type OtterscanConfig = {
    * "central_server" whose values are their respective root URLs.
    */
   sourcifySources?: { [key: string]: string };
+
+  /** Version number
+   */
+  version: string;
 };
 
 /**
@@ -155,6 +159,7 @@ export const useConfig = (
         );
       }
     }
+    _config.version = "zq1.0.0";
     return _config;
   }, [data]);
 

@@ -24,7 +24,7 @@ const DSBlockLink: FC<DSBlockLinkProps> = ({ blockTag }) => {
       }`}
       to={dsBlockURL(blockTag)}
     >
-      <span className="text-orange-500">
+      <span className="text-black">
         <FontAwesomeIcon className="self-center" icon={faCube} size="1x" />
       </span>
       <span>{text}</span>

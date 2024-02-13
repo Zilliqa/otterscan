@@ -74,6 +74,7 @@ export const useRuntime = (): OtterscanRuntime => {
         zilliqa: zilliqa,
       };
     }
+
     return { config: effectiveConfig, connStatus, provider, zilliqa };
   }, [effectiveConfig, connStatus, provider, zilliqa]);
 
