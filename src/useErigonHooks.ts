@@ -699,31 +699,31 @@ export const providerFetcher =
     return result;
   };
 
-  export const useHasCode = (
-    provider: JsonRpcApiProvider | undefined,
-    address: ChecksummedAddress | undefined,
-    // @todo Zilliqa 1  ignores the blockTag and so we set it to 0 if it is "latest".
-    //       When ZQ2 comes along, we will need to remember that this is ZQ2.
-    //       This is also rather horrific in that we lie about the contents of a block
-    //       because ZQ1 is not capable of time travel and we need to query eg.
-    //       the state of a contract at the block a txn took place :-(
-    blockTag: BlockTag = "0",
-  ): boolean | undefined => {
-    // @todo: this fix the tests. So if the network is the local erigon node
-    // used for the tests with chainID 1337 we se the blockTag to "latest"
-    if (provider?._network.chainId === BigInt(1337)) {
-      blockTag = "latest"
-    };
-    const fetcher = providerFetcher(provider);
-    const { data, error } = useSWRImmutable(
-      ["ots_hasCode", address, blockTag],
-      fetcher,
-    );
-    if (error) {
-      return undefined;
-    }
-    return data as boolean | undefined;
-  };
+export const useHasCode = (
+  provider: JsonRpcApiProvider | undefined,
+  address: ChecksummedAddress | undefined,
+  // @todo Zilliqa 1  ignores the blockTag and so we set it to 0 if it is "latest".
+  //       When ZQ2 comes along, we will need to remember that this is ZQ2.
+  //       This is also rather horrific in that we lie about the contents of a block
+  //       because ZQ1 is not capable of time travel and we need to query eg.
+  //       the state of a contract at the block a txn took place :-(
+  blockTag: BlockTag = "0",
+): boolean | undefined => {
+  // @todo: this fixes the local devnet test. So if the network is the local erigon node
+  // used for the tests with chainID 1337 we se the blockTag to "latest"
+  if (provider?._network.chainId === BigInt(1337)) {
+    blockTag = "latest";
+  }
+  const fetcher = providerFetcher(provider);
+  const { data, error } = useSWRImmutable(
+    ["ots_hasCode", address, blockTag],
+    fetcher,
+  );
+  if (error) {
+    return undefined;
+  }
+  return data as boolean | undefined;
+};
 
 export const useGetRawReceipt = (
   provider: JsonRpcApiProvider | undefined,
