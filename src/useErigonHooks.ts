@@ -719,7 +719,7 @@ export const useHasCode = (
     //       This is also rather horrific in that we lie about the contents of a block
     //       because ZQ1 is not capable of time travel and we need to query eg.
     //       the state of a contract at the block a txn took place :-(
-    blockTag = 0
+    blockTag = 0;
   }
   const fetcher = providerFetcher(provider);
   const { data, error } = useSWRImmutable(
