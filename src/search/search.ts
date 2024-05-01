@@ -240,6 +240,9 @@ const doSearch = async (q: string, navigate: NavigateFunction) => {
   if (isHexString(q, 32)) {
     navigate(`/tx/${q}`);
     return;
+  } else if (isHexString(`0x${q}`, 32)) {
+    navigate(`/tx/0x${q}`);
+    return;
   }
 
   // Block number?
