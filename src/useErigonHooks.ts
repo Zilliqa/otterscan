@@ -17,6 +17,7 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import useSWR, { Fetcher } from "swr";
 import useSWRImmutable from "swr/immutable";
+import useSWRInfinite from "swr/infinite";
 import erc20 from "./abi/erc20.json";
 import L1Block from "./abi/optimism/L1Block.json";
 import { getOpFeeData, isOptimisticChain } from "./execution/op-tx-calculation";
@@ -212,6 +213,51 @@ export const useBlockData = (
   }
   return { data, isLoading };
 };
+
+export const useRecentBlocks = (
+  provider: JsonRpcApiProvider | undefined,
+  blockNumber: number | undefined,
+  pageNumber: number,
+  pageSize: number,
+): { data: (ExtendedBlock | null)[] | undefined; isLoading: boolean } => {
+  const startBlockNum: number | undefined = blockNumber
+    ? blockNumber - pageSize * pageNumber
+    : undefined;
+
+  // This function is used by SWR to get the key which we pass to the fetcher function
+  // It also searches the cache for the presence of this key and if found returns the
+  // cached value. The pageSize differenciates the cache between components so that different components
+  // do not display incorrect number of displays
+  const getKey = (
+    pageIndex: number,
+  ): [JsonRpcApiProvider, string, number] | null => {
+    if (
+      provider == undefined ||
+      startBlockNum == undefined ||
+      startBlockNum - pageIndex < 0
+    )
+      return null;
+
+    return [provider, (startBlockNum - pageIndex).toString(), pageSize];
+  };
+
+  // Calls the fetcher to fetch the most recent pageNumber of blocks in parallel
+  const { data, error, isLoading, isValidating } = useSWRInfinite(
+    getKey,
+    blockDataFetcher,
+    {
+      keepPreviousData: true,
+      revalidateFirstPage: false,
+      initialSize: pageSize,
+      parallel: true,
+    },
+  );
+  if (error) {
+    return { data: undefined, isLoading: false };
+  }
+  return { data, isLoading: isLoading || isValidating };
+};
+
 
 export const useBlockDataFromTransaction = (
   provider: JsonRpcApiProvider | undefined,
@@ -435,7 +481,11 @@ export const useTraceTransaction = (
     }
 
     const traceTx = async () => {
-      const results = await provider.send("ots_traceTransaction", [txHash]);
+      let results = await provider.send("ots_traceTransaction", [txHash]);
+      // null here means there was no trace
+      if (results == null) {
+        results = [];
+      }
 
       // Implement better formatter
       for (let i = 0; i < results.length; i++) {
@@ -524,9 +574,14 @@ export const useTransactionError = (
       ])) as string;
 
       // Empty or success
-      if (result === "0x") {
+      if (result === "0x" || result == null) {
         setErrorMsg(undefined);
-        setData(result);
+        if (result == null) {
+          // Avoid problems later :-)
+          setData("0x");
+        } else {
+          setData(result);
+        }
         setCustomError(false);
         return;
       }
@@ -736,6 +791,21 @@ export const useHasCode = (
     return undefined;
   }
   return data as boolean | undefined;
+};
+
+export const useGetRawReceipt = (
+  provider: JsonRpcApiProvider | undefined,
+  address: ChecksummedAddress | undefined,
+): string | undefined => {
+  const fetcher = providerFetcher(provider);
+  const { data, error } = useSWRImmutable(
+    ["eth_getTransactionReceipt", address],
+    fetcher,
+  );
+  if (error) {
+    return undefined;
+  }
+  return data as string | undefined;
 };
 
 export const useGetCode = (

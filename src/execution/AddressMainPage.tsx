@@ -2,6 +2,8 @@ import { faQuestionCircle } from "@fortawesome/free-regular-svg-icons";
 import { faCircleNotch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Tab } from "@headlessui/react";
+import { fromBech32Address } from "@zilliqa-js/crypto";
+import { validation } from "@zilliqa-js/util";
 import React, { useCallback, useContext } from "react";
 import {
   Route,
@@ -78,10 +80,14 @@ const ProxyReadContract: React.FC<AddressAwareComponentProps> = ({
 type AddressMainPageProps = {};
 
 const AddressMainPage: React.FC<AddressMainPageProps> = () => {
-  const { addressOrName, direction } = useParams();
-  if (addressOrName === undefined) {
+  const { uncheckedAddressOrName, direction } = useParams();
+  if (uncheckedAddressOrName === undefined) {
     throw new Error("addressOrName couldn't be undefined here");
   }
+
+  const addressOrName = validation.isBech32(uncheckedAddressOrName)
+    ? fromBech32Address(uncheckedAddressOrName).toLowerCase()
+    : uncheckedAddressOrName;
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();

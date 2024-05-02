@@ -23,7 +23,7 @@ const FormattedBalanceHighlighter: FC<FormattedBalanceProps> = ({
         selection !== null &&
         selection.type === "value" &&
         selection.content === value.toString()
-          ? "border-orange-400 bg-amber-100"
+          ? "border-zq-lightblue bg-amber-100"
           : "border-transparent"
       }`}
       onMouseEnter={select}

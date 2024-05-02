@@ -1,0 +1,12 @@
+--- .gitignore
++++ .gitignore
+@@ -14,6 +21,9 @@
+ 
+ # testing
+ /coverage
++/storybook-static
++/cypress/screenshots
++/cypress/videos
+ 
+ # production
+ /build

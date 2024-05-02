@@ -11,6 +11,10 @@ import { useLatestBlockHeader } from "./useLatestBlock";
 import { RuntimeContext } from "./useRuntime";
 import { usePageTitle } from "./useTitle";
 import { commify } from "./utils/utils";
+import Header from "./Header";
+import ChainInfo from "./execution/ChainInfo";
+import RecentBlocks from "./execution/block/RecentBlocks";
+import RecentDSBlocks from "./execution/block/RecentDSBlocks";
 
 const CameraScanner = lazy(() => import("./search/CameraScanner"));
 
@@ -26,6 +30,19 @@ const Home: FC = () => {
   usePageTitle("Home");
 
   return (
+    <>
+      <Header sourcifyPresent={false} />
+      <div className="mx-1 my-1">
+      <ChainInfo />
+      </div>
+      <div className="grid grid-cols-5 gap-x-1 mx-1">
+        <span className="col-span-2">
+          <RecentDSBlocks />
+       </span>
+        <span className="col-span-3">
+          <RecentBlocks />
+      </span>
+      </div>
     <div className="flex grow flex-col items-center pb-5">
       {isScanning && <CameraScanner turnOffScan={() => setScanning(false)} />}
       <div className="mb-10 mt-5 flex max-h-64 grow items-end">
@@ -43,7 +60,7 @@ const Home: FC = () => {
             type="text"
             size={50}
             data-test="home-search-input"
-            placeholder={`Search by address / txn hash / block number${
+            placeholder={`Search by address / txn hash / block number / # DSblock ${
               provider?._network.getPlugin("org.ethers.plugins.network.Ens") !==
               null
                 ? " / ENS name"
@@ -86,6 +103,7 @@ const Home: FC = () => {
         >
           <div>Latest block: {commify(latestBlock.number)}</div>
           <Timestamp value={latestBlock.timestamp} />
+          <div>Ziliqa Otterscan Version: {config?.version}</div>
         </NavLink>
       )}
       {finalizedSlotNumber !== undefined && (
@@ -98,6 +116,7 @@ const Home: FC = () => {
         </NavLink>
       )}
     </div>
+      </>
   );
 };
 

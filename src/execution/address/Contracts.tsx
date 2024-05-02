@@ -1,7 +1,8 @@
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Menu } from "@headlessui/react";
-import React, { lazy, useContext, useEffect, useState } from "react";
+import { toUtf8String } from "ethers";
+import React, { lazy, useContext, useEffect, useMemo, useState } from "react";
 import ContentFrame from "../../components/ContentFrame";
 import ExternalLink from "../../components/ExternalLink";
 import InfoRow from "../../components/InfoRow";
@@ -14,6 +15,7 @@ import { usePageTitle } from "../../useTitle";
 import { commify } from "../../utils/utils";
 import ContractFromRepo from "./ContractFromRepo";
 import ContractABI from "./contract/ContractABI";
+import ScillaContract from "./ScillaContract";
 
 const HighlightedSolidity = lazy(
   () => import("./contract/HighlightedSolidity"),
@@ -26,8 +28,21 @@ type ContractsProps = {
 
 const Contracts: React.FC<ContractsProps> = ({ checksummedAddress, match }) => {
   const { provider } = useContext(RuntimeContext);
-  usePageTitle(`Contract | ${checksummedAddress}`);
   const code = useGetCode(provider, checksummedAddress);
+  const scillaCode = useMemo(() => {
+    try {
+      if (code) {
+        let s = toUtf8String(code);
+        if (s.startsWith("scilla_version")) {
+          return s;
+        }
+      }
+    } catch (err) {
+      // Silently ignore on purpose
+      return undefined;
+    }
+  }, [code]);
+  usePageTitle(`Contract | ${checksummedAddress}`);
 
   const [selected, setSelected] = useState<string>();
   useEffect(() => {
@@ -75,13 +90,14 @@ const Contracts: React.FC<ContractsProps> = ({ checksummedAddress, match }) => {
           </InfoRow>
         </>
       )}
+    {!scillaCode && (
       <div className="py-5">
         {match === undefined && (
           <span>Getting data from Sourcify repository...</span>
         )}
         {match === null && (
           <span>
-            Address is not a contract or couldn't find contract metadata in
+            Address is not a contract or could not find contract metadata in
             Sourcify repository.
           </span>
         )}
@@ -151,9 +167,11 @@ const Contracts: React.FC<ContractsProps> = ({ checksummedAddress, match }) => {
           </>
         )}
       </div>
+    )}
       <div className="py-5">
-        {code === undefined && <span>Getting contract bytecode...</span>}
-        {code && (
+      {code === undefined && <span>Getting contract bytecode...</span>}
+    { scillaCode && <ScillaContract content={scillaCode} />}
+        {!scillaCode && code && (
           <>
             <div className="pb-2">Contract Bytecode</div>
             <StandardTextarea value={code} />

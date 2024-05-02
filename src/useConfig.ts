@@ -185,6 +185,10 @@ export type OtterscanConfig = {
      */
     l1ExplorerURL?: string;
   };
+
+  /** Version number
+   */
+  version: string;
 };
 
 /**

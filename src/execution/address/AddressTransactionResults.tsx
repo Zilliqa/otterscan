@@ -8,8 +8,10 @@ import StandardScrollableTable from "../../components/StandardScrollableTable";
 import StandardTBody from "../../components/StandardTBody";
 import TransactionLink from "../../components/TransactionLink";
 import { useProxyAttributes } from "../../ots2/usePrototypeTransferHooks";
+import { PendingTransactionResults } from "../../search/PendingResults";
 import ResultHeader from "../../search/ResultHeader";
 import TransactionItem from "../../search/TransactionItem";
+import TransactionResultHeader from "../../search/TransactionResultHeader";
 import UndefinedPageControl from "../../search/UndefinedPageControl";
 import { SearchController } from "../../search/search";
 import { useFeeToggler } from "../../search/useFeeToggler";
@@ -49,11 +51,12 @@ const AddressTransactionResults: FC<AddressAwareComponentProps> = ({
   const { config, provider } = useContext(RuntimeContext);
   const [feeDisplay, feeDisplayToggler] = useFeeToggler();
 
-  const { addressOrName, direction } = useParams();
-  if (addressOrName === undefined) {
-    throw new Error("addressOrName couldn't be undefined here");
-  }
+  const { uncheckedAddressOrName, direction } = useParams();
+  if (uncheckedAddressOrName === undefined) {
+     throw new Error("addressOrName couldn't be undefined here");
+   }
 
+  usePageTitle(`Address ${uncheckedAddressOrName}`);
   const [searchParams] = useSearchParams();
   const hash = searchParams.get("h");
 
@@ -127,8 +130,8 @@ const AddressTransactionResults: FC<AddressAwareComponentProps> = ({
 
   usePageTitle(
     resolvedName && resolvedNameTrusted
-      ? `${resolvedName} | Address ${addressOrName}`
-      : `Address ${addressOrName}`,
+      ? `${resolvedName} | Address ${uncheckedAddressOrName}`
+      : `Address ${uncheckedAddressOrName}`,
   );
 
   return (
@@ -163,7 +166,7 @@ const AddressTransactionResults: FC<AddressAwareComponentProps> = ({
         </BlockNumberContext.Provider>
         <NavBar address={address} page={page} controller={controller} />
         <StandardScrollableTable isAuto={true}>
-          <ResultHeader
+          <TransactionResultHeader
             feeDisplay={feeDisplay}
             feeDisplayToggler={feeDisplayToggler}
           />
@@ -183,6 +186,7 @@ const AddressTransactionResults: FC<AddressAwareComponentProps> = ({
           )}
         </StandardScrollableTable>
         <NavBar address={address} page={page} controller={controller} />
+      <PendingTransactionResults />
       </StandardSelectionBoundary>
     </ContentFrame>
   );

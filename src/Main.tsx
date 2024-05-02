@@ -19,7 +19,7 @@ const Main: React.FC = () => {
 
   return (
     <AppConfigContext.Provider value={appConfig}>
-      <Header />
+      <Header sourcifyPresent={true} />
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <Outlet />
       </ErrorBoundary>

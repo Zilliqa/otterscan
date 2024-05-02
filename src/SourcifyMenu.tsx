@@ -50,7 +50,7 @@ const SourcifyMenuItem: React.FC<PropsWithChildren<SourcifyMenuItemProps>> = ({
     {({ active }) => (
       <button
         className={`px-2 py-1 text-left text-sm ${
-          active ? "border-orange-200 text-gray-500" : "text-gray-400"
+          active ? "border-zq-lightblue text-gray-500" : "text-gray-400"
         } transition-colors transition-transform duration-75 ${
           checked ? "text-gray-900" : ""
         }`}
