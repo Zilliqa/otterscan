@@ -82,7 +82,7 @@ type AddressMainPageProps = {};
 const AddressMainPage: React.FC<AddressMainPageProps> = () => {
   const { uncheckedAddressOrName, direction } = useParams();
   if (uncheckedAddressOrName === undefined) {
-    throw new Error("addressOrName couldn't be undefined here");
+    throw new Error("uncheckedAddressOrName couldn't be undefined here");
   }
 
   const addressOrName = validation.isBech32(uncheckedAddressOrName)
