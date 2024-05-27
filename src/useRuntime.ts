@@ -27,13 +27,11 @@ export type OtterscanRuntime = {
    */
   provider?: JsonRpcApiProvider;
 
-
   /**
    * Zilliqa object; may be undefined if not ready because of config fetching,
    * probing occurring, etc.
    */
   zilliqa?: Zilliqa;
-
 };
 
 export const useRuntime = (): OtterscanRuntime => {

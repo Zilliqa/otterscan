@@ -1,4 +1,3 @@
-import { commify } from "../utils/utils";
 import { FC, useContext } from "react";
 import { useParams } from "react-router-dom";
 import BlockLink from "../components/BlockLink";
@@ -14,7 +13,11 @@ import { useLatestBlockChainInfo } from "../useLatestBlock";
 import { RuntimeContext } from "../useRuntime";
 import { useBlockPageTitle } from "../useTitle";
 import { useDSBlockData } from "../useZilliqaHooks";
-import { pubKeyToAddr, zilliqaToOtterscanTimestamp } from "../utils/utils";
+import {
+  commify,
+  pubKeyToAddr,
+  zilliqaToOtterscanTimestamp,
+} from "../utils/utils";
 import DecoratedAddressLink from "./components/DecoratedAddressLink";
 
 // TODO: Figure out what we want to do with the previous Hash field

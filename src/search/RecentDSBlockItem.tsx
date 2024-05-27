@@ -1,8 +1,7 @@
-import { commify } from "../utils/utils";
 import { DsBlockObj } from "@zilliqa-js/core/dist/types/src/types";
 import DSBlockLink from "../components/DSBlockLink";
 import TimestampAge from "../components/TimestampAge";
-import { zilliqaToOtterscanTimestamp } from "../utils/utils";
+import { commify, zilliqaToOtterscanTimestamp } from "../utils/utils";
 
 type DSBlockItemProps = {
   block: DsBlockObj;

@@ -14,8 +14,8 @@ import { RuntimeContext } from "../../useRuntime";
 import { usePageTitle } from "../../useTitle";
 import { commify } from "../../utils/utils";
 import ContractFromRepo from "./ContractFromRepo";
-import ContractABI from "./contract/ContractABI";
 import ScillaContract from "./ScillaContract";
+import ContractABI from "./contract/ContractABI";
 
 const HighlightedSolidity = lazy(
   () => import("./contract/HighlightedSolidity"),
@@ -90,87 +90,87 @@ const Contracts: React.FC<ContractsProps> = ({ checksummedAddress, match }) => {
           </InfoRow>
         </>
       )}
-    {!scillaCode && (
-      <div className="py-5">
-        {match === undefined && (
-          <span>Getting data from Sourcify repository...</span>
-        )}
-        {match === null && (
-          <span>
-            Address is not a contract or could not find contract metadata in
-            Sourcify repository.
-          </span>
-        )}
-        {match !== undefined && match !== null && (
-          <>
-            {match.metadata.output.abi && (
-              <ContractABI abi={match.metadata.output.abi} />
-            )}
-            <div>
-              <Menu>
-                <div className="flex items-baseline justify-between space-x-2">
-                  <Menu.Button className="flex space-x-2 rounded-t border-l border-r border-t px-2 py-1 text-sm">
-                    <span>{selected}</span>
-                    <span className="self-center">
-                      <FontAwesomeIcon icon={faChevronDown} size="xs" />
-                    </span>
-                  </Menu.Button>
-                  {provider && (
-                    <div className="text-sm">
-                      <ExternalLink
-                        href={openInRemixURL(
-                          checksummedAddress,
-                          provider._network.chainId,
-                        )}
-                      >
-                        Open in Remix
-                      </ExternalLink>
-                    </div>
-                  )}
-                </div>
-                <div className="relative">
-                  <Menu.Items className="absolute z-10 flex flex-col rounded-b border bg-white p-1">
-                    {Object.entries(match.metadata.sources).map(([k]) => (
-                      <Menu.Item key={k}>
-                        <button
-                          className={`flex px-2 py-1 text-sm ${
-                            selected === k
-                              ? "bg-gray-200 font-bold text-gray-500"
-                              : "text-gray-400 transition-colors duration-75 hover:text-gray-500"
-                          }`}
-                          onClick={() => setSelected(k)}
-                        >
-                          {k}
-                        </button>
-                      </Menu.Item>
-                    ))}
-                  </Menu.Items>
-                </div>
-              </Menu>
-              {selected && (
-                <>
-                  {match.metadata.sources[selected].content ? (
-                    <HighlightedSolidity
-                      source={match.metadata.sources[selected].content}
-                    />
-                  ) : (
-                    <ContractFromRepo
-                      checksummedAddress={checksummedAddress}
-                      networkId={provider!._network.chainId}
-                      filename={selected}
-                      type={match.type}
-                    />
-                  )}
-                </>
+      {!scillaCode && (
+        <div className="py-5">
+          {match === undefined && (
+            <span>Getting data from Sourcify repository...</span>
+          )}
+          {match === null && (
+            <span>
+              Address is not a contract or could not find contract metadata in
+              Sourcify repository.
+            </span>
+          )}
+          {match !== undefined && match !== null && (
+            <>
+              {match.metadata.output.abi && (
+                <ContractABI abi={match.metadata.output.abi} />
               )}
-            </div>
-          </>
-        )}
-      </div>
-    )}
+              <div>
+                <Menu>
+                  <div className="flex items-baseline justify-between space-x-2">
+                    <Menu.Button className="flex space-x-2 rounded-t border-l border-r border-t px-2 py-1 text-sm">
+                      <span>{selected}</span>
+                      <span className="self-center">
+                        <FontAwesomeIcon icon={faChevronDown} size="xs" />
+                      </span>
+                    </Menu.Button>
+                    {provider && (
+                      <div className="text-sm">
+                        <ExternalLink
+                          href={openInRemixURL(
+                            checksummedAddress,
+                            provider._network.chainId,
+                          )}
+                        >
+                          Open in Remix
+                        </ExternalLink>
+                      </div>
+                    )}
+                  </div>
+                  <div className="relative">
+                    <Menu.Items className="absolute z-10 flex flex-col rounded-b border bg-white p-1">
+                      {Object.entries(match.metadata.sources).map(([k]) => (
+                        <Menu.Item key={k}>
+                          <button
+                            className={`flex px-2 py-1 text-sm ${
+                              selected === k
+                                ? "bg-gray-200 font-bold text-gray-500"
+                                : "text-gray-400 transition-colors duration-75 hover:text-gray-500"
+                            }`}
+                            onClick={() => setSelected(k)}
+                          >
+                            {k}
+                          </button>
+                        </Menu.Item>
+                      ))}
+                    </Menu.Items>
+                  </div>
+                </Menu>
+                {selected && (
+                  <>
+                    {match.metadata.sources[selected].content ? (
+                      <HighlightedSolidity
+                        source={match.metadata.sources[selected].content}
+                      />
+                    ) : (
+                      <ContractFromRepo
+                        checksummedAddress={checksummedAddress}
+                        networkId={provider!._network.chainId}
+                        filename={selected}
+                        type={match.type}
+                      />
+                    )}
+                  </>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+      )}
       <div className="py-5">
-      {code === undefined && <span>Getting contract bytecode...</span>}
-    { scillaCode && <ScillaContract content={scillaCode} />}
+        {code === undefined && <span>Getting contract bytecode...</span>}
+        {scillaCode && <ScillaContract content={scillaCode} />}
         {!scillaCode && code && (
           <>
             <div className="pb-2">Contract Bytecode</div>

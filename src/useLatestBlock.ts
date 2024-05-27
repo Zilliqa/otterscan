@@ -4,7 +4,6 @@ import { Block, JsonRpcApiProvider } from "ethers";
 import { useEffect, useState } from "react";
 import { formatter } from "./utils/formatter";
 
-
 const refreshRate = 30000; // In milliseconds
 
 /**
@@ -45,7 +44,6 @@ export const useLatestBlockHeader = (provider?: JsonRpcApiProvider) => {
 
   return latestBlock;
 };
-
 
 /**
  * Returns the latest chain information AND hoook an internal listener
@@ -136,7 +134,6 @@ export const useBCInfoStateInfo = (
 
   return state;
 };
-
 
 /**
  * Returns the latest block number AND hook an internal listener

@@ -227,9 +227,10 @@ const LogEntry: FC<LogEntryProps> = ({ log }) => {
                 <ScillaEncapsDisplay
                   kind={topic0ScillaEncapsLogDesc.kind}
                   description={topic0ScillaEncapsLogDesc.description}
-                    />
-                ) : ( <div />
-                  )}
+                />
+              ) : (
+                <div />
+              )}
             </Tab.Panel>
             <Tab.Panel as={React.Fragment}>
               <RawLog topics={log.topics} data={log.data} />

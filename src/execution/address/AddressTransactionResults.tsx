@@ -9,7 +9,6 @@ import StandardTBody from "../../components/StandardTBody";
 import TransactionLink from "../../components/TransactionLink";
 import { useProxyAttributes } from "../../ots2/usePrototypeTransferHooks";
 import { PendingTransactionResults } from "../../search/PendingResults";
-import ResultHeader from "../../search/ResultHeader";
 import TransactionItem from "../../search/TransactionItem";
 import TransactionResultHeader from "../../search/TransactionResultHeader";
 import UndefinedPageControl from "../../search/UndefinedPageControl";
@@ -53,8 +52,8 @@ const AddressTransactionResults: FC<AddressAwareComponentProps> = ({
 
   const { uncheckedAddressOrName, direction } = useParams();
   if (uncheckedAddressOrName === undefined) {
-     throw new Error("addressOrName couldn't be undefined here");
-   }
+    throw new Error("addressOrName couldn't be undefined here");
+  }
 
   usePageTitle(`Address ${uncheckedAddressOrName}`);
   const [searchParams] = useSearchParams();
@@ -186,7 +185,7 @@ const AddressTransactionResults: FC<AddressAwareComponentProps> = ({
           )}
         </StandardScrollableTable>
         <NavBar address={address} page={page} controller={controller} />
-      <PendingTransactionResults />
+        <PendingTransactionResults />
       </StandardSelectionBoundary>
     </ContentFrame>
   );
