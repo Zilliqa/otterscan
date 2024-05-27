@@ -36,12 +36,9 @@ const Home: FC = () => {
       <ChainInfo />
       </div>
       <div className="grid grid-cols-5 gap-x-1 mx-1">
-        <span className="col-span-2">
-          <RecentDSBlocks />
-       </span>
-        <span className="col-span-3">
+        <span className="col-span-5">
           <RecentBlocks />
-      </span>
+        </span>
       </div>
     <div className="flex grow flex-col items-center pb-5">
       {isScanning && <CameraScanner turnOffScan={() => setScanning(false)} />}
