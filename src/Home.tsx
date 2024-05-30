@@ -1,12 +1,13 @@
 import { faQrcode } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FC, lazy, memo, useContext, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useSearchParams } from "react-router-dom";
 import Header from "./Header";
 import Logo from "./Logo";
 import Timestamp from "./components/Timestamp";
 import ChainInfo from "./execution/ChainInfo";
 import RecentBlocks from "./execution/block/RecentBlocks";
+import RecentDSBlocks from "./execution/block/RecentDSBlocks";
 import { useGenericSearch } from "./search/search";
 import { blockURL, slotURL } from "./url";
 import { useFinalizedSlotNumber, useSlotTimestamp } from "./useConsensus";
@@ -28,6 +29,9 @@ const Home: FC = () => {
 
   usePageTitle("Home");
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isDevMode = searchParams.get("dev") === "1";
+
   return (
     <>
       <Header sourcifyPresent={false} />
@@ -35,7 +39,14 @@ const Home: FC = () => {
         <ChainInfo />
       </div>
       <div className="grid grid-cols-5 gap-x-1 mx-1">
-        <span className="col-span-5">
+        {isDevMode ? (
+          <span className="col-span-2">
+            <RecentDSBlocks />
+          </span>
+        ) : (
+          <div />
+        )}
+        <span className={isDevMode ? "col-span-3" : "col-span-5"}>
           <RecentBlocks />
         </span>
       </div>
