@@ -12,7 +12,7 @@ import Otter from "./otter.png?w=128&h=128&webp";
 const CameraScanner = lazy(() => import("./search/CameraScanner"));
 type HeaderProps = { sourcifyPresent: boolean };
 
-const Header: FC<HeaderProps>  = ({ sourcifyPresent }) => {
+const Header: FC<HeaderProps> = ({ sourcifyPresent }) => {
   const { config, provider } = useContext(RuntimeContext);
   const [searchRef, handleChange, handleSubmit] = useGenericSearch();
   const [isScanning, setScanning] = useState<boolean>(false);
@@ -41,7 +41,7 @@ const Header: FC<HeaderProps>  = ({ sourcifyPresent }) => {
             </div>
           </Link>
           <div className="inline sm:hidden">
-            { sourcifyPresent && <SourcifyMenu /> }
+            {sourcifyPresent && <SourcifyMenu />}
           </div>
         </div>
         <div className="flex items-baseline gap-x-3">
@@ -87,7 +87,7 @@ const Header: FC<HeaderProps>  = ({ sourcifyPresent }) => {
             </button>
           </form>
           <div className="hidden sm:inline self-stretch">
-           { sourcifyPresent && <SourcifyMenu /> }
+            {sourcifyPresent && <SourcifyMenu />}
           </div>
         </div>
       </div>

@@ -31,7 +31,7 @@ const ConnectionErrorPanel: React.FC<ConnectionErrorPanelProps> = ({
         )}
         {connStatus === ConnectionStatus.NOT_ERIGON && (
           <>
-             <Step type="ok" msg="It is a Zilliqa node" />
+            <Step type="ok" msg="It is a Zilliqa node" />
             <Step type="error" msg="It does not seem to be an Zilliqa node">
               Make sure your Zilliqa node is running.
             </Step>
@@ -43,8 +43,7 @@ const ConnectionErrorPanel: React.FC<ConnectionErrorPanelProps> = ({
             <Step
               type="error"
               msg="It does not seem to contain up-to-date Otterscan patches"
-            >
-            </Step>
+            ></Step>
           </>
         )}
       </div>

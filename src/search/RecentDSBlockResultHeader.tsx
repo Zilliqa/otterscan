@@ -10,4 +10,3 @@ const RecentDSBlockResultHeader: React.FC = () => (
 );
 
 export default React.memo(RecentDSBlockResultHeader);
-

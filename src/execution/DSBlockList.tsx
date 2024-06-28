@@ -70,4 +70,3 @@ const DSBlockList: React.FC = () => {
 };
 
 export default DSBlockList;
-

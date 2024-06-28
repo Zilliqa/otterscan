@@ -86,4 +86,3 @@ const BlockList: React.FC = () => {
 };
 
 export default BlockList;
-

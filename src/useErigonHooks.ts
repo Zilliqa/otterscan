@@ -258,7 +258,6 @@ export const useRecentBlocks = (
   return { data, isLoading: isLoading || isValidating };
 };
 
-
 export const useBlockDataFromTransaction = (
   provider: JsonRpcApiProvider | undefined,
   txData: TransactionData | null | undefined,

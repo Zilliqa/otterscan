@@ -1,4 +1,3 @@
-
 import { getAddressFromPublicKey } from "@zilliqa-js/crypto";
 import { validation } from "@zilliqa-js/util";
 
@@ -122,4 +121,3 @@ export const pubKeyToAddr: (k: string) => string = (pubKey: string) => {
   if (!validation.isPubKey(strippedPubKey)) return "Invalid public key";
   else return getAddressFromPublicKey(strippedPubKey).toLowerCase();
 };
-

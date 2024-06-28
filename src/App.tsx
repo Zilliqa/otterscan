@@ -66,7 +66,7 @@ const App = () => {
                     <Route
                       path="block/:blockNumber/txs"
                       element={<BlockTransactions />}
-                       />
+                    />
                     <Route
                       path="dsblock/:dsBlockNumberOrHash"
                       element={<DSBlock />}
