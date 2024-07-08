@@ -30,9 +30,12 @@ const DSBlockItem: React.FC<DSBlockItemProps> = ({
       </span>
       <span>{commify(block.header.Difficulty)}</span>
       <span>{commify(block.header.DifficultyDS)}</span>
-      <span className="col-span-2 truncate"><Timestamp
-         age={false} value={zilliqaToOtterscanTimestamp(block.header.Timestamp)}
-        /></span>
+      <span className="col-span-2 truncate">
+        <Timestamp
+          age={false}
+          value={zilliqaToOtterscanTimestamp(block.header.Timestamp)}
+        />
+      </span>
       <span className="col-span-2 truncate">
         <TransactionAddress
           address={pubKeyToAddr(block.header.LeaderPubKey)}

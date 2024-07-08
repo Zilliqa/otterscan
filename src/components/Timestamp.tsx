@@ -45,7 +45,11 @@ const Timestamp: React.FC<TimestampProps> = ({ value, age }) => {
 
   let snippet;
   if (age === undefined || age) {
-    snippet = <span><TimestampAge timestamp={value} /> ({tsString})</span>;
+    snippet = (
+      <span>
+        <TimestampAge timestamp={value} /> ({tsString})
+      </span>
+    );
   } else {
     snippet = <span>{tsString}</span>;
   }
@@ -53,7 +57,7 @@ const Timestamp: React.FC<TimestampProps> = ({ value, age }) => {
   return (
     <div className="flex items-baseline space-x-1">
       <FontAwesomeIcon className="self-center" icon={faClock} size="sm" />
-      { snippet }
+      {snippet}
     </div>
   );
 };

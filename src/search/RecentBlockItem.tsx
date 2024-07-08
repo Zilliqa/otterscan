@@ -1,7 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import BlockLink from "../components/BlockLink";
-import TimestampAge from "../components/TimestampAge";
 import Timestamp from "../components/Timestamp";
 import { formatValue } from "../components/formatter";
 import BlockReward from "../execution/components/BlockReward";
