@@ -2,7 +2,7 @@ import { DsBlockObj } from "@zilliqa-js/core/dist/types/src/types";
 import React from "react";
 import DSBlockLink from "../components/DSBlockLink";
 import HexValue from "../components/HexValue";
-import TimestampAge from "../components/TimestampAge";
+import Timestamp from "../components/Timestamp";
 import TransactionAddress from "../execution/components/TransactionAddress";
 import {
   addHexPrefix,
@@ -30,17 +30,20 @@ const DSBlockItem: React.FC<DSBlockItemProps> = ({
       </span>
       <span>{commify(block.header.Difficulty)}</span>
       <span>{commify(block.header.DifficultyDS)}</span>
-      <TimestampAge
-        timestamp={zilliqaToOtterscanTimestamp(block.header.Timestamp)}
-      />
-      <span className="col-span-4 truncate">
+      <span className="col-span-2 truncate">
+        <Timestamp
+          age={false}
+          value={zilliqaToOtterscanTimestamp(block.header.Timestamp)}
+        />
+      </span>
+      <span className="col-span-2 truncate">
         <TransactionAddress
           address={pubKeyToAddr(block.header.LeaderPubKey)}
           selectedAddress={selectedAddress}
           miner={true}
         />
       </span>
-      <span className="col-span-4 truncate">
+      <span className="col-span-2 truncate">
         <HexValue value={addHexPrefix(block.header.PrevHash)} />
       </span>
     </div>

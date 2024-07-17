@@ -5,9 +5,9 @@ const DSBlockResultHeader: React.FC = () => (
     <div>Height</div>
     <div>Difficulty</div>
     <div>DS Difficulty</div>
-    <div>Age</div>
-    <div className="col-span-4">DS Leader</div>
-    <div className="col-span-4">Prev Block Hash</div>
+    <div className="col-span-2">Timestamp</div>
+    <div className="col-span-2">DS Leader</div>
+    <div className="col-span-2">Prev Block Hash</div>
   </div>
 );
 

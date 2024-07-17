@@ -5,6 +5,7 @@ import TimestampAge from "./TimestampAge";
 
 type TimestampProps = {
   value: number;
+  age?: boolean;
 };
 
 const months = [
@@ -22,7 +23,7 @@ const months = [
   "Dec",
 ];
 
-const Timestamp: React.FC<TimestampProps> = ({ value }) => {
+const Timestamp: React.FC<TimestampProps> = ({ value, age }) => {
   const d = new Date(value * 1000);
   let hour = d.getUTCHours() % 12;
   if (hour === 0) {
@@ -42,12 +43,21 @@ const Timestamp: React.FC<TimestampProps> = ({ value }) => {
     minimumIntegerDigits: 2,
   })} ${am ? "AM" : "PM"} +UTC`;
 
-  return (
-    <div className="flex items-baseline space-x-1">
-      <FontAwesomeIcon className="self-center" icon={faClock} size="sm" />
+  let snippet;
+  if (age === undefined || age) {
+    snippet = (
       <span>
         <TimestampAge timestamp={value} /> ({tsString})
       </span>
+    );
+  } else {
+    snippet = <span>{tsString}</span>;
+  }
+
+  return (
+    <div className="flex items-baseline space-x-1">
+      <FontAwesomeIcon className="self-center" icon={faClock} size="sm" />
+      {snippet}
     </div>
   );
 };

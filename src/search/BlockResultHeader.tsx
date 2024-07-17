@@ -40,7 +40,7 @@ const BlockResultHeader: React.FC<ResultHeaderProps> = ({
       </button>
     </div>
     <div>Rewards</div>
-    <div>Age</div>
+    <div>Timestamp</div>
   </div>
 );
 
