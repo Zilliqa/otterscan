@@ -30,7 +30,7 @@ import {
   TokenTransfer,
   TransactionData,
 } from "./types";
-import { useQuirks, Quirks} from "./useQuirks";
+import { useQuirks } from "./useQuirks";
 import { formatter } from "./utils/formatter";
 
 const TRANSFER_TOPIC =

@@ -1,6 +1,6 @@
 import React from "react";
-import { FeeDisplay } from "./useFeeToggler";
 import StandardTHead from "../components/StandardTHead";
+import { FeeDisplay } from "./useFeeToggler";
 
 export type ResultHeaderProps = {
   feeDisplay: FeeDisplay;
