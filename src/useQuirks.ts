@@ -18,7 +18,7 @@ export const quirksFetcher =
     const version = await provider?.send("GetVersion", []);
     const isZilliqa1 = version?.Version.match(/^v9.[0-9]+/);
     return {
-      isZilliqa1,
+      isZilliqa1: !!isZilliqa1,
     };
   };
 
