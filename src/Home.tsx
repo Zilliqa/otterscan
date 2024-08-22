@@ -111,7 +111,7 @@ const Home: FC = () => {
           >
             <div>Latest block: {commify(latestBlock.number)}</div>
             <Timestamp value={latestBlock.timestamp} />
-            <div>Ziliqa Otterscan Version: {config?.version}</div>
+            <div>Zilliqa Otterscan Version: {config?.version}pl1</div>
           </NavLink>
         )}
         {finalizedSlotNumber !== undefined && (
