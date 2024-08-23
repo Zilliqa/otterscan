@@ -11,13 +11,17 @@ import { Fetcher, useSWRConfig } from "swr";
 import useSWRImmutable from "swr/immutable";
 import useSWRInfinite from "swr/infinite";
 
-export type StateValue = {
-  name: string,
-  valueType: string,
+export type InitValue = {
+  vname: string,
+  type: string,
   value: any
 };
 
-export type ContractState = Array<StateValue>;
+export type ContractInitData = Array<InitValue>;
+
+export type ContractState = {
+  [key: string]: object
+};
 
 const dsBlockDataFetcher: Fetcher<
   DsBlockObj | null,
@@ -111,13 +115,13 @@ export const useBlockChainInfo = (
   return { data, isLoading };
 };
 
-export const smartContractInitFetcher : Fetcher<ContractState, [Zilliqa, string, string]> = async ([zilliqa, methodName, address]) => {
+export const smartContractInitFetcher : Fetcher<ContractInitData, [Zilliqa, string, string]> = async ([zilliqa, methodName, address]) => {
   const contract = zilliqa.contracts.at(address);
   const initParams = await contract.getInit();
-  return initParams as ContractState;
+  return initParams as ContractInitData;
 };
 
-export const useSmartContractInit = ( zilliqa: Zilliqa | undefined, address: string): { data: ContractState; isLoading: boolean } => {
+export const useSmartContractInit = ( zilliqa: Zilliqa | undefined, address: string): { data: ContractInitData | undefined; isLoading: boolean } => {
   const { data, error, isLoading } = useSWRImmutable(
     zilliqa !== undefined ? [ zilliqa, "useSmartContractInit", address ] : null,
     smartContractInitFetcher,
@@ -135,7 +139,7 @@ export const smartContractStateFetcher : Fetcher<any, [Zilliqa, string, string]>
   return initParams as any;
 };
 
-export const useSmartContractState = ( zilliqa: Zilliqa | undefined, address: string): { data: ContractState; isLoading: boolean } => {
+export const useSmartContractState = ( zilliqa: Zilliqa | undefined, address: string): { data: ContractState | undefined; isLoading: boolean } => {
   const { data, error, isLoading } = useSWRImmutable(
     zilliqa !== undefined ? [ zilliqa, "useSmartContractState", address ] : null,
     smartContractStateFetcher,

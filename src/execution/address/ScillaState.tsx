@@ -2,13 +2,13 @@ import { FC, memo, useState, useContext, useEffect, useMemo } from "react";
 import { RuntimeContext } from "../../useRuntime";
 import StandardTextarea from "../../components/StandardTextarea";
 import StandardSelectionBoundary from "../../selection/StandardSelectionBoundary";
-import { useSmartContractState, ContractState, StateValue } from "../../useZilliqaHooks";
+import { useSmartContractState, ContractState, InitValue } from "../../useZilliqaHooks";
 
 
 type ScillaStateProps = {
-  address : String
-  loadContractState: boolean,
-  setLoadContractState: (boolean) => void,
+  address : string
+  loadContractState: boolean | undefined,
+  setLoadContractState: (arg0: boolean) => void,
 };
 
 type ScillaStateRowProps = {
@@ -17,7 +17,7 @@ type ScillaStateRowProps = {
 };
 
 
-const ScillaStateParamRow: FC<ScillaInitParamRowProps> = ({
+const ScillaStateParamRow: FC<ScillaStateRowProps> = ({
   name,
   value } ) => {
     return (
@@ -39,9 +39,9 @@ const formatJsonValue = (value: any): string => {
 export const ScillaState: FC<ScillaStateProps> = ({
   address, loadContractState, setLoadContractState })  => {
     const { zilliqa }  = useContext(RuntimeContext);
-    let [ contractState, setContractState ] = useState<string>(null);
+    let [ contractState, setContractState ] = useState<ContractState | null>(null);
 
-    let { data, loading } = useSmartContractState(loadContractState ? zilliqa : null, address);
+    let { data, isLoading } = useSmartContractState(loadContractState ? zilliqa :undefined, address);
     if (data && contractState == null) {
       setContractState(data);
     }
@@ -58,7 +58,7 @@ export const ScillaState: FC<ScillaStateProps> = ({
 
     if (!contractState) {
       return (
-        <div> Loading contract state </div>)
+        <div className="mt-6"> Loading contract state </div>)
     }
 
     return (

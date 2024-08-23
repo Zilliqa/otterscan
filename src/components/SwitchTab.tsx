@@ -3,7 +3,8 @@ import React, { Fragment, PropsWithChildren } from "react";
 import { NavLink } from "react-router-dom";
 
 type SwitchTabProps = {
-  href: string;
+  disabled?: boolean | undefined,
+  children: any,
 };
 
 const SwitchTab: React.FC<PropsWithChildren<SwitchTabProps>> = ({

@@ -6,6 +6,7 @@ import { ScillaInitParams } from "./ScillaInitParams";
 import { ScillaState } from "./ScillaState";
 
 type ContractProps = {
+  address: string;
   content: any;
 };
 

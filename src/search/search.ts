@@ -248,11 +248,16 @@ const doSearch = async (q: string, navigate: NavigateFunction) => {
     maybeIndex = q.substring(sepIndex + 1);
   }
 
-  if (!isAddress(maybeAddress) && maybeAddress.length > 40) {
-    try {
-      maybeAddress = "0x" + maybeAddress.substr(maybeAddress.length - 40).toLowerCase();
-    } catch (e) {
-      // Obviously not.
+  // The type checker is convinced that ethers:isAddress() will never say that a string > 40 characters
+  // long is not an address. I'm not sure why...
+  if (!isAddress(maybeAddress)) {
+    let typeCheckerIsWrong = maybeAddress as string;
+    if (typeCheckerIsWrong.length > 40) {
+      try {
+        maybeAddress = "0x" + typeCheckerIsWrong.substr(typeCheckerIsWrong.length - 40).toLowerCase();
+      } catch (e) {
+        // Obviously not.
+      }
     }
   }
 

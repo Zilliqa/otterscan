@@ -1,9 +1,9 @@
 import { FC, memo, useContext } from "react";
-import { useSmartContractInit, ContractState, StateValue } from "../../useZilliqaHooks";
+import { useSmartContractInit, ContractInitData, InitValue } from "../../useZilliqaHooks";
 import { RuntimeContext } from "../../useRuntime";
 
-type ScillaInitParamsTableProps = {
-  address : String
+type ScillaInitParamsProps = {
+  address : string
 };
 
 type ScillaInitParamRowProps = {
@@ -33,9 +33,9 @@ const ScillaInitParamRow: FC<ScillaInitParamRowProps> = ({
 export const ScillaInitParams: FC<ScillaInitParamsProps> = ({
   address })  => {
     const { zilliqa }  = useContext(RuntimeContext);
-    let {data, loading} = useSmartContractInit(zilliqa, address);
-    if (loading) {
-      return (<span>Cannot retrieve contract init parameters</span>);
+    let {data, isLoading} = useSmartContractInit(zilliqa, address);
+    if (isLoading) {
+      return (<div className="mt-6">Loading (or cannot retrieve) contract init parameters</div>);
     } else {
       return (
         <div className="mt-6"><table className="w-ful border">
@@ -49,10 +49,10 @@ export const ScillaInitParams: FC<ScillaInitParamsProps> = ({
           <tbody className="divide-y">
          {data ? data.map((val) => (
            <ScillaInitParamRow
-           key={val["vname"]}
-           name={val["vname"]}
-           valueType={val["type"]}
-           value={val["value"]}
+           key={val.vname}
+           name={val.vname}
+           valueType={val.type}
+           value={val.value}
              />
          )) : undefined} 
        </tbody>
