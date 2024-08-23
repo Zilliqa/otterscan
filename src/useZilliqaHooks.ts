@@ -7,9 +7,17 @@ import {
   DsBlockObj,
 } from "@zilliqa-js/core/dist/types/src/types";
 import { Zilliqa } from "@zilliqa-js/zilliqa";
-import { Fetcher } from "swr";
+import { Fetcher, useSWRConfig } from "swr";
 import useSWRImmutable from "swr/immutable";
 import useSWRInfinite from "swr/infinite";
+
+export type StateValue = {
+  name: string,
+  valueType: string,
+  value: any
+};
+
+export type ContractState = Array<StateValue>;
 
 const dsBlockDataFetcher: Fetcher<
   DsBlockObj | null,
@@ -102,3 +110,39 @@ export const useBlockChainInfo = (
   }
   return { data, isLoading };
 };
+
+export const smartContractInitFetcher : Fetcher<ContractState, [Zilliqa, string, string]> = async ([zilliqa, methodName, address]) => {
+  const contract = zilliqa.contracts.at(address);
+  const initParams = await contract.getInit();
+  return initParams as ContractState;
+};
+
+export const useSmartContractInit = ( zilliqa: Zilliqa | undefined, address: string): { data: ContractState; isLoading: boolean } => {
+  const { data, error, isLoading } = useSWRImmutable(
+    zilliqa !== undefined ? [ zilliqa, "useSmartContractInit", address ] : null,
+    smartContractInitFetcher,
+    { keepPreviousData: true },
+  );
+  if (error) {
+    return { data : undefined, isLoading: false };
+  }
+  return { data, isLoading };
+}
+
+export const smartContractStateFetcher : Fetcher<any, [Zilliqa, string, string]> = async ([zilliqa, methodName, address]) => {
+  const contract = zilliqa.contracts.at(address);
+  const initParams = await contract.getState();
+  return initParams as any;
+};
+
+export const useSmartContractState = ( zilliqa: Zilliqa | undefined, address: string): { data: ContractState; isLoading: boolean } => {
+  const { data, error, isLoading } = useSWRImmutable(
+    zilliqa !== undefined ? [ zilliqa, "useSmartContractState", address ] : null,
+    smartContractStateFetcher,
+    { keepPreviousData: true },
+  );
+  if (error) {
+    return { data : undefined, isLoading: false };
+  }
+  return { data, isLoading };
+}

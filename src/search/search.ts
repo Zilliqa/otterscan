@@ -4,6 +4,7 @@ import {
   TransactionResponse,
   isAddress,
   isHexString,
+  getAddress
 } from "ethers";
 import {
   ChangeEventHandler,
@@ -247,6 +248,14 @@ const doSearch = async (q: string, navigate: NavigateFunction) => {
     maybeIndex = q.substring(sepIndex + 1);
   }
 
+  if (!isAddress(maybeAddress) && maybeAddress.length > 40) {
+    try {
+      maybeAddress = "0x" + maybeAddress.substr(maybeAddress.length - 40).toLowerCase();
+    } catch (e) {
+      // Obviously not.
+    }
+  }
+
   // Plain address?
   if (isAddress(maybeAddress)) {
     navigate(
@@ -267,10 +276,14 @@ const doSearch = async (q: string, navigate: NavigateFunction) => {
   }
 
   // Block number?
-  const blockNumber = parseInt(q);
-  if (!isNaN(blockNumber)) {
-    navigate(`/block/${blockNumber}`);
+  // If the number here is very large, parseInt() will return an fp number which
+  // will cause errors, so ..
+  try {
+    const blockNumber = BigInt(q);
+    navigate(`/block/${blockNumber.toString()}`);
     return;
+  } catch (e) {
+    // Obviously not!
   }
 
   // DS Block number?
