@@ -30,6 +30,7 @@ import {
   TokenTransfer,
   TransactionData,
 } from "./types";
+import { useQuirks } from "./useQuirks";
 import { formatter } from "./utils/formatter";
 
 const TRANSFER_TOPIC =
@@ -420,13 +421,15 @@ export const useInternalOperations = (
     }
 
     const _t: InternalOperation[] = [];
-    for (const t of data) {
-      _t.push({
-        type: t.type,
-        from: formatter.address(getAddress(t.from)),
-        to: formatter.address(getAddress(t.to)),
-        value: formatter.bigInt(t.value),
-      });
+    if (data) {
+      for (const t of data) {
+        _t.push({
+          type: t.type,
+          from: formatter.address(getAddress(t.from)),
+          to: formatter.address(getAddress(t.to)),
+          value: formatter.bigInt(t.value),
+        });
+      }
     }
     return _t;
   }, [provider, data]);
@@ -782,6 +785,12 @@ export const useHasCode = (
   blockTag: BlockTag = "latest",
 ): boolean | undefined => {
   const fetcher = providerFetcher(provider);
+  const quirks = useQuirks(provider);
+  if (quirks?.isZilliqa1) {
+    // Zilliqa 1 requires that the tag be numeric, but ignores it, so we can
+    // use 0 and save ourselves a fetch.
+    blockTag = 0;
+  }
   const { data, error } = useSWRImmutable(
     ["ots_hasCode", address, blockTag],
     fetcher,
