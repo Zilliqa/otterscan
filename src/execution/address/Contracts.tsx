@@ -170,7 +170,9 @@ const Contracts: React.FC<ContractsProps> = ({ checksummedAddress, match }) => {
       )}
       <div className="py-5">
         {code === undefined && <span>Getting contract bytecode...</span>}
-    {scillaCode && <ScillaContract address={checksummedAddress} content={scillaCode} />}
+        {scillaCode && (
+          <ScillaContract address={checksummedAddress} content={scillaCode} />
+        )}
         {!scillaCode && code && (
           <>
             <div className="pb-2">Contract Bytecode</div>

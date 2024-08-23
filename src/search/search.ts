@@ -4,7 +4,6 @@ import {
   TransactionResponse,
   isAddress,
   isHexString,
-  getAddress
 } from "ethers";
 import {
   ChangeEventHandler,
@@ -254,7 +253,11 @@ const doSearch = async (q: string, navigate: NavigateFunction) => {
     let typeCheckerIsWrong = maybeAddress as string;
     if (typeCheckerIsWrong.length > 40) {
       try {
-        maybeAddress = "0x" + typeCheckerIsWrong.substr(typeCheckerIsWrong.length - 40).toLowerCase();
+        maybeAddress =
+          "0x" +
+          typeCheckerIsWrong
+            .substr(typeCheckerIsWrong.length - 40)
+            .toLowerCase();
       } catch (e) {
         // Obviously not.
       }
