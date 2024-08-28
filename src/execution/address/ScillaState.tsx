@@ -36,7 +36,9 @@ export const ScillaState: FC<ScillaStateProps> = ({
   setLoadContractState,
 }) => {
   const { zilliqa } = useContext(RuntimeContext);
-  const [contractState, setContractState] = useState<ContractState | null>(null);
+  const [contractState, setContractState] = useState<ContractState | null>(
+    null,
+  );
 
   const { data, isLoading } = useSmartContractState(
     loadContractState ? zilliqa : undefined,
