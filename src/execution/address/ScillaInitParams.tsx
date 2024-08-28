@@ -32,7 +32,7 @@ const ScillaInitParamRow: FC<ScillaInitParamRowProps> = ({
 
 export const ScillaInitParams: FC<ScillaInitParamsProps> = ({ address }) => {
   const { zilliqa } = useContext(RuntimeContext);
-  let { data, isLoading } = useSmartContractInit(zilliqa, address);
+  const { data, isLoading } = useSmartContractInit(zilliqa, address);
   if (isLoading) {
     return (
       <div className="mt-6">
