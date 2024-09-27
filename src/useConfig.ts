@@ -228,20 +228,19 @@ export const useConfig = (
         );
       }
       if (_config.version === undefined) {
-        _config.version="(unknown)"
+        _config.version = "(unknown)";
       }
       if (import.meta.env.VITE_OTTERSCAN_VERSION !== undefined) {
-        _config.version = import.meta.env.VITE_OTTERSCAN_VERSION
+        _config.version = import.meta.env.VITE_OTTERSCAN_VERSION;
       }
       try {
-        import('../autogen/version.ts').then((mod) => {
+        import("../autogen/version.ts").then((mod) => {
           console.log(`Dynamic import succeeded! ${JSON.stringify(mod)}`);
           _config.version = mod.OTTERSCAN_VERSION;
         });
       } catch (e) {
         // The version import doesn't exist - we're probably a development version.
       }
-      
     }
     return _config;
   }, [data]);
