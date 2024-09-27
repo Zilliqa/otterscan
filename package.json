@@ -48,9 +48,9 @@
     "web-vitals": "^3.5.2"
   },
   "scripts": {
-    "start": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
+    "start": "./scripts/gen-version.sh autogen/version.ts && vite",
+    "build": "./scripts/gen-version.sh autogen/version.ts && tsc && vite build",
+    "preview": "./scripts/gen-version.sh autogen/version.ts && vite preview",
     "test": "jest",
     "source-map-explorer": "source-map-explorer build/static/js/*.js",
     "assets-start": "docker run --rm -p 5175:80 --name otterscan-assets -d otterscan/otterscan-assets:v1.0.1",

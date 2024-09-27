@@ -10,13 +10,16 @@ const Footer: React.FC = () => {
         provider?._network.chainId === 1n
           ? "bg-link-blue text-gray-200"
           : "bg-zq-lightblue text-white font-bold"
-      } text-center`}
+      } flex justify-between items-center`}
     >
-      {provider ? (
-        <>Using Zilliqa node at {config?.erigonURL}</>
-      ) : (
-        <>Waiting for the provider...</>
-      )}
+      <div className="flex-grow text-center">
+        {provider ? (
+          <>Using Zilliqa node at {config?.erigonURL}</>
+        ) : (
+          <>Waiting for the provider...</>
+        )}
+      </div>
+      <div className="flex-shrink-0 ml-2">zq otterscan {config?.version}</div>
     </div>
   );
 };
