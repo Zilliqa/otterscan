@@ -235,7 +235,6 @@ export const useConfig = (
       }
       try {
         import("../autogen/version.ts").then((mod) => {
-          console.log(`Dynamic import succeeded! ${JSON.stringify(mod)}`);
           _config.version = mod.OTTERSCAN_VERSION;
         });
       } catch (e) {
