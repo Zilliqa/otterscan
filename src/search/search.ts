@@ -345,7 +345,7 @@ const doSearch = async (q: string, navigate: NavigateFunction) => {
     const mayBeValidator = q.substring(10);
     // Validator by index
     if (mayBeValidator.match(/^\d+$/)) {
-      console.log(`validator: ${validator}`);
+      console.log(`search: validator: ${mayBeValidator}`);
       const validatorIndex = parseInt(mayBeValidator);
       navigate(`/validator/${validatorIndex}`);
       return;

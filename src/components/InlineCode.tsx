@@ -1,7 +1,7 @@
 import React from "react";
 
 type InlineCodeProps = React.PropsWithChildren<{
-  children: React.RectNode;
+  children: React.ReactNode;
 }>;
 
 const InlineCode: React.FC<InlineCodeProps> = ({ children }) => (
