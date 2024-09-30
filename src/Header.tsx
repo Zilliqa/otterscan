@@ -4,9 +4,9 @@ import { FC, lazy, memo, useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import PriceBox from "./PriceBox";
 import SourcifyMenu from "./SourcifyMenu";
+import InlineCode from "./components/InlineCode";
 import { useGenericSearch } from "./search/search";
 import { RuntimeContext } from "./useRuntime";
-import InlineCode from "./components/InlineCode";
 // @ts-expect-error
 import Otter from "./otter.png?w=128&h=128&webp";
 
@@ -84,13 +84,13 @@ const Header: FC<HeaderProps> = ({ sourcifyPresent }) => {
               <FontAwesomeIcon icon={faQrcode} />
             </button>
             <button
-                 className="border bg-skin-button-fill px-2 py-1 text-sm text-skin-button hover:bg-skin-button-hover-fill focus:outline-none"
-                  type="button"
-                  onClick={() => setHelpOpen(true)}
-                title="Help with searching"
-              >
-             <FontAwesomeIcon icon={faQuestionCircle} />
-           </button>
+              className="border bg-skin-button-fill px-2 py-1 text-sm text-skin-button hover:bg-skin-button-hover-fill focus:outline-none"
+              type="button"
+              onClick={() => setHelpOpen(true)}
+              title="Help with searching"
+            >
+              <FontAwesomeIcon icon={faQuestionCircle} />
+            </button>
             <button
               className="rounded-r border-b border-r border-t bg-skin-button-fill px-2 py-1 text-sm text-skin-button hover:bg-skin-button-hover-fill focus:outline-none"
               type="submit"
@@ -103,40 +103,93 @@ const Header: FC<HeaderProps> = ({ sourcifyPresent }) => {
           </div>
         </div>
       </div>
-      { isHelpOpen && (
-        <div className="fixed inset-0 z-10 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+      {isHelpOpen && (
+        <div
+          className="fixed inset-0 z-10 overflow-y-auto"
+          aria-labelledby="modal-title"
+          role="dialog"
+          aria-modal="true"
+        >
           <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+            <div
+              className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+              aria-hidden="true"
+            ></div>
 
-            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <span
+              className="hidden sm:inline-block sm:align-middle sm:h-screen"
+              aria-hidden="true"
+            >
+              &#8203;
+            </span>
 
             <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div className="sm:flex sm:items-start">
                   <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                    <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                    <h3
+                      className="text-lg leading-6 font-medium text-gray-900"
+                      id="modal-title"
+                    >
                       Help Information
-        </h3>
-          <div className="mt-2">
-          <span className="text-sm text-gray-500">
-          <p>
-          Search terms are interpreted as..
-          </p>
-          <br />
-          <ul className="list-disc list-inside mb-6">
-          <li> A bech32 address if it is in the right format.</li>
-          <li> An address if we can (right length, starts with <InlineCode>0x</InlineCode> or <InlineCode>zil1</InlineCode>).</li>
-          <li> If a 32-character hex string we'll try to search as a transaction id</li>
-          <li> If a &gt; 40 character hex string, we'll think it's probably an address with leading 0s.</li>
-          <li> Then we'll attempt an <InlineCode>BigInt</InlineCode> and try to find a block number</li>
-          <li> Terms starting with <InlineCode>#</InlineCode> are treated as a DS block number for ZQ1</li>
-          <li> Terms like <InlineCode>epoch:&lt;number&gt;</InlineCode> are epochs.</li>
-          <li> Terms like <InlineCode>validator:&lt;number&gt;</InlineCode> are validator searches.</li>
-          </ul>
-          <p>If the search term does not match any of those rules, we interpret it as an ENS name.
-          </p>
-        </span>
-          </div>
+                    </h3>
+                    <div className="mt-2">
+                      <span className="text-sm text-gray-500">
+                        <p>Search terms are interpreted as..</p>
+                        <br />
+                        <ul className="list-disc list-inside mb-6">
+                          <li>
+                            {" "}
+                            A bech32 address if it is in the right format.
+                          </li>
+                          <li>
+                            {" "}
+                            An address if we can (right length, starts with{" "}
+                            <InlineCode>0x</InlineCode> or{" "}
+                            <InlineCode>zil1</InlineCode>).
+                          </li>
+                          <li>
+                            {" "}
+                            If a 32-character hex string we'll try to search as
+                            a transaction id
+                          </li>
+                          <li>
+                            {" "}
+                            If a &gt; 40 character hex string, we'll think it's
+                            probably an address with leading 0s.
+                          </li>
+                          <li>
+                            {" "}
+                            Then we'll attempt an{" "}
+                            <InlineCode>BigInt</InlineCode> and try to find a
+                            block number
+                          </li>
+                          <li>
+                            {" "}
+                            Terms starting with <InlineCode>#</InlineCode> are
+                            treated as a DS block number for ZQ1
+                          </li>
+                          <li>
+                            {" "}
+                            Terms like{" "}
+                            <InlineCode>epoch:&lt;number&gt;</InlineCode> are
+                            epochs.
+                          </li>
+                          <li>
+                            {" "}
+                            Terms like{" "}
+                            <InlineCode>
+                              validator:&lt;number&gt;
+                            </InlineCode>{" "}
+                            are validator searches.
+                          </li>
+                        </ul>
+                        <p>
+                          If the search term does not match any of those rules,
+                          we interpret it as an ENS name.
+                        </p>
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -153,7 +206,6 @@ const Header: FC<HeaderProps> = ({ sourcifyPresent }) => {
           </div>
         </div>
       )}
-
     </>
   );
 };

@@ -1,3 +1,4 @@
+import { fromBech32Address } from "@zilliqa-js/crypto";
 import {
   JsonRpcApiProvider,
   TransactionReceiptParams,
@@ -21,7 +22,6 @@ import {
 import { PAGE_SIZE } from "../params";
 import { ProcessedTransaction, TransactionChunk } from "../types";
 import { formatter } from "../utils/formatter";
-import { fromBech32Address } from "@zilliqa-js/crypto";
 
 export const rawToProcessed = (provider: JsonRpcApiProvider, _rawRes: any) => {
   const _res: TransactionResponse[] = _rawRes.txs.map(
@@ -293,7 +293,6 @@ const doSearch = async (q: string, navigate: NavigateFunction) => {
     );
     return;
   }
-
 
   // Block number?
   // If the number here is very large, parseInt() will return an fp number which
