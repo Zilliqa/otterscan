@@ -124,6 +124,7 @@ const Header: FC<HeaderProps> = ({ sourcifyPresent }) => {
           </p>
           <br />
           <ul className="list-disc list-inside mb-6">
+          <li> A bech32 address if it is in the right format.</li>
           <li> An address if we can (right length, starts with <InlineCode>0x</InlineCode> or <InlineCode>zil1</InlineCode>).</li>
           <li> If a 32-character hex string we'll try to search as a transaction id</li>
           <li> If a &gt; 40 character hex string, we'll think it's probably an address with leading 0s.</li>
