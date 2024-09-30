@@ -266,6 +266,7 @@ const doSearch = async (q: string, navigate: NavigateFunction) => {
 
   // Plain address?
   if (isAddress(maybeAddress)) {
+    console.log(`maybeAddress ${maybeAddress} is an address ..`);
     navigate(
       `/address/${maybeAddress}${
         maybeIndex !== "" ? `?nonce=${maybeIndex}` : ""
@@ -276,6 +277,7 @@ const doSearch = async (q: string, navigate: NavigateFunction) => {
 
   // Tx hash?
   if (isHexString(q, 32)) {
+    console.log(`This looks like a txn hash - ${q}`);
     navigate(`/tx/${q}`);
     return;
   } else if (isHexString(`0x${q}`, 32)) {
@@ -288,6 +290,7 @@ const doSearch = async (q: string, navigate: NavigateFunction) => {
   // will cause errors, so ..
   try {
     const blockNumber = BigInt(q);
+    console.log(`Parses as a block number ${blockNumber}`);
     navigate(`/block/${blockNumber.toString()}`);
     return;
   } catch (e) {
@@ -298,6 +301,7 @@ const doSearch = async (q: string, navigate: NavigateFunction) => {
   if (q.charAt(0) === "#") {
     const dsBlockNumber = parseInt(q.substring(1));
     if (!isNaN(dsBlockNumber)) {
+      console.log(`# ${dsBlockNumber} - it's a ds block number`);
       navigate(`/dsblock/${dsBlockNumber}`);
       return;
     }
@@ -308,6 +312,7 @@ const doSearch = async (q: string, navigate: NavigateFunction) => {
     const mayBeEpoch = q.substring(6);
     const epoch = parseInt(mayBeEpoch);
     if (!isNaN(epoch)) {
+      console.log(`epoch: ${epoch}`);
       navigate(`/epoch/${epoch}`);
       return;
     }
@@ -318,6 +323,7 @@ const doSearch = async (q: string, navigate: NavigateFunction) => {
     const mayBeSlot = q.substring(5);
     const slot = parseInt(mayBeSlot);
     if (!isNaN(slot)) {
+      console.log(`slot: ${slot}`);
       navigate(`/slot/${slot}`);
       return;
     }
@@ -326,9 +332,9 @@ const doSearch = async (q: string, navigate: NavigateFunction) => {
   // Validator?
   if (q.startsWith("validator:")) {
     const mayBeValidator = q.substring(10);
-
     // Validator by index
     if (mayBeValidator.match(/^\d+$/)) {
+      console.log(`validator: ${validator}`);
       const validatorIndex = parseInt(mayBeValidator);
       navigate(`/validator/${validatorIndex}`);
       return;
@@ -342,6 +348,7 @@ const doSearch = async (q: string, navigate: NavigateFunction) => {
   }
 
   // Assume it is an ENS name
+  console.log(`no match: assuming ${maybeAddress} is an ENS name`);
   navigate(
     `/address/${maybeAddress}${
       maybeIndex !== "" ? `?nonce=${maybeIndex}` : ""
