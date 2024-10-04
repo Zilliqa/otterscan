@@ -20,6 +20,9 @@ spec:
       containers:
         - image: otterscan
           name: otterscan
+          env:
+            - name: ERIGON_URL
+              value: not-set
           ports:
             - containerPort: 80
           resources:
