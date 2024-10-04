@@ -206,12 +206,18 @@ export const DEFAULT_CONFIG_FILE = "/config.json";
 export const useConfig = (
   configURL: string = DEFAULT_CONFIG_FILE,
 ): OtterscanConfig | undefined => {
-  const { data } = useSWRImmutable(configURL, jsonFetcherWithErrorHandling);
+  let { data } = useSWRImmutable(configURL, jsonFetcherWithErrorHandling);
+  const localData = localStorage.getItem('otterscanConfig');
   const config = useMemo(() => {
     if (data === undefined) {
       return undefined;
     }
+    if (localData !== undefined) {
+      let localDataObject = JSON.parse(localData);
+      data = { ... data, ...localDataObject }
+    }
 
+    console.log(`Resolved config ${JSON.stringify(data)}`);
     // Override config for local dev
     const _config: OtterscanConfig = { ...data };
     if (import.meta.env.DEV) {
@@ -242,7 +248,7 @@ export const useConfig = (
       }
     }
     return _config;
-  }, [data]);
+  }, [data, localData]);
 
   useEffect(() => {
     if (data === undefined) {

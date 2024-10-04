@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { Route, useParams, BrowserRouter as Router, Routes } from "react-router-dom";
 import ConnectionErrorPanel from "./ConnectionErrorPanel";
 import Footer from "./Footer";
 import Home from "./Home";
@@ -34,6 +34,13 @@ const Faucets = lazy(() => import("./Faucets"));
 const PageNotFound = lazy(() => import("./PageNotFound"));
 
 const App = () => {
+  // useParams isn't available here, unfortunately.
+  let params = new URL(document.location.toString()).searchParams;
+  let network = params.get('network');
+  if (network !== undefined) {
+    localStorage.setItem('otterscanConfig',
+                         JSON.stringify({ "erigonURL" : network }));
+  }
   const runtime = useRuntime();
   // TODO: fix internal hack
   let chainInfo = useChainInfoFromMetadataFile(runtime);
