@@ -1,0 +1,137 @@
+name: "CICD staging"
+
+on:
+  # Test run before merging
+  pull_request:
+    branches:
+      - main
+  # On merged
+  push:
+    branches:
+      - main
+      - users/richard/61-cicd
+
+jobs:
+  build-makefile:
+    permissions:
+      id-token: write
+      contents: write
+    runs-on: ubuntu-22.04
+    # To test deployments, remove the github.ref_name clause: see devops/docs/z2-testing-apps.md - rrw 2024-04-12
+    # && github.ref_name == 'main'
+    if: github.actor != 'dependabot[bot]'
+    name: "Build image with Makefile"
+    strategy:
+      fail-fast: false
+      matrix:
+        application: [otterscan]
+        include:
+          - application: otterscan
+            image_name: otterscan
+            path: .
+            tag_length: 8
+            tag_latest: false
+    env:
+      DOCKER_DOMAIN: asia-docker.pkg.dev
+      REGISTRY: asia-docker.pkg.dev/prj-d-devops-services-4dgwlsse/zilliqa-public
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29
+        with:
+          submodules: recursive
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          fetch-depth: 0
+
+      - name: "Authenticate to Google Cloud - staging"
+        id: google-auth
+        uses: "google-github-actions/auth@71fee32a0bb7e97b4d33d548e7d957010649d8fa"
+        with:
+          token_format: "access_token"
+          workload_identity_provider: "${{ secrets.GCP_PRD_GITHUB_WIF }}"
+          service_account: "${{ secrets.GCP_STG_GITHUB_SA_DOCKER_REGISTRY }}"
+          create_credentials_file: true
+
+      - name: Login to the registry - staging
+        uses: docker/login-action@e92390c5fb421da1463c202d546fed0ec5c39f20
+        with:
+          registry: ${{ env.DOCKER_DOMAIN }}
+          username: "oauth2accesstoken"
+          password: "${{ steps.google-auth.outputs.access_token }}"
+
+      - name: Get tag version - staging
+        id: set-tag
+        uses: Zilliqa/gh-actions-workflows/actions/generate-tag@v1
+        with:
+          tag: ${{ env.REGISTRY }}/${{ matrix.image_name }}
+          length: ${{ matrix.tag_length }}
+
+      - name: "Build and push ${{ matrix.application }} - staging"
+        env:
+          ENVIRONMENT: stg
+          IMAGE_TAG: ${{ steps.set-tag.outputs.tags }}
+        run: |
+          cd ${{ matrix.path }}
+          make image/build-and-push
+
+      - name: "Build and push ${{ matrix.application }} tag latest - staging"
+        if: ${{ matrix.tag_latest == true }}
+        env:
+          ENVIRONMENT: stg
+          IMAGE_TAG: "${{ env.REGISTRY }}/${{ matrix.image_name }}:latest"
+        run: |
+          cd ${{ matrix.path }}
+          make image/build-and-push
+
+  deploy-to-staging:
+    needs: [build-makefile]
+    permissions:
+      id-token: write
+      contents: write
+    runs-on: ubuntu-22.04
+    if: github.actor != 'dependabot[bot]' && github.ref_name == 'main'
+    strategy:
+      fail-fast: false
+      matrix:
+        application:
+          - developer-portal
+    env:
+      APP_NAME: ${{ matrix.application }}
+      Z_ENV: infra/live/gcp/non-production/prj-d-staging/z_ase1.yaml
+      Z_SERVICE_ACCOUNT: ${{ secrets.GCP_STG_GITHUB_SA_K8S_DEPLOY }}
+      OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN_STG }}
+      GITHUB_PAT: ${{ secrets.GH_PAT }}
+      Z_IMAGE: asia-docker.pkg.dev/prj-d-devops-services-4dgwlsse/zilliqa-private/z:latest
+      REGISTRY: asia-docker.pkg.dev
+    steps:
+      - name: Checkout
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29
+        with:
+          repository: Zilliqa/devops
+          token: ${{ env.GITHUB_PAT }}
+          ref: main
+          sparse-checkout: |
+            ${{ env.Z_ENV }}
+
+      - name: Authenticate to Google Cloud
+        id: google-auth
+        uses: google-github-actions/auth@71fee32a0bb7e97b4d33d548e7d957010649d8fa
+        with:
+          token_format: "access_token"
+          workload_identity_provider: "${{ secrets.GCP_PRD_GITHUB_WIF }}"
+          service_account: ${{ env.Z_SERVICE_ACCOUNT }}
+          create_credentials_file: true
+
+      - name: Deploy application
+        run: |
+          gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://${{ env.REGISTRY }}
+          docker run --rm \
+              -e ZQ_USER='${{ env.Z_SERVICE_ACCOUNT }}' \
+              -e Z_ENV='/devops/${{ env.Z_ENV }}' \
+              -e OP_SERVICE_ACCOUNT_TOKEN='${{ env.OP_SERVICE_ACCOUNT_TOKEN }}' \
+              -e GITHUB_PAT='${{ env.GITHUB_PAT }}' \
+              -e CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE='/google/application_default_credentials.json' \
+              -v `pwd`:/devops \
+              -v ${{ steps.google-auth.outputs.credentials_file_path }}:/google/application_default_credentials.json \
+              --name z_container ${{ env.Z_IMAGE }} \
+              bash -c "gcloud config set account ${{ env.Z_SERVICE_ACCOUNT }} && z /app /devops app sync --cache-dir .cache ${{ env.APP_NAME }}"
