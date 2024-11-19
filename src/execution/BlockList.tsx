@@ -14,6 +14,7 @@ import {
   useEmptyBlocksToggler,
 } from "../search/useEmptyBlocksToggler";
 import { useFeeToggler } from "../search/useFeeToggler";
+import { useMultiColumnDisplayToggler } from "../search/useMultiColumnDisplayToggler";
 import StandardSelectionBoundary from "../selection/StandardSelectionBoundary";
 import { useRecentBlocks } from "../useErigonHooks";
 import { useLatestBlockNumber } from "../useLatestBlock";
@@ -26,6 +27,8 @@ const BlockList: React.FC = () => {
   const [feeDisplay, feeDisplayToggler] = useFeeToggler();
   const [emptyBlocksDisplay, emptyBlocksDisplayToggler] =
     useEmptyBlocksToggler();
+  const [multiColumnDisplay, multiColumnDisplayToggler] =
+    useMultiColumnDisplayToggler();
 
   const [searchParams] = useSearchParams();
   let pageNumber = 1;
@@ -35,7 +38,6 @@ const BlockList: React.FC = () => {
       pageNumber = parseInt(p);
     } catch (err) {}
   }
-
   const { data, isLoading } = useRecentBlocks(
     provider,
     latestBlockNum,
@@ -60,6 +62,8 @@ const BlockList: React.FC = () => {
           feeDisplayToggler={feeDisplayToggler}
           emptyBlocksDisplay={emptyBlocksDisplay}
           emptyBlocksDisplayToggler={emptyBlocksDisplayToggler}
+          multiColumnDisplay={multiColumnDisplay}
+          multiColumnDisplayToggler={multiColumnDisplayToggler}
         />
         {data ? (
           <StandardSelectionBoundary>
@@ -72,6 +76,7 @@ const BlockList: React.FC = () => {
                     key={block.number}
                     block={block}
                     feeDisplay={feeDisplay}
+                    multiColumnDisplay={multiColumnDisplay}
                   />
                 ) : undefined,
               )
