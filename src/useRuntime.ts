@@ -1,7 +1,9 @@
+import { Zilliqa } from "@zilliqa-js/zilliqa";
 import { JsonRpcApiProvider, JsonRpcProvider, Network } from "ethers";
 import { createContext } from "react";
 import { OtterscanConfig } from "./useConfig";
 import { createAndProbeProvider } from "./useProvider";
+import { useZilliqa } from "./useZilliqa";
 
 /**
  * A runtime comprises a OtterscanConfig read from somewhere, +
@@ -26,6 +28,12 @@ export type OtterscanRuntime = {
    * in order to fail fast obvious configuration errors.
    */
   provider: JsonRpcApiProvider;
+
+  /**
+   * Zilliqa object; may be undefined if not ready because of config fetching,
+   * probing occurring, etc.
+   */
+  zilliqa: Zilliqa;
 };
 
 /**
@@ -50,13 +58,16 @@ export const createRuntime = async (
       provider: new JsonRpcProvider(effectiveConfig.erigonURL, network, {
         staticNetwork: network,
       }),
+      zilliqa: useZilliqa(effectiveConfig.erigonURL)
     };
   }
 
+  const zilliqa = useZilliqa(effectiveConfig?.erigonURL);
   const provider = await createAndProbeProvider(effectiveConfig.erigonURL);
   return {
     config: effectiveConfig,
     provider,
+    zilliqa
   };
 };
 

@@ -24,7 +24,7 @@ const BlockLink: FC<BlockLinkProps> = ({ blockTag }) => {
       }`}
       to={blockURL(blockTag)}
     >
-      <span className="text-orange-500">
+      <span className="text-black">
         <FontAwesomeIcon className="self-center" icon={faCube} size="1x" />
       </span>
       <span>{text.toString()}</span>

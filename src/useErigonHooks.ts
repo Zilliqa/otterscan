@@ -18,6 +18,7 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import useSWR, { Fetcher } from "swr";
 import useSWRImmutable from "swr/immutable";
+import useSWRInfinite from "swr/infinite";
 import erc20 from "./abi/erc20.json";
 import L1Block from "./abi/optimism/L1Block.json";
 import { getOpFeeData, isOptimisticChain } from "./execution/op-tx-calculation";
@@ -30,6 +31,7 @@ import {
   TokenTransfer,
   TransactionData,
 } from "./types";
+import { useQuirks } from "./useQuirks";
 import { formatter } from "./utils/formatter";
 
 const TRANSFER_TOPIC =
@@ -214,6 +216,50 @@ export const useBlockData = (
   return { data, isLoading };
 };
 
+export const useRecentBlocks = (
+  provider: JsonRpcApiProvider | undefined,
+  blockNumber: number | undefined,
+  pageNumber: number,
+  pageSize: number,
+): { data: (ExtendedBlock | null)[] | undefined; isLoading: boolean } => {
+  const startBlockNum: number | undefined = blockNumber
+    ? blockNumber - pageSize * pageNumber
+    : undefined;
+
+  // This function is used by SWR to get the key which we pass to the fetcher function
+  // It also searches the cache for the presence of this key and if found returns the
+  // cached value. The pageSize differenciates the cache between components so that different components
+  // do not display incorrect number of displays
+  const getKey = (
+    pageIndex: number,
+  ): [JsonRpcApiProvider, string, number] | null => {
+    if (
+      provider == undefined ||
+      startBlockNum == undefined ||
+      startBlockNum - pageIndex < 0
+    )
+      return null;
+
+    return [provider, (startBlockNum - pageIndex).toString(), pageSize];
+  };
+
+  // Calls the fetcher to fetch the most recent pageNumber of blocks in parallel
+  const { data, error, isLoading, isValidating } = useSWRInfinite(
+    getKey,
+    blockDataFetcher,
+    {
+      keepPreviousData: true,
+      revalidateFirstPage: false,
+      initialSize: pageSize,
+      parallel: true,
+    },
+  );
+  if (error) {
+    return { data: undefined, isLoading: false };
+  }
+  return { data, isLoading: isLoading || isValidating };
+};
+
 export const useBlockDataFromTransaction = (
   provider: JsonRpcApiProvider,
   txData: TransactionData | null | undefined,
@@ -370,13 +416,15 @@ export const useInternalOperations = (
     }
 
     const _t: InternalOperation[] = [];
-    for (const t of data) {
-      _t.push({
-        type: t.type,
-        from: formatter.address(getAddress(t.from)),
-        to: formatter.address(getAddress(t.to)),
-        value: formatter.bigInt(t.value),
-      });
+    if (data) {
+      for (const t of data) {
+        _t.push({
+          type: t.type,
+          from: formatter.address(getAddress(t.from)),
+          to: formatter.address(getAddress(t.to)),
+          value: formatter.bigInt(t.value),
+        });
+      }
     }
     return _t;
   }, [data]);
@@ -547,7 +595,11 @@ export const useTraceTransaction = (
 
   useEffect(() => {
     const traceTx = async () => {
-      const results = await provider.send("ots_traceTransaction", [txHash]);
+      let results = await provider.send("ots_traceTransaction", [txHash]);
+      // null here means there was no trace
+      if (results == null) {
+        results = [];
+      }
 
       // Implement better formatter
       for (let i = 0; i < results.length; i++) {
@@ -632,9 +684,14 @@ export const useTransactionError = (
       ])) as string | null;
 
       // Empty or success
-      if (result === "0x" || typeof result !== "string") {
+      if (result === "0x" || result == null || typeof result !== "string") {
         setErrorMsg(undefined);
-        setData("0x");
+        if (result == null) {
+          // Avoid problems later :-)
+          setData("0x");
+        } else {
+          setData(result);
+        }
         setCustomError(false);
         return;
       }
@@ -817,9 +874,16 @@ export const useHasCode = (
   address: ChecksummedAddress | undefined,
   blockTag: BlockTag = "latest",
 ): boolean | undefined => {
+  const quirks = useQuirks(provider);
+  if (quirks?.isZilliqa1) {
+    // Zilliqa 1 requires that the tag be numeric, but ignores it, so we can
+    // use 0 and save ourselves a fetch.
+    blockTag = 0;
+  }
   const { data: hasCode } = useQuery(hasCodeQuery(provider, address, blockTag));
   return hasCode;
 };
+
 
 export const hasCodeQuery = (
   provider: JsonRpcApiProvider,
@@ -840,6 +904,25 @@ export const getCodeQuery = (
   queryKey: ["eth_getCode", address, blockTag],
   queryFn: () => {
     return provider.send("eth_getCode", [address, blockTag]);
+  },
+});
+
+export const useGetRawReceipt = (
+  provider: JsonRpcApiProvider | undefined,
+  address: ChecksummedAddress | undefined,
+): string | undefined => {
+  const { data } = useQuery(getTransactionReceiptQuery(provider, address));
+  return data as string | undefined;
+};
+
+
+export const getTransactionReceiptQuery = (
+  provider: JsonRpcApiProvider,
+  address: Address
+) => ({
+  queryKey: [ "eth_getTransactionReceipt", address ],
+  queryFn: () => {
+    return provider.send("eth_getTransactionReceipt", [ address ]);
   },
 });
 

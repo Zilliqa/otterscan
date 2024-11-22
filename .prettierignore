@@ -10,3 +10,6 @@ scripts
 chains
 topic0
 trustwallet
+
+node_modules
+.github

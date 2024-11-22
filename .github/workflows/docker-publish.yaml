@@ -3,9 +3,10 @@ name: Publish Docker image
 on:
   push:
     branches:
+      - "main"
       - "develop"
     tags:
-      - "*"
+      - "v*"
 
 env:
   IMAGE_NAME: ${{ github.repository }}
@@ -15,7 +16,8 @@ jobs:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      id-token: write
+      contents: write
       packages: write
 
     steps:
@@ -31,6 +33,22 @@ jobs:
           driver-opts: |
             image=moby/buildkit:master
 
+      - name: "Authenticate to Google Cloud"
+        id: google-auth
+        uses: "google-github-actions/auth@v1"
+        with:
+          token_format: "access_token"
+          workload_identity_provider: "${{ secrets.GCP_PRD_GITHUB_WIF }}"
+          service_account: "${{ secrets.GCP_PRD_GITHUB_SA_DOCKER_REGISTRY }}"
+          create_credentials_file: true
+
+      - name: Login to the registry - production
+        uses: docker/login-action@v2
+        with:
+          registry: asia-docker.pkg.dev
+          username: oauth2accesstoken
+          password: "${{ steps.google-auth.outputs.access_token }}"
+
       - name: Docker Login
         uses: docker/login-action@v3
         with:
@@ -41,7 +59,7 @@ jobs:
       - name: Docker Login
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USER }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Docker Metadata action
@@ -49,15 +67,21 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            otterscan/otterscan
-            ghcr.io/${{ env.IMAGE_NAME }}
+            zilliqa/otterscan
+            asia-docker.pkg.dev/prj-p-devops-services-tvwmrf63/zilliqa-public/otterscan
+          tags: |
+            type=ref,enable=false,priority=600,prefix=pr-,suffix=,event=pr
+            type=ref,event=branch
+            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
+            type=semver,pattern={{raw}}
 
-      - name: Build and push Docker images
-        uses: docker/build-push-action@v6
+      - name: Build and push by digest
+        id: build
+        uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          platforms: linux/amd64,linux/arm64
+          platforms: ${{ matrix.platform }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha

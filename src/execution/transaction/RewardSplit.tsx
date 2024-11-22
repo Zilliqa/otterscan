@@ -33,7 +33,7 @@ const RewardSplit: React.FC<RewardSplitProps> = ({ txData }) => {
           perc={feePerc.burned}
           bgColor="bg-orange-100"
           bgColorPerc="bg-orange-500"
-          textColor="text-orange-800"
+          textColor="text-black"
         />
         <div className="flex items-baseline space-x-1">
           <span className="flex space-x-1 text-orange-500">

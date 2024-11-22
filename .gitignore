@@ -28,3 +28,11 @@ yarn-error.log*
 
 /.vscode
 .gitsigners
+
+# Vite cache
+.vite/
+
+# emacs backups
+*~
+\.#*
+\#*

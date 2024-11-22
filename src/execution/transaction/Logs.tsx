@@ -25,6 +25,8 @@ const Logs: FC<LogsProps> = ({ logs }) => {
   }, [logs]);
   return (
     <ContentFrame tabs>
+    <div>
+      {" "}
       {logs && (
         <>
           {logs.length > 0 ? (
@@ -34,10 +36,11 @@ const Logs: FC<LogsProps> = ({ logs }) => {
               ))}
             </>
           ) : (
-            <div className="py-4 text-sm">Transaction didn't emit any logs</div>
+            <div className="py-4 text-sm">Transaction did not emit any logs</div>
           )}
         </>
-      )}
+      )}{" "}
+    </div>
     </ContentFrame>
   );
 };

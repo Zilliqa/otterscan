@@ -1,10 +1,14 @@
 import { faQrcode } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FC, lazy, memo, useContext, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useSearchParams } from "react-router-dom";
+import Header from "./Header";
 import Logo from "./Logo";
 import SourcifyMenu from "./SourcifyMenu";
 import Timestamp from "./components/Timestamp";
+import ChainInfo from "./execution/ChainInfo";
+import RecentBlocks from "./execution/block/RecentBlocks";
+import RecentDSBlocks from "./execution/block/RecentDSBlocks";
 import { useGenericSearch } from "./search/search";
 import { blockURL, slotURL } from "./url";
 import { useFinalizedSlotNumber, useSlotTimestamp } from "./useConsensus";
@@ -26,11 +30,28 @@ const Home: FC = () => {
 
   usePageTitle("Home");
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isDevMode = searchParams.get("dev") === "1";
+
   return (
     <>
-      <div className="flex justify-end py-2 px-3 lg:px-9 h-[2.875rem]">
-        <SourcifyMenu />
+      <Header sourcifyPresent={false} />
+      <div className="mx-1 my-1">
+        <ChainInfo />
       </div>
+      <div className="grid grid-cols-5 gap-x-1 mx-1">
+        {isDevMode ? (
+          <span className="col-span-2">
+            <RecentDSBlocks />
+          </span>
+        ) : (
+          <div />
+        )}
+        <span className={isDevMode ? "col-span-3" : "col-span-5"}>
+          <RecentBlocks />
+        </span>
+      </div>
+
       <div className="flex grow flex-col items-center pb-5">
         {isScanning && <CameraScanner turnOffScan={() => setScanning(false)} />}
         <div className="mb-10 mt-5 flex max-h-64 grow items-end">
@@ -48,8 +69,8 @@ const Home: FC = () => {
               type="text"
               size={50}
               data-test="home-search-input"
-              placeholder={`Search by address / txn hash / block number${
-                provider._network.getPlugin(
+              placeholder={`Search by address / txn hash / block number / # DSblock ${
+                provider?._network.getPlugin(
                   "org.ethers.plugins.network.Ens",
                 ) !== null
                   ? " / ENS name"
@@ -75,8 +96,8 @@ const Home: FC = () => {
             Search
           </button>
         </form>
-        {!(config.branding?.hideAnnouncements ?? false) &&
-          config.experimental && (
+        {!(config?.branding?.hideAnnouncements ?? false) &&
+          config?.experimental && (
             <NavLink
               className="text-md font-bold text-green-600 hover:text-green-800"
               to="contracts/all"
@@ -92,6 +113,7 @@ const Home: FC = () => {
           >
             <div>Latest block: {commify(latestBlock.number)}</div>
             <Timestamp value={latestBlock.timestamp} />
+            <div>Zilliqa Otterscan Version: {config?.version}</div>
           </NavLink>
         )}
         {finalizedSlotNumber !== undefined && (

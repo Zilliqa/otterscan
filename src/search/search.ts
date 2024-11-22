@@ -22,6 +22,9 @@ import { PAGE_SIZE } from "../params";
 import { queryClient } from "../queryClient";
 import { ProcessedTransaction, TransactionChunk } from "../types";
 import { formatter } from "../utils/formatter";
+import { fromBech32Address } from "@zilliqa-js/crypto";
+
+
 
 export const rawToProcessed = (provider: JsonRpcApiProvider, _rawRes: any) => {
   const _res: TransactionResponse[] = _rawRes.txs.map(
@@ -293,27 +296,76 @@ export const parseSearch = (q: string): string | undefined => {
     }
   }
 
+  // Tx hash?
+  if (isHexString(q, 32)) {
+    console.log(`search: this looks like a txn hash - ${q}`);
+    navigate(`/tx/${q}`);
+    return;
+  } else if (isHexString(`0x${q}`, 32)) {
+    navigate(`/tx/0x${q}`);
+    return;
+  }
+
+  // Zilliqa address?
+  try {
+    maybeAddress = fromBech32Address(maybeAddress);
+    console.log(`search: bech32 address to base16 - ${maybeAddress}`);
+  } catch (e) {
+    console.log(`search: Not a bech32 address`);
+  }
+
+  // The type checker is convinced that ethers:isAddress() will never say that a string > 40 characters
+  // long is not an address. I'm not sure why...
+  if (!isAddress(maybeAddress)) {
+    let typeCheckerIsWrong = maybeAddress as string;
+    if (typeCheckerIsWrong.length > 40) {
+      try {
+        maybeAddress =
+          "0x" +
+          typeCheckerIsWrong
+            .substr(typeCheckerIsWrong.length - 40)
+            .toLowerCase();
+      } catch (e) {
+        // Obviously not.
+      }
+    }
+  }
+
   // Plain address?
   if (isAddress(maybeAddress)) {
+    console.log(`search: maybeAddress ${maybeAddress} is an address ..`);
     return `/address/${maybeAddress}${maybeIndex !== "" ? `?nonce=${maybeIndex}` : ""}`;
   }
 
-  // Tx hash?
-  if (isHexString(q, 32)) {
-    return `/tx/${q}`;
+  // Block number?
+  // If the number here is very large, parseInt() will return an fp number which
+  // will cause errors, so ..
+  try {
+    let toParse = q;
+    console.log(`search: try to parse ${toParse} as a block number`);
+    const blockNumber = BigInt(toParse);
+    console.log(`search: ${toParse} Parses as a block number ${blockNumber}`);
+    navigate(`/block/${blockNumber.toString()}`);
+    return;
+  } catch (e) {
+    // Obviously not!
   }
 
-  // Block number?
-  const blockNumber = parseInt(q);
-  if (!isNaN(blockNumber)) {
-    return `/block/${blockNumber}`;
-  }
+  // DS Block number?
+  if (q.charAt(0) === "#") {
+    const dsBlockNumber = parseInt(q.substring(1));
+    if (!isNaN(dsBlockNumber)) {
+      console.log(`search: # ${dsBlockNumber} - it's a ds block number`);
+      navigate(`/dsblock/${dsBlockNumber}`);
+      return;
+    }
 
   // Epoch?
   if (q.startsWith("epoch:")) {
     const mayBeEpoch = q.substring(6);
     const epoch = parseInt(mayBeEpoch);
     if (!isNaN(epoch)) {
+      console.log(`search: epoch: ${epoch}`);
       return `/epoch/${epoch}`;
     }
   }
@@ -323,6 +375,7 @@ export const parseSearch = (q: string): string | undefined => {
     const mayBeSlot = q.substring(5);
     const slot = parseInt(mayBeSlot);
     if (!isNaN(slot)) {
+      console.log(`search: slot: ${slot}`);
       return `/slot/${slot}`;
     }
   }
@@ -333,6 +386,7 @@ export const parseSearch = (q: string): string | undefined => {
 
     // Validator by index
     if (mayBeValidator.match(/^\d+$/)) {
+      console.log(`search: validator: ${mayBeValidator}`);
       const validatorIndex = parseInt(mayBeValidator);
       return `/validator/${validatorIndex}`;
     }
@@ -344,6 +398,7 @@ export const parseSearch = (q: string): string | undefined => {
   }
 
   // Assume it is an ENS name
+  console.log(`search: no match: assuming ${maybeAddress} is an ENS name`);
   return `/address/${maybeAddress}${maybeIndex !== "" ? `?nonce=${maybeIndex}` : ""}`;
 };
 

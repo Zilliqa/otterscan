@@ -19,7 +19,7 @@ const Main: React.FC = () => {
 
   return (
     <AppConfigContext.Provider value={appConfig}>
-      <Header />
+      <Header sourcifyPresent={true} />
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <Suspense fallback={<div className="w-screen h-screen"></div>}>
           <Outlet />

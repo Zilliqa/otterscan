@@ -7,7 +7,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FC, useContext, useState } from "react";
 import Blockies from "react-blockies";
-import Copy from "../../components/Copy";
+import AddressSwap from "../../components/AddressSwap";
 import Faucet from "../../components/Faucet";
 import StandardSubtitle from "../../components/StandardSubtitle";
 import { useChainInfo } from "../../useChainInfo";
@@ -52,12 +52,8 @@ const AddressSubtitle: FC<AddressSubtitleProps> = ({
           seed={address.toLowerCase()}
           scale={3}
         />
-        <span>Address</span>
-        <span
-          className="font-address text-base text-gray-500"
-          data-test="address"
-        >
-          {address}
+        <span data-test="address">
+          <AddressSwap addr={address} />
         </span>
         <Copy value={address} rounded />
         {/* Only display faucets for testnets who actually have any */}

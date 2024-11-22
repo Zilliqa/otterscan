@@ -2,6 +2,8 @@ import { faQuestionCircle } from "@fortawesome/free-regular-svg-icons";
 import { faCircleNotch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TabGroup, TabList, TabPanels } from "@headlessui/react";
+import { fromBech32Address } from "@zilliqa-js/crypto";
+import { validation } from "@zilliqa-js/util";
 import { useQuery } from "@tanstack/react-query";
 import React, { useCallback, useContext } from "react";
 import {
@@ -55,10 +57,13 @@ export type AddressOutletContext = {
 };
 
 const AddressMainPage: React.FC = () => {
-  const { addressOrName, direction } = useParams();
-  if (addressOrName === undefined) {
-    throw new Error("addressOrName couldn't be undefined here");
+  const { uncheckedAddressOrName, direction } = useParams();
+  if (uncheckedAddressOrName === undefined) {
+    throw new Error("uncheckedAddressOrName couldn't be undefined here");
   }
+  const addressOrName = validation.isBech32(uncheckedAddressOrName)
+    ? fromBech32Address(uncheckedAddressOrName).toLowerCase()
+    : uncheckedAddressOrName;
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
