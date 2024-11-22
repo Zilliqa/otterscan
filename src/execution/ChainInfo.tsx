@@ -7,14 +7,21 @@ import ContentFrame from "../components/ContentFrame";
 import { PendingChainInfoResults } from "../search/PendingResults";
 import { useBCInfoStateInfo, useLatestBlockChainInfo } from "../useLatestBlock";
 import { RuntimeContext } from "../useRuntime";
+import { useQuirks } from "../useQuirks";
 
 const ChainInfo: FC = () => {
-  const { zilliqa } = useContext(RuntimeContext);
+  const { zilliqa, provider } = useContext(RuntimeContext);
+  const quirks = useQuirks(provider);
 
   const latestBlockChainInfo = useLatestBlockChainInfo(zilliqa);
 
   const BCInfo = useBCInfoStateInfo(latestBlockChainInfo);
 
+  let gridValues = "grid-rows-2 grid-cols-4"
+  if (quirks?.isZilliqa1) {
+    gridValues = "grid-rows-3 grid-cols-4"
+  }
+  gridValues = "grid items-baseline gap-x-1 border-t border-b border-gray-200 bg-gray-100 text-sm " + gridValues;
   // Return a table with rows containing the basic information of the most recent RECENT_SIZE blocks
   return (
     <ContentFrame isLoading={latestBlockChainInfo === undefined}>
@@ -22,8 +29,7 @@ const ChainInfo: FC = () => {
         <ChainInfoHeader isLoading={latestBlockChainInfo === undefined} />
         {latestBlockChainInfo ? (
           <div
-            className="grid grid-rows-3 grid-cols-4 items-baseline gap-x-1 border-t 
-        border-b border-gray-200 bg-gray-100 text-sm"
+          className={ gridValues }
           >
             <span>
               <ChainInfoItem
@@ -37,30 +43,35 @@ const ChainInfo: FC = () => {
                 data={latestBlockChainInfo.NumTransactions}
               />
             </span>
-            <span>
+            { quirks?.isZilliqa1 && (<span>
               <ChainInfoItem
                 title="Peers:"
                 data={latestBlockChainInfo.NumPeers}
               />
-            </span>
-            <span>
+              </span>) }
+            { quirks?.isZilliqa1 && (<span>
               <ChainInfoItem
                 title="Sharding Structure:"
                 data={`[${latestBlockChainInfo.ShardingStructure.NumPeers.toString()}]`}
               />
-            </span>
-            <span>
-              <ChainInfoItem
+              </span>)
+            }
+            { quirks?.isZilliqa1 && (
+              <span>
+                <ChainInfoItem
                 title="Current DS Epoch:"
                 data={latestBlockChainInfo.CurrentDSEpoch}
-              />
-            </span>
+                />
+                </span>
+            )}
+          { quirks?.isZilliqa1 && (
             <span>
               <ChainInfoItem
                 title="DS Block Rate:"
                 data={latestBlockChainInfo.DSBlockRate.toFixed(5)}
-              />
-            </span>
+                />
+              </span>)
+              }
             <span>
               <ChainInfoItem
                 title="Tx Block Rate:"
@@ -73,18 +84,22 @@ const ChainInfo: FC = () => {
                 data={latestBlockChainInfo.TransactionRate.toFixed(5)}
               />
             </span>
+            { quirks?.isZilliqa1 && (
+              <span>
+                <ChainInfoItem
+              title="Number of Txns in DS Epoch:"
+              data={latestBlockChainInfo.NumTxnsDSEpoch}
+                />
+                </span>
+            )}
+          {quirks?.isZilliqa1 && (
             <span>
               <ChainInfoItem
-                title="Number of Txns in DS Epoch:"
-                data={latestBlockChainInfo.NumTxnsDSEpoch}
-              />
-            </span>
-            <span>
-              <ChainInfoItem
-                title="Number of Txns in Txn Epoch:"
+            title="Number of Txns in Txn Epoch:"
                 data={latestBlockChainInfo.NumTxnsTxEpoch}
               />
-            </span>
+              </span>
+          )}
             <span>
               <ChainInfoItem
                 title={

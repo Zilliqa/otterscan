@@ -97,8 +97,8 @@ export const defaultChainInfo: ChainInfo = {
   name: "",
   faucets: [],
   nativeCurrency: {
-    name: "Ether",
-    symbol: "ETH",
+    name: "Zilliqa",
+    symbol: "ZIL",
     decimals: 18,
   },
 };
