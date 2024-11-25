@@ -299,11 +299,9 @@ export const parseSearch = (q: string): string | undefined => {
   // Tx hash?
   if (isHexString(q, 32)) {
     console.log(`search: this looks like a txn hash - ${q}`);
-    navigate(`/tx/${q}`);
-    return;
+    return `/tx/${q}`;
   } else if (isHexString(`0x${q}`, 32)) {
-    navigate(`/tx/0x${q}`);
-    return;
+    return `/tx/0x${q}`;
   }
 
   // Zilliqa address?
@@ -345,8 +343,7 @@ export const parseSearch = (q: string): string | undefined => {
     console.log(`search: try to parse ${toParse} as a block number`);
     const blockNumber = BigInt(toParse);
     console.log(`search: ${toParse} Parses as a block number ${blockNumber}`);
-    navigate(`/block/${blockNumber.toString()}`);
-    return;
+    return `/block/${blockNumber.toString()}`;
   } catch (e) {
     // Obviously not!
   }
@@ -356,8 +353,7 @@ export const parseSearch = (q: string): string | undefined => {
     const dsBlockNumber = parseInt(q.substring(1));
     if (!isNaN(dsBlockNumber)) {
       console.log(`search: # ${dsBlockNumber} - it's a ds block number`);
-      navigate(`/dsblock/${dsBlockNumber}`);
-      return;
+      return `/dsblock/${dsBlockNumber}`;
     }
   }
 
