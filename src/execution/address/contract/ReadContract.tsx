@@ -1,5 +1,5 @@
 import { FunctionFragment } from "ethers";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import ContentFrame from "../../../components/ContentFrame";
 import LabeledSwitch from "../../../components/LabeledSwitch";
 import StandardSelectionBoundary from "../../../selection/StandardSelectionBoundary";
@@ -7,6 +7,8 @@ import { Match, MatchType } from "../../../sourcify/useSourcify";
 import { usePageTitle } from "../../../useTitle";
 import WhatsabiWarning from "../WhatsabiWarning";
 import ReadFunction from "./ReadFunction";
+import { useIsScillaCode } from "../../../useZilliqa";
+import { RuntimeContext } from "../../../useRuntime";
 
 type ContractsProps = {
   checksummedAddress: string;
@@ -25,6 +27,8 @@ const ReadContract: React.FC<ContractsProps> = ({
   match,
 }) => {
   const [showNonViewReturns, setShowNonViewReturns] = useState<boolean>(false);
+  const { provider } = useContext(RuntimeContext);
+  const isScilla = useIsScillaCode(provider, checksummedAddress);
   usePageTitle(`Read Contract | ${checksummedAddress}`);
 
   const viewFunctions = match?.metadata.output.abi.filter((fn) =>
@@ -35,7 +39,14 @@ const ReadContract: React.FC<ContractsProps> = ({
   );
   const showDecodedOutputs = match?.type !== MatchType.WHATSABI_GUESS;
 
-  return (
+  const withScilla = (
+    <StandardSelectionBoundary>
+      <ContentFrame tabs>
+      <span>This is a scilla contract; use the state read option in the Contract tab to read the state for now</span>
+      </ContentFrame>
+      </StandardSelectionBoundary>);
+  
+  const withCode = (
     <StandardSelectionBoundary>
       <ContentFrame tabs>
         {match && match.type === MatchType.WHATSABI_GUESS && (
@@ -47,7 +58,7 @@ const ReadContract: React.FC<ContractsProps> = ({
           )}
           {match === null && (
             <span>
-              Address is not a contract or couldn't find contract metadata in
+              Address is not a contract or could not find contract metadata in
               Sourcify repository.
             </span>
           )}
@@ -108,6 +119,8 @@ const ReadContract: React.FC<ContractsProps> = ({
       </ContentFrame>
     </StandardSelectionBoundary>
   );
+
+  return isScilla ? withScilla : withCode;
 };
 
 export default React.memo(ReadContract);

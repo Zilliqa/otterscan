@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import { JsonRpcApiProvider } from "ethers";
 import { Fetcher } from "swr";
 import useSWRImmutable from "swr/immutable";
@@ -13,7 +14,7 @@ type ZilliqaVersion = {
 };
 
 export const useQuirks = (provider: JsonRpcApiProvider | undefined): Quirks => {
-  const version = useQuery(getVersionQuery(provider));
+  const { data: version } = useQuery(getVersionQuery(provider));
   const isZilliqa1 = version?.Version.match(/^v9.[0-9]+/);
   return {
     isZilliqa1: !!isZilliqa1,

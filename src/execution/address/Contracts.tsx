@@ -18,6 +18,7 @@ import ContractFromRepo from "./ContractFromRepo";
 import ScillaContract from "./ScillaContract";
 import WhatsabiWarning from "./WhatsabiWarning";
 import ContractABI from "./contract/ContractABI";
+import { useIsScillaCode } from "../../useZilliqa";
 
 const HighlightedSolidity = lazy(
   () => import("./contract/HighlightedSolidity"),
@@ -33,21 +34,8 @@ const Contracts: React.FC<ContractsProps> = ({ checksummedAddress, match }) => {
   const { data: code } = useQuery(
     getCodeQuery(provider, checksummedAddress, "latest"),
   );
-  const scillaCode = useMemo(() => {
-    try {
-      if (code) {
-        let s = toUtf8String(code);
-        if (s.startsWith("scilla_version")) {
-          return s;
-        }
-      }
-    } catch (err) {
-      // Silently ignore on purpose
-      return undefined;
-    }
-  }, [code]);
+  const scillaCode = useIsScillaCode(provider, checksummedAddress);
   usePageTitle(`Contract | ${checksummedAddress}`);
- 
 
   const [selected, setSelected] = useState<string>();
   useEffect(() => {
@@ -64,7 +52,7 @@ const Contracts: React.FC<ContractsProps> = ({ checksummedAddress, match }) => {
 
   return (
     <ContentFrame tabs>
-      {match && match.type === MatchType.WHATSABI_GUESS && <WhatsabiWarning />}
+      {match && match.type === MatchType.WHATSABI_GUESS && !scillaCode && <WhatsabiWarning />}
       {match && match.type !== MatchType.WHATSABI_GUESS && (
         <>
           {match.metadata.settings?.compilationTarget && (
@@ -104,8 +92,8 @@ const Contracts: React.FC<ContractsProps> = ({ checksummedAddress, match }) => {
         {match === null && (
           <span>
             Address is not a contract or could not find contract metadata in
-            Sourcify repository.
-          </span>
+          Sourcify repository.
+            </span>
         )}
         {match !== undefined && match !== null && (
           <>

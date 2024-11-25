@@ -20,7 +20,7 @@ import SourcifyLogo from "../sourcify/SourcifyLogo";
 import { Match, useSourcifyMetadata } from "../sourcify/useSourcify";
 import { useWhatsabiMetadata } from "../sourcify/useWhatsabi";
 import { ChecksummedAddress } from "../types";
-import { hasCodeQuery } from "../useErigonHooks";
+import { hasCodeQuery, useHasCode } from "../useErigonHooks";
 import { useAddressOrENS } from "../useResolvedAddresses";
 import { RuntimeContext } from "../useRuntime";
 import AddressSubtitle from "./address/AddressSubtitle";
@@ -84,9 +84,7 @@ const AddressMainPage: React.FC = () => {
   );
 
   const { config, provider } = useContext(RuntimeContext);
-  const { data: hasCode } = useQuery(
-    hasCodeQuery(provider, checksummedAddress, "latest"),
-  );
+  const hasCode = useHasCode(provider, checksummedAddress);
 
   const match = useSourcifyMetadata(
     hasCode ? checksummedAddress : undefined,

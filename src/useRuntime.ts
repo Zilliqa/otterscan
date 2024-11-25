@@ -3,7 +3,7 @@ import { JsonRpcApiProvider, JsonRpcProvider, Network } from "ethers";
 import { createContext } from "react";
 import { OtterscanConfig } from "./useConfig";
 import { createAndProbeProvider } from "./useProvider";
-import { useZilliqa } from "./useZilliqa";
+import { createZilliqa } from "./useZilliqa";
 
 /**
  * A runtime comprises a OtterscanConfig read from somewhere, +
@@ -58,11 +58,11 @@ export const createRuntime = async (
       provider: new JsonRpcProvider(effectiveConfig.erigonURL, network, {
         staticNetwork: network,
       }),
-      zilliqa: useZilliqa(effectiveConfig.erigonURL)
+      zilliqa: createZilliqa(effectiveConfig.erigonURL)
     };
   }
 
-  const zilliqa = useZilliqa(effectiveConfig?.erigonURL);
+  const zilliqa = createZilliqa(effectiveConfig?.erigonURL);
   const provider = await createAndProbeProvider(effectiveConfig.erigonURL);
   return {
     config: effectiveConfig,

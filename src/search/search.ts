@@ -359,6 +359,7 @@ export const parseSearch = (q: string): string | undefined => {
       navigate(`/dsblock/${dsBlockNumber}`);
       return;
     }
+  }
 
   // Epoch?
   if (q.startsWith("epoch:")) {

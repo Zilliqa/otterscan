@@ -1,3 +1,7 @@
+import { useEffect, useMemo } from "react";
+import useSWRImmutable from "swr/immutable";
+import { jsonFetcherWithErrorHandling } from "./fetcher";
+
 /**
  * Defines a set of metadata for a certain chain.
  *
@@ -239,39 +243,38 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
   try {
     const res = await fetch(configURL);
     const data = await res.json();
-
     // Override config for local dev
     const config: OtterscanConfig = { ...data };
     if (import.meta.env.DEV) {
       config.erigonURL = import.meta.env.VITE_ERIGON_URL ?? config.erigonURL;
       config.beaconAPI =
-        import.meta.env.VITE_BEACON_API_URL ?? config.beaconAPI;
+      import.meta.env.VITE_BEACON_API_URL ?? config.beaconAPI;
       config.assetsURLPrefix =
-        import.meta.env.VITE_ASSETS_URL ?? config.assetsURLPrefix;
+      import.meta.env.VITE_ASSETS_URL ?? config.assetsURLPrefix;
       config.experimental =
-        import.meta.env.VITE_EXPERIMENTAL ?? config.experimental;
+      import.meta.env.VITE_EXPERIMENTAL ?? config.experimental;
       if (import.meta.env.VITE_EXPERIMENTAL_FIXED_CHAIN_ID !== undefined) {
         config.experimentalFixedChainId = parseInt(
           import.meta.env.VITE_EXPERIMENTAL_FIXED_CHAIN_ID,
         );
       }
-      if (_config.version === undefined) {
-        _config.version = "(unknown)";
-      }
-      if (import.meta.env.VITE_OTTERSCAN_VERSION !== undefined) {
-        _config.version = import.meta.env.VITE_OTTERSCAN_VERSION;
-      }
-      try {
-        import("../autogen/version.ts").then((mod) => {
-          _config.version = mod.OTTERSCAN_VERSION;
-        });
-      } catch (e) {
-        // The version import doesn't exist - we're probably a development version.
-      }
     }
+    if (config.version === undefined) {
+      config.version = "(unknown)";
+    }
+    if (import.meta.env.VITE_OTTERSCAN_VERSION !== undefined) {
+      config.version = import.meta.env.VITE_OTTERSCAN_VERSION;
+    }
+    try {
+      import("../autogen/version.ts").then((mod) => {
+        config.version = mod.OTTERSCAN_VERSION;
+      });
+    } catch (e) {
+      // The version import doesn't exist - we're probably a development version.
+    }
+
     console.info("Loaded app config");
     console.info(config);
-
     return config;
   } catch (err) {
     throw new Error(`Error while reading config file: ${configURL}`, {

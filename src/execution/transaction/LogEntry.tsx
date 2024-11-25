@@ -1,5 +1,4 @@
 import { TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
-import { Fragment, Interface, Log } from "ethers";
 import {
   AbiCoder,
   Fragment,
@@ -191,7 +190,42 @@ const LogEntry: FC<LogEntryProps> = ({ log }) => {
   }, [topic0, log]);
 
   // If we have a known topic, use that. Otherwise, if we have an eth log, use that.
-  const resolvedLogDesc = topic0LogDesc ? logDesc : undefined;
+  const resolvedLogDesc = logDesc ?? topic0LogDesc;
+  let scillaLog = undefined;
+  if (scillaLogDesc !== null && scillaLogDesc !== undefined) {
+    scillaLog = (
+      <ScillaLogDisplay
+      eventName={scillaLogDesc.eventName}
+      address={scillaLogDesc.address}
+      params={scillaLogDesc.params}
+        />)
+  } else if (topic0ScillaEncapsLogDesc !== undefined) {
+    scillaLog = (<ScillaEncapsDisplay
+                 kind={topic0ScillaEncapsLogDesc.kind}
+                 description={topic0ScillaEncapsLogDesc.description}
+      />)
+  }
+
+  let logDescElem = (<TwoColumnPanel>Waiting for data...</TwoColumnPanel>);
+  if (resolvedLogDesc !== undefined) {
+    if (resolvedLogDesc === null) {
+      if (scillaLog !== undefined) {
+        logDescElem = scillaLog;
+      } else {
+        logDescElem = (<TwoColumnPanel>Cannot decode data</TwoColumnPanel>);
+      }
+    } else {
+      logDescElem = (                <TwoColumnPanel>
+        <DecodedLogSignature event={resolvedLogDesc.fragment} />
+                  <DecodedParamsTable
+                    args={resolvedLogDesc.args}
+                    paramTypes={resolvedLogDesc.fragment.inputs}
+                    hasParamNames={resolvedLogDesc === logDesc}
+                  />
+                </TwoColumnPanel>
+        )
+    }
+  };
 
   return (
     <div className="flex space-x-10 py-5">
@@ -212,31 +246,8 @@ const LogEntry: FC<LogEntryProps> = ({ log }) => {
             </TwoColumnPanel>
           </TabList>
           <TabPanels as={React.Fragment}>
-            <TabPanel>
-              {resolvedLogDesc !== undefined && resolvedLogDesc !== null ? (
-                <EvmLogDisplay resolvedLogDesc={resolvedLogDesc} />
-              ) : scillaLogDesc !== null && scillaLogDesc !== undefined ? (
-                <ScillaLogDisplay
-                  eventName={scillaLogDesc.eventName}
-                  address={scillaLogDesc.address}
-                  params={scillaLogDesc.params}
-                />
-              ) : topic0ScillaEncapsLogDesc !== null &&
-                topic0ScillaEncapsLogDesc !== undefined ? (
-                <ScillaEncapsDisplay
-                  kind={topic0ScillaEncapsLogDesc.kind}
-                  description={topic0ScillaEncapsLogDesc.description}
-                />
-              ) : (
-                <TwoColumnPanel>
-                  <DecodedLogSignature event={resolvedLogDesc.fragment} />
-                  <DecodedParamsTable
-                    args={resolvedLogDesc.args}
-                    paramTypes={resolvedLogDesc.fragment.inputs}
-                    hasParamNames={resolvedLogDesc === logDesc}
-                  />
-                  <div />
-                )}
+      <TabPanel>
+      { logDescElem }
             </TabPanel>
             <TabPanel as={React.Fragment}>
               <RawLog topics={log.topics} data={log.data} />
@@ -249,3 +260,21 @@ const LogEntry: FC<LogEntryProps> = ({ log }) => {
 };
 
 export default memo(LogEntry);
+
+/*       
+              {resolvedLogDesc !== undefined && resolvedLogDesc !== null ? (
+                <EvmLogDisplay resolvedLogDesc={resolvedLogDesc} />
+              ) : scillaLogDesc !== null && scillaLogDesc !== undefined ? (
+              ) : topic0ScillaEncapsLogDesc !== null &&
+                topic0ScillaEncapsLogDesc !== undefined ? (
+              ) : (
+                <TwoColumnPanel>
+                  <DecodedLogSignature event={resolvedLogDesc.fragment} />
+                  <DecodedParamsTable
+                    args={resolvedLogDesc.args}
+                    paramTypes={resolvedLogDesc.fragment.inputs}
+                    hasParamNames={resolvedLogDesc === logDesc}
+                  />
+                  <div />
+                )}
+*/

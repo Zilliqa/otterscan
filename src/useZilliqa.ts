@@ -1,14 +1,30 @@
 import { Zilliqa } from "@zilliqa-js/zilliqa";
 import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { JsonRpcApiProvider } from "ethers";
+import { getCodeQuery } from "./useErigonHooks";
+import { toUtf8String } from "ethers";
 
-export const useZilliqa = (erigonURL?: string): Zilliqa | undefined => {
-  // Do I need to use useMemo here as string is a primitive type
-  const zilliqa = useMemo((): Zilliqa | undefined => {
-    if (erigonURL === undefined) {
+
+export const createZilliqa = (erigonURL?: string): Zilliqa | undefined => {
+  return new Zilliqa(erigonURL);
+}
+
+export const useIsScillaCode = (provider: JsonRpcApiProvider | undefined, checksummedAddress?: string) => {
+  const { data : code } = useQuery(
+    getCodeQuery(provider, checksummedAddress, "latest"));
+  const scillaCode = useMemo(() => {
+        try {
+      if (code) {
+        let s = toUtf8String(code);
+        if (s.startsWith("scilla_version")) {
+          return s;
+        }
+      }
+        } catch (err) {
+      // Silently ignore on purpose
       return undefined;
     }
-    return new Zilliqa(erigonURL);
-  }, [erigonURL]);
-
-  return zilliqa;
-};
+  }, [code]);
+  return scillaCode;
+}

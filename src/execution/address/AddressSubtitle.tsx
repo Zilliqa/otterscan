@@ -55,7 +55,6 @@ const AddressSubtitle: FC<AddressSubtitleProps> = ({
         <span data-test="address">
           <AddressSwap addr={address} />
         </span>
-        <Copy value={address} rounded />
         {/* Only display faucets for testnets who actually have any */}
         {faucets && faucets.length > 0 && <Faucet address={address} rounded />}
         {config.experimental && <AddressAttributes address={address} full />}
