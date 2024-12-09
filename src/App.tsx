@@ -32,9 +32,9 @@ import { loader as searchLoader } from "./Search";
 import { getTransactionQuery, searchTransactionsQuery } from "./search/search";
 import { ConnectionStatus } from "./types";
 import { ChainInfoContext, populateChainInfo } from "./useChainInfo";
-import { useQuirks } from "./useQuirks";
 import { loadOtterscanConfig, OtterscanConfig } from "./useConfig";
 import { getBalanceQuery, getCodeQuery, hasCodeQuery } from "./useErigonHooks";
+import { useQuirks } from "./useQuirks";
 import { createRuntime, RuntimeContext } from "./useRuntime";
 import WarningHeader from "./WarningHeader";
 

@@ -222,8 +222,8 @@ const LogEntry: FC<LogEntryProps> = ({ log }) => {
         <TwoColumnPanel>
           <DecodedLogSignature event={(resolvedLogDesc as any).fragment} />
           <DecodedParamsTable
-        args={(resolvedLogDesc as any).args}
-        paramTypes={(resolvedLogDesc as any).fragment.inputs}
+            args={(resolvedLogDesc as any).args}
+            paramTypes={(resolvedLogDesc as any).fragment.inputs}
             hasParamNames={resolvedLogDesc === logDesc}
           />
         </TwoColumnPanel>
