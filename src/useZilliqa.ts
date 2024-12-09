@@ -4,12 +4,12 @@ import { JsonRpcApiProvider, toUtf8String } from "ethers";
 import { useMemo } from "react";
 import { getCodeQuery } from "./useErigonHooks";
 
-export const createZilliqa = (erigonURL?: string): Zilliqa | undefined => {
+export const createZilliqa = (erigonURL: string): Zilliqa => {
   return new Zilliqa(erigonURL);
 };
 
 export const useIsScillaCode = (
-  provider: JsonRpcApiProvider | undefined,
+  provider: JsonRpcApiProvider,
   checksummedAddress?: string,
 ) => {
   const { data: code } = useQuery(

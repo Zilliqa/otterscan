@@ -33,7 +33,7 @@ export type OtterscanRuntime = {
    * Zilliqa object; may be undefined if not ready because of config fetching,
    * probing occurring, etc.
    */
-  zilliqa: Zilliqa;
+  zilliqa?: Zilliqa;
 };
 
 /**
@@ -58,11 +58,11 @@ export const createRuntime = async (
       provider: new JsonRpcProvider(effectiveConfig.erigonURL, network, {
         staticNetwork: network,
       }),
-      zilliqa: createZilliqa(effectiveConfig.erigonURL),
+      zilliqa: createZilliqa(effectiveConfig.erigonURL!),
     };
   }
 
-  const zilliqa = createZilliqa(effectiveConfig?.erigonURL);
+  const zilliqa = createZilliqa(effectiveConfig.erigonURL!);
   const provider = await createAndProbeProvider(effectiveConfig.erigonURL);
   return {
     config: effectiveConfig,

@@ -17,4 +17,4 @@ else
     # Changes
     REPORT="${COMMIT}+"
 fi
-echo "export const OTTERSCAN_VERSION=\"${REPORT}\"" >$1
+echo "export const OTTERSCAN_VERSION = \"${REPORT}\";" >$1

@@ -203,7 +203,7 @@ export type OtterscanConfig = {
 
   /** Version number
    */
-  version: string;
+  version?: string;
 };
 
 /**

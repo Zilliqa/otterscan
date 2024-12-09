@@ -11,7 +11,7 @@ type ZilliqaVersion = {
   Version: string;
 };
 
-export const useQuirks = (provider: JsonRpcApiProvider | undefined): Quirks => {
+export const useQuirks = (provider: JsonRpcApiProvider): Quirks => {
   const { data: version } = useQuery(getVersionQuery(provider));
   const isZilliqa1 = version?.Version.match(/^v9.[0-9]+/);
   return {
