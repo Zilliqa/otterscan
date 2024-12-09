@@ -214,8 +214,8 @@ const AddressTransactionResults: FC = () => {
             <PendingPage rows={1} cols={8} />
           )}
         </StandardScrollableTable>
-      <NavBar address={address} page={page} controller={controller} />
-      <PendingTransactionResults />
+        <NavBar address={address} page={page} controller={controller} />
+        <PendingTransactionResults />
       </StandardSelectionBoundary>
     </ContentFrame>
   );

@@ -1,14 +1,14 @@
 import { FunctionFragment } from "ethers";
-import React, { useState, useContext } from "react";
+import React, { useContext, useState } from "react";
 import ContentFrame from "../../../components/ContentFrame";
 import LabeledSwitch from "../../../components/LabeledSwitch";
 import StandardSelectionBoundary from "../../../selection/StandardSelectionBoundary";
 import { Match, MatchType } from "../../../sourcify/useSourcify";
+import { RuntimeContext } from "../../../useRuntime";
 import { usePageTitle } from "../../../useTitle";
+import { useIsScillaCode } from "../../../useZilliqa";
 import WhatsabiWarning from "../WhatsabiWarning";
 import ReadFunction from "./ReadFunction";
-import { useIsScillaCode } from "../../../useZilliqa";
-import { RuntimeContext } from "../../../useRuntime";
 
 type ContractsProps = {
   checksummedAddress: string;
@@ -42,10 +42,14 @@ const ReadContract: React.FC<ContractsProps> = ({
   const withScilla = (
     <StandardSelectionBoundary>
       <ContentFrame tabs>
-      <span>This is a scilla contract; use the state read option in the Contract tab to read the state for now</span>
+        <span>
+          This is a scilla contract; use the state read option in the Contract
+          tab to read the state for now
+        </span>
       </ContentFrame>
-      </StandardSelectionBoundary>);
-  
+    </StandardSelectionBoundary>
+  );
+
   const withCode = (
     <StandardSelectionBoundary>
       <ContentFrame tabs>

@@ -58,7 +58,7 @@ export const createRuntime = async (
       provider: new JsonRpcProvider(effectiveConfig.erigonURL, network, {
         staticNetwork: network,
       }),
-      zilliqa: createZilliqa(effectiveConfig.erigonURL)
+      zilliqa: createZilliqa(effectiveConfig.erigonURL),
     };
   }
 
@@ -67,7 +67,7 @@ export const createRuntime = async (
   return {
     config: effectiveConfig,
     provider,
-    zilliqa
+    zilliqa,
   };
 };
 

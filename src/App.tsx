@@ -33,7 +33,7 @@ import { getTransactionQuery, searchTransactionsQuery } from "./search/search";
 import { ConnectionStatus } from "./types";
 import { ChainInfoContext, populateChainInfo } from "./useChainInfo";
 import { loadOtterscanConfig, OtterscanConfig } from "./useConfig";
-import { getBalanceQuery, getCodeQuery, hasCodeQuery, useHasCode } from "./useErigonHooks";
+import { getBalanceQuery, getCodeQuery, hasCodeQuery } from "./useErigonHooks";
 import { createRuntime, RuntimeContext } from "./useRuntime";
 import WarningHeader from "./WarningHeader";
 

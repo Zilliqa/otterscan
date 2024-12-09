@@ -65,5 +65,4 @@ export const PendingChainInfoResults: React.FC = React.memo(() => (
   </div>
 ));
 
-
 export default React.memo(PendingResults);

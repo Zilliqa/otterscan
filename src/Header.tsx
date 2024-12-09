@@ -79,8 +79,8 @@ const Header: FC<HeaderProps> = ({ sourcifyPresent }) => {
               title="Scan an ETH address using your camera"
             >
               <FontAwesomeIcon icon={faQrcode} />
-              </button>
-              <button
+            </button>
+            <button
               className="border bg-skin-button-fill px-2 py-1 text-sm text-skin-button hover:bg-skin-button-hover-fill focus:outline-none"
               type="button"
               onClick={() => setHelpOpen(true)}

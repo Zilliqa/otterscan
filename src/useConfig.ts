@@ -1,7 +1,3 @@
-import { useEffect, useMemo } from "react";
-import useSWRImmutable from "swr/immutable";
-import { jsonFetcherWithErrorHandling } from "./fetcher";
-
 /**
  * Defines a set of metadata for a certain chain.
  *
@@ -207,7 +203,7 @@ export type OtterscanConfig = {
 
   /** Version number
    */
-   version: string;
+  version: string;
 };
 
 /**
@@ -248,11 +244,11 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
     if (import.meta.env.DEV) {
       config.erigonURL = import.meta.env.VITE_ERIGON_URL ?? config.erigonURL;
       config.beaconAPI =
-      import.meta.env.VITE_BEACON_API_URL ?? config.beaconAPI;
+        import.meta.env.VITE_BEACON_API_URL ?? config.beaconAPI;
       config.assetsURLPrefix =
-      import.meta.env.VITE_ASSETS_URL ?? config.assetsURLPrefix;
+        import.meta.env.VITE_ASSETS_URL ?? config.assetsURLPrefix;
       config.experimental =
-      import.meta.env.VITE_EXPERIMENTAL ?? config.experimental;
+        import.meta.env.VITE_EXPERIMENTAL ?? config.experimental;
       if (import.meta.env.VITE_EXPERIMENTAL_FIXED_CHAIN_ID !== undefined) {
         config.experimentalFixedChainId = parseInt(
           import.meta.env.VITE_EXPERIMENTAL_FIXED_CHAIN_ID,

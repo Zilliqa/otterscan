@@ -49,7 +49,7 @@ const Timestamp: React.FC<TimestampProps> = ({ value, age }) => {
       <span>
         <TimestampAge timestamp={value} /> ({tsString})
       </span>
-     );
+    );
   } else {
     snippet = <span>{tsString}</span>;
   }

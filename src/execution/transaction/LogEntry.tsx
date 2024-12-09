@@ -195,37 +195,41 @@ const LogEntry: FC<LogEntryProps> = ({ log }) => {
   if (scillaLogDesc !== null && scillaLogDesc !== undefined) {
     scillaLog = (
       <ScillaLogDisplay
-      eventName={scillaLogDesc.eventName}
-      address={scillaLogDesc.address}
-      params={scillaLogDesc.params}
-        />)
+        eventName={scillaLogDesc.eventName}
+        address={scillaLogDesc.address}
+        params={scillaLogDesc.params}
+      />
+    );
   } else if (topic0ScillaEncapsLogDesc !== undefined) {
-    scillaLog = (<ScillaEncapsDisplay
-                 kind={topic0ScillaEncapsLogDesc.kind}
-                 description={topic0ScillaEncapsLogDesc.description}
-      />)
+    scillaLog = (
+      <ScillaEncapsDisplay
+        kind={topic0ScillaEncapsLogDesc.kind}
+        description={topic0ScillaEncapsLogDesc.description}
+      />
+    );
   }
 
-  let logDescElem = (<TwoColumnPanel>Waiting for data...</TwoColumnPanel>);
+  let logDescElem = <TwoColumnPanel>Waiting for data...</TwoColumnPanel>;
   if (resolvedLogDesc !== undefined) {
     if (resolvedLogDesc === null) {
       if (scillaLog !== undefined) {
         logDescElem = scillaLog;
       } else {
-        logDescElem = (<TwoColumnPanel>Cannot decode data</TwoColumnPanel>);
+        logDescElem = <TwoColumnPanel>Cannot decode data</TwoColumnPanel>;
       }
     } else {
-      logDescElem = (                <TwoColumnPanel>
-        <DecodedLogSignature event={resolvedLogDesc.fragment} />
-                  <DecodedParamsTable
-                    args={resolvedLogDesc.args}
-                    paramTypes={resolvedLogDesc.fragment.inputs}
-                    hasParamNames={resolvedLogDesc === logDesc}
-                  />
-                </TwoColumnPanel>
-        )
+      logDescElem = (
+        <TwoColumnPanel>
+          <DecodedLogSignature event={resolvedLogDesc.fragment} />
+          <DecodedParamsTable
+            args={resolvedLogDesc.args}
+            paramTypes={resolvedLogDesc.fragment.inputs}
+            hasParamNames={resolvedLogDesc === logDesc}
+          />
+        </TwoColumnPanel>
+      );
     }
-  };
+  }
 
   return (
     <div className="flex space-x-10 py-5">
@@ -246,9 +250,7 @@ const LogEntry: FC<LogEntryProps> = ({ log }) => {
             </TwoColumnPanel>
           </TabList>
           <TabPanels as={React.Fragment}>
-      <TabPanel>
-      { logDescElem }
-            </TabPanel>
+            <TabPanel>{logDescElem}</TabPanel>
             <TabPanel as={React.Fragment}>
               <RawLog topics={log.topics} data={log.data} />
             </TabPanel>

@@ -1,7 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { JsonRpcApiProvider } from "ethers";
-import { Fetcher } from "swr";
-import useSWRImmutable from "swr/immutable";
 
 export type Quirks = {
   // Zilliqa 1 has so many odd quirks that we just have to declare it ..
@@ -21,8 +19,8 @@ export const useQuirks = (provider: JsonRpcApiProvider | undefined): Quirks => {
   };
 };
 
-export const getVersionQuery = ( provider: JsonRpcApiProvider ) => ({
-  queryKey: [ "GetVersion" ],
+export const getVersionQuery = (provider: JsonRpcApiProvider) => ({
+  queryKey: ["GetVersion"],
   queryFn: () => {
     return provider.send("GetVersion", []);
   },
