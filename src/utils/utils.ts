@@ -97,7 +97,6 @@ export function commify(value: string | number | bigint): string {
   return negative + formatted.join(",") + suffix;
 }
 
-
 export const zilliqaToOtterscanTimestamp = (timestamp: string): number => {
   return Math.trunc(parseInt(timestamp, 10) / 1000000);
 };

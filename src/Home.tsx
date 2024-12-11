@@ -4,7 +4,6 @@ import { FC, lazy, memo, useContext, useState } from "react";
 import { NavLink, useSearchParams } from "react-router-dom";
 import Header from "./Header";
 import Logo from "./Logo";
-import SourcifyMenu from "./SourcifyMenu";
 import Timestamp from "./components/Timestamp";
 import ChainInfo from "./execution/ChainInfo";
 import RecentBlocks from "./execution/block/RecentBlocks";

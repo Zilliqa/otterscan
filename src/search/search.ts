@@ -1,3 +1,4 @@
+import { fromBech32Address } from "@zilliqa-js/crypto";
 import {
   JsonRpcApiProvider,
   TransactionReceiptParams,
@@ -22,9 +23,6 @@ import { PAGE_SIZE } from "../params";
 import { queryClient } from "../queryClient";
 import { ProcessedTransaction, TransactionChunk } from "../types";
 import { formatter } from "../utils/formatter";
-import { fromBech32Address } from "@zilliqa-js/crypto";
-
-
 
 export const rawToProcessed = (provider: JsonRpcApiProvider, _rawRes: any) => {
   const _res: TransactionResponse[] = _rawRes.txs.map(

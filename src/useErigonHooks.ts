@@ -884,7 +884,6 @@ export const useHasCode = (
   return hasCode;
 };
 
-
 export const hasCodeQuery = (
   provider: JsonRpcApiProvider,
   address: ChecksummedAddress | undefined,
@@ -908,21 +907,20 @@ export const getCodeQuery = (
 });
 
 export const useGetRawReceipt = (
-  provider: JsonRpcApiProvider | undefined,
-  address: ChecksummedAddress | undefined,
+  provider: JsonRpcApiProvider,
+  address: ChecksummedAddress,
 ): string | undefined => {
   const { data } = useQuery(getTransactionReceiptQuery(provider, address));
   return data as string | undefined;
 };
 
-
 export const getTransactionReceiptQuery = (
   provider: JsonRpcApiProvider,
-  address: Address
+  address: ChecksummedAddress,
 ) => ({
-  queryKey: [ "eth_getTransactionReceipt", address ],
+  queryKey: ["eth_getTransactionReceipt", address],
   queryFn: () => {
-    return provider.send("eth_getTransactionReceipt", [ address ]);
+    return provider.send("eth_getTransactionReceipt", [address]);
   },
 });
 

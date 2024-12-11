@@ -11,4 +11,4 @@ import hljsDefineSolidity from "highlightjs-solidity";
 hljsDefineSolidity(hljs);
 hljs.registerLanguage("json", json);
 
-export { SyntaxHighlighter, docco };
+export { docco, SyntaxHighlighter };

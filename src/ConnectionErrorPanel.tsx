@@ -27,8 +27,8 @@ const ConnectionErrorPanel: FC<ConnectionErrorPanelProps> = ({
           <Step type="error" msg="It does not seem to be a Zilliqa node">
             <p>Make sure your browser can access the URL above.</p>
             <p>
-              If you want to customize the Zilliqa rpc endpoint, please
-              follow the instructions in the <code>README.md</code>.
+              If you want to customize the Zilliqa rpc endpoint, please follow
+              the instructions in the <code>README.md</code>.
             </p>
           </Step>
         )}
@@ -36,7 +36,7 @@ const ConnectionErrorPanel: FC<ConnectionErrorPanelProps> = ({
           <>
             <Step type="ok" msg="It is a Zilliqa node" />
             <Step type="error" msg="It does not seem to be a Zilliqa node">
-            Make sure your Zilliqa node is up and running.
+              Make sure your Zilliqa node is up and running.
             </Step>
           </>
         )}
@@ -47,7 +47,7 @@ const ConnectionErrorPanel: FC<ConnectionErrorPanelProps> = ({
               type="error"
               msg="It does not seem to contain up-to-date Otterscan patches"
             >
-            Check your Zilliqa node version.
+              Check your Zilliqa node version.
             </Step>
           </>
         )}

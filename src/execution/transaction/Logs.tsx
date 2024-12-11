@@ -25,22 +25,24 @@ const Logs: FC<LogsProps> = ({ logs }) => {
   }, [logs]);
   return (
     <ContentFrame tabs>
-    <div>
-      {" "}
-      {logs && (
-        <>
-          {logs.length > 0 ? (
-            <>
-              {logs.map((l, i) => (
-                <LogEntry key={i} log={l} />
-              ))}
-            </>
-          ) : (
-            <div className="py-4 text-sm">Transaction did not emit any logs</div>
-          )}
-        </>
-      )}{" "}
-    </div>
+      <div>
+        {" "}
+        {logs && (
+          <>
+            {logs.length > 0 ? (
+              <>
+                {logs.map((l, i) => (
+                  <LogEntry key={i} log={l} />
+                ))}
+              </>
+            ) : (
+              <div className="py-4 text-sm">
+                Transaction did not emit any logs
+              </div>
+            )}
+          </>
+        )}{" "}
+      </div>
     </ContentFrame>
   );
 };

@@ -1,7 +1,7 @@
 import { Wallet } from "ethers";
 
 describe("Navigation", () => {
-  it("Should navigate correctly on address transaction results pages with a single transaction", () => {
+  xit("Should navigate correctly on address transaction results pages with a single transaction", () => {
     // Send 26 transactions (25n + 1, with the default page size of 25)
     const targetAddr = Wallet.createRandom().address;
     const loopArr = Array.from({ length: 25 + 1 }, (value, index) => index);

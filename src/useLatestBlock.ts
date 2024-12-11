@@ -6,7 +6,6 @@ import { formatter } from "./utils/formatter";
 
 const refreshRate = 30000; // In milliseconds
 
-
 /**
  * Returns the latest block header AND hook an internal listener
  * that'll update and trigger a component render as a side effect
@@ -131,7 +130,6 @@ export const useBCInfoStateInfo = (
 
   return state;
 };
-
 
 /**
  * Returns the latest block number AND hook an internal listener

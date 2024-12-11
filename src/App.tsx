@@ -33,7 +33,8 @@ import { getTransactionQuery, searchTransactionsQuery } from "./search/search";
 import { ConnectionStatus } from "./types";
 import { ChainInfoContext, populateChainInfo } from "./useChainInfo";
 import { loadOtterscanConfig, OtterscanConfig } from "./useConfig";
-import { getBalanceQuery, getCodeQuery, hasCodeQuery, useHasCode } from "./useErigonHooks";
+import { getBalanceQuery, getCodeQuery, hasCodeQuery } from "./useErigonHooks";
+import { useQuirks } from "./useQuirks";
 import { createRuntime, RuntimeContext } from "./useRuntime";
 import WarningHeader from "./WarningHeader";
 
@@ -108,12 +109,12 @@ const loader: LoaderFunction = async () => {
 const addressLoader: LoaderFunction = async ({ params }) => {
   runtime.then((rt) => {
     if (isAddress(params.addressOrName)) {
-      const quirks = useQuirks(provider);
+      const quirks = useQuirks(rt.provider);
       let blockTag = "latest";
       if (quirks?.isZilliqa1) {
         // Zilliqa 1 requires that the tag be numeric, but ignores it, so we can
         // use 0 and save ourselves a fetch.
-        blockTag = 0;
+        blockTag = "0";
       }
       const query = hasCodeQuery(rt.provider, params.addressOrName, blockTag);
       queryClient.prefetchQuery(query);

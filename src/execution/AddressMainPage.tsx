@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TabGroup, TabList, TabPanels } from "@headlessui/react";
 import { fromBech32Address } from "@zilliqa-js/crypto";
 import { validation } from "@zilliqa-js/util";
-import { useQuery } from "@tanstack/react-query";
 import React, { useCallback, useContext } from "react";
 import {
   Outlet,
@@ -20,7 +19,7 @@ import SourcifyLogo from "../sourcify/SourcifyLogo";
 import { Match, useSourcifyMetadata } from "../sourcify/useSourcify";
 import { useWhatsabiMetadata } from "../sourcify/useWhatsabi";
 import { ChecksummedAddress } from "../types";
-import { hasCodeQuery, useHasCode } from "../useErigonHooks";
+import { useHasCode } from "../useErigonHooks";
 import { useAddressOrENS } from "../useResolvedAddresses";
 import { RuntimeContext } from "../useRuntime";
 import AddressSubtitle from "./address/AddressSubtitle";
