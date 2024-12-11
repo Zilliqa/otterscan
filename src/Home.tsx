@@ -34,7 +34,7 @@ const Home: FC = () => {
 
   return (
     <>
-      <Header sourcifyPresent={false} />
+      <Header sourcifyPresent={true} />
       <div className="mx-1 my-1">
         <ChainInfo />
       </div>

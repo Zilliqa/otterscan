@@ -4,6 +4,7 @@ import { FC, lazy, memo, useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import PriceBox from "./PriceBox";
 import SourcifyMenu from "./SourcifyMenu";
+import NetworkMenu from "./NetworkMenu";
 import InlineCode from "./components/InlineCode";
 import { useGenericSearch } from "./search/search";
 import { RuntimeContext } from "./useRuntime";
@@ -40,7 +41,8 @@ const Header: FC<HeaderProps> = ({ sourcifyPresent }) => {
                 {config.experimental && <span className="text-red-400">2</span>}
               </span>
             </div>
-          </Link>
+      </Link>
+    <NetworkMenu />
           <div className="inline sm:hidden">
             {sourcifyPresent && <SourcifyMenu />}
           </div>
@@ -95,7 +97,7 @@ const Header: FC<HeaderProps> = ({ sourcifyPresent }) => {
               Search
             </button>
           </form>
-          <div className="hidden sm:inline self-stretch">
+           <div className="hidden sm:inline self-stretch">
             {sourcifyPresent && <SourcifyMenu />}
           </div>
         </div>

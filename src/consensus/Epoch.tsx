@@ -22,66 +22,9 @@ import SlotItem from "./epoch/SlotItem";
 
 const Epoch: FC = () => {
   const { epochNumber } = useParams();
-  if (epochNumber === undefined) {
-    throw new Error("epochNumber couldn't be undefined here");
-  }
-  const epochAsNumber = parseInt(epochNumber);
-
-  usePageTitle(isNaN(epochAsNumber) ? undefined : `Epoch #${epochAsNumber}`);
-
-  const epochTimestamp = useEpochTimestamp(epochNumber);
-  const slots = useReversedSlotsFromEpoch(epochAsNumber);
-  const finalizedSlot = useFinalizedSlotNumber();
-
-  const isFinalized = useMemo(() => {
-    if (slots === undefined || finalizedSlot === undefined) {
-      return undefined;
-    }
-
-    return slots[0] <= finalizedSlot;
-  }, [slots, finalizedSlot]);
-
-  return (
-    <StandardFrame>
-      <EpochSubtitle epochNumber={epochAsNumber} />
-      <StandardSelectionBoundary>
-        <ContentFrame key={epochAsNumber}>
-          <InfoRow title="Finalized">
-            {isFinalized === undefined ? (
-              ""
-            ) : isFinalized ? (
-              <Finalized />
-            ) : (
-              <NotFinalized />
-            )}
-          </InfoRow>
-          <InfoRow title="Timestamp">
-            {epochTimestamp && <Timestamp value={epochTimestamp} />}
-          </InfoRow>
-          <StandardTable>
-            <StandardTHead>
-              <th className="w-28">Slot</th>
-              <th className="w-24">Status</th>
-              <th className="w-24">Block</th>
-              <th className="w-32">Age</th>
-              <th className="w-24">Proposer</th>
-              <th>Root Hash</th>
-              <th className="w-24">Attestations</th>
-              <th className="w-48">Sync Participation</th>
-              <th className="w-40">Deposits/Withdrawals</th>
-              <th className="w-28">Slashings A/P</th>
-              <th className="w-24">Exits</th>
-            </StandardTHead>
-            <StandardTBody>
-              <TickerContextProvider>
-                <SlotList slots={slots} />
-              </TickerContextProvider>
-            </StandardTBody>
-          </StandardTable>
-        </ContentFrame>
-      </StandardSelectionBoundary>
-    </StandardFrame>
-  );
+  return ( <StandardFrame>
+    Zilliqa is epochless
+           </StandardFrame> );
 };
 
 type SlotListProps = {
