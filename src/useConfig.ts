@@ -228,6 +228,25 @@ export type OtterscanConfig = {
  */
 export const DEFAULT_CONFIG_FILE = "/config.json";
 
+/** Stash a connection and go to it */
+export const newConnection = async (config: OtterscanConfig, name: string, connection: string): Promise<boolean> => {
+  var storage = window["localStorage"];
+  var storageConfiguration = JSON.parse(
+    storage.getItem("otterscanConfig") ?? "{}",
+  );
+  if (!(storageConfiguration instanceof Object)) {
+    storageConfiguration = {};
+  }
+  console.log("newConnection storage " + storageConfiguration);
+  var conn = storageConfiguration["connections"] ?? config.connections;
+  conn = conn.filter((val) => val.menuName !== name);
+  conn.push( { menuName: name, url: connection });
+  storageConfiguration["connections"] = conn;
+  console.log("storing " + JSON.stringify(storageConfiguration));
+  storage.setItem("otterscanConfig", JSON.stringify(storageConfiguration));
+  return true;
+}
+
 /** Stores the connection with the given name in local storage - issuing a page reload will then
  * get us to use it.
  */
@@ -243,7 +262,8 @@ export const chooseConnection = async (
     storageConfiguration = {};
   }
   console.log("storage " + storageConfiguration);
-  for (var chain of config.connections ?? []) {
+  let connections = storageConfiguration["connections"] ?? config.connections ?? [];
+  for (var chain of connections) {
     if (chain.menuName === connection) {
       console.log(`Changing to ${chain.menuName}, URL ${chain.url} .. `);
       storageConfiguration["erigonURL"] = chain.url;
