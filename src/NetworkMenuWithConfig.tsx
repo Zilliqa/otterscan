@@ -1,6 +1,7 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import React, { FC, PropsWithChildren, useState } from "react";
-import { OtterscanConfig, chooseConnection, newConnection } from "./useConfig";
+import { OtterscanConfig, chooseConnection, newConnection, deleteParametersFromLocation } from "./useConfig";
+import InlineCode from "./components/InlineCode";
 
 type NetworkMenuWithConfigProps = {
   config: OtterscanConfig;
@@ -24,32 +25,32 @@ const NetworkMenuWithConfig: FC<NetworkMenuWithConfigProps> = ({ config }) => {
       </Menu>
     );
   }
-  
 
   async function newNetwork(name: string, url: string) {
     let result = await newConnection(config, connectName, connectUrl);
     goToNetwork(name);
   }
-  
+
   async function goToNetwork(name: string) {
     console.log("Switch to network " + name);
     const result = await chooseConnection(config, name);
     if (result) {
       console.log("Connection changed. Reloading .. ");
-      window.location.reload();
+      await deleteParametersFromLocation();
+      //window.location.reload();
     }
   }
   var legend =
-    connections.find((elem) => elem.url == config.erigonURL)?.menuName ??
+    connections.find((elem) => elem?.url == config?.erigonURL)?.menuName ??
     "Networks";
 
   const connectionItems = connections.map((conn) => (
-    <div key={conn.menuName}>
+    <div key={conn?.menuName}>
       <NetworkMenuItem
-        onClick={() => goToNetwork(conn.menuName)}
-        checked={conn.url === config.erigonURL}
-        name={conn.menuName}
-        url={conn.url ?? "(none)"}
+        onClick={() => goToNetwork(conn?.menuName)}
+        checked={conn?.url === config.erigonURL}
+        name={conn?.menuName}
+        url={conn?.url ?? "(none)"}
       ></NetworkMenuItem>
     </div>
   ));
@@ -95,8 +96,9 @@ const NetworkMenuWithConfig: FC<NetworkMenuWithConfigProps> = ({ config }) => {
                       id="modal-title"
           >
                Connect to a network
-                    </h3>
+        </h3>
           <div className="w-full mt-2 w-full">
+          <div className="text-sm"> You can also configure these by giving the <InlineCode>network</InlineCode> URL parameter to indicate a URL and (optionally) <InlineCode>name</InlineCode> for the name</div>
           <div className="text-sm text-gray-500 w-full m-4">
                      Name: <input className="border ml-4 border-gray-400" id="name" onChange={(e) => setConnectName(e.target.value)}></input>
           </div>

@@ -277,6 +277,10 @@ export const chooseConnection = async (
   return false;
 };
 
+export const deleteParametersFromLocation = async (): Promise<boolean> => {
+  window.location.search = '';
+}
+
 /**
  * Loads the global configuration according to the following criteria:
  *
@@ -364,16 +368,23 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
         for (var c of connections) {
           console.log("c = " + c + " url " + url);
           if (c.url === url) {
+            if (params.has("name")) {
+              let name = params.get("name");
+              connections = connections.map((c) =>
+                {
+                  if (c.url == url) { c.menuName = name; }; return c; } );
+            }
             found = true;
             break;
           }
         }
         if (!found) {
-          connections.push({ menuName: url, url });
+          var name = params.get("name") ?? url;
+          connections.push({ menuName: name, url });
         }
         storageConfiguration["connections"] = connections;
         console.log("sc = " + JSON.stringify(storageConfiguration));
-      }
+        }
     } catch (err) {
       console.log(`Error parsing parameters - ${err}`);
     }
