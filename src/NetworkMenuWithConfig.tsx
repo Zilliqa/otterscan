@@ -1,8 +1,6 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import React, { PropsWithChildren } from "react";
+import React, { FC, PropsWithChildren } from "react";
 import { OtterscanConfig, chooseConnection } from "./useConfig";
-import { FC, useContext, useMemo } from "react";
-
 
 type NetworkMenuWithConfigProps = {
   config: OtterscanConfig;

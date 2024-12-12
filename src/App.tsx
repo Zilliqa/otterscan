@@ -37,7 +37,6 @@ import { getBalanceQuery, getCodeQuery, hasCodeQuery } from "./useErigonHooks";
 import { useQuirks } from "./useQuirks";
 import { createRuntime, RuntimeContext } from "./useRuntime";
 import WarningHeader from "./WarningHeader";
-import { useQuirks } from "./useQuirks";
 
 const Block = lazy(() => import("./execution/Block"));
 const BlockTransactions = lazy(() => import("./execution/BlockTransactions"));

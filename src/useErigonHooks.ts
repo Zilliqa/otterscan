@@ -910,7 +910,7 @@ export const useGetRawReceipt = (
   provider: JsonRpcApiProvider,
   address: ChecksummedAddress,
 ): string | undefined => {
-  const { data } = useQuery(getTransactionReceiptQuery(provider, address));
+  const { data } = useQuery(getTransactionReceiptQuery(provider!, address));
   return data as string | undefined;
 };
 

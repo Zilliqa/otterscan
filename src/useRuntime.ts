@@ -62,7 +62,7 @@ export const createRuntime = async (
     };
   }
 
-  const zilliqa = createZilliqa(effectiveConfig.erigonURL!);
+  const zilliqa = createZilliqa(effectiveConfig?.erigonURL!)!;
   const provider = await createAndProbeProvider(effectiveConfig.erigonURL);
   return {
     config: effectiveConfig,

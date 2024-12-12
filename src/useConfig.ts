@@ -234,16 +234,16 @@ export const DEFAULT_CONFIG_FILE = "/config.json";
 export const chooseConnection = async (
   config: OtterscanConfig,
   connection: string,
-): Promise<bool> => {
+): Promise<boolean> => {
   var storage = window["localStorage"];
   var storageConfiguration = JSON.parse(
-    storage.getItem("otterscanConfig") ?? {},
+    storage.getItem("otterscanConfig") ?? "{}",
   );
   if (!(storageConfiguration instanceof Object)) {
     storageConfiguration = {};
   }
   console.log("storage " + storageConfiguration);
-  for (var chain of config.connections) {
+  for (var chain of config.connections ?? []) {
     if (chain.menuName === connection) {
       console.log(`Changing to ${chain.menuName}, URL ${chain.url} .. `);
       storageConfiguration["erigonURL"] = chain.url;
@@ -316,7 +316,7 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
       // The version import doesn't exist - we're probably a development version.
     }
     console.log(JSON.stringify(config));
-    var storageConfiguration = {};
+    var storageConfiguration: any = {};
     try {
       var storage = window["localStorage"];
       if (storage !== undefined) {
