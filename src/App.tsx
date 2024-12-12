@@ -37,6 +37,7 @@ import { getBalanceQuery, getCodeQuery, hasCodeQuery } from "./useErigonHooks";
 import { useQuirks } from "./useQuirks";
 import { createRuntime, RuntimeContext } from "./useRuntime";
 import WarningHeader from "./WarningHeader";
+import { useQuirks } from "./useQuirks";
 
 const Block = lazy(() => import("./execution/Block"));
 const BlockTransactions = lazy(() => import("./execution/BlockTransactions"));
@@ -254,13 +255,16 @@ const Layout: FC = () => {
               config.experimentalFixedChainId === undefined && (
                 <ConnectionErrorPanel
                   connStatus={ConnectionStatus.CONNECTING}
-                nodeURL={config.erigonURL!}
-                config={config}
+                  nodeURL={config.erigonURL!}
+                  config={config}
                 />
               )
             }
           >
-            <Await resolve={data.rt} errorElement={<ProbeErrorHandler config={config} />}>
+            <Await
+              resolve={data.rt}
+              errorElement={<ProbeErrorHandler config={config} />}
+            >
               {(runtime) => (
                 // App is healthy from here
                 <QueryClientProvider client={queryClient}>

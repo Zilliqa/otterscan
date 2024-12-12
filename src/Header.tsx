@@ -2,9 +2,9 @@ import { faQrcode, faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FC, lazy, memo, useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import NetworkMenu from "./NetworkMenu";
 import PriceBox from "./PriceBox";
 import SourcifyMenu from "./SourcifyMenu";
-import NetworkMenu from "./NetworkMenu";
 import InlineCode from "./components/InlineCode";
 import { useGenericSearch } from "./search/search";
 import { RuntimeContext } from "./useRuntime";
@@ -41,11 +41,11 @@ const Header: FC<HeaderProps> = ({ sourcifyPresent }) => {
                 {config.experimental && <span className="text-red-400">2</span>}
               </span>
             </div>
-      </Link>
+          </Link>
         </div>
-      <div className="pt-2 flex items-center justify-center">
-      <NetworkMenu />
-         </div>
+        <div className="pt-2 flex items-center justify-center">
+          <NetworkMenu />
+        </div>
         <div className="flex items-baseline gap-x-3">
           {(provider._network.chainId === 1n ||
             config.priceOracleInfo?.nativeTokenPrice?.ethUSDOracleAddress) && (
@@ -96,7 +96,7 @@ const Header: FC<HeaderProps> = ({ sourcifyPresent }) => {
               Search
             </button>
           </form>
-           <div className="hidden sm:inline self-stretch">
+          <div className="hidden sm:inline self-stretch">
             {sourcifyPresent && <SourcifyMenu />}
           </div>
         </div>

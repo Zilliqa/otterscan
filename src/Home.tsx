@@ -26,7 +26,7 @@ const Home: FC = () => {
   const finalizedSlotNumber = useFinalizedSlotNumber();
   const slotTime = useSlotTimestamp(finalizedSlotNumber);
   const [isScanning, setScanning] = useState<boolean>(false);
-  
+
   usePageTitle("Home");
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -113,7 +113,6 @@ const Home: FC = () => {
             <div>Latest block: {commify(latestBlock.number)}</div>
             <Timestamp value={latestBlock.timestamp} />
             <div>Zilliqa Otterscan Version: {config?.version}</div>
-            
           </NavLink>
         )}
         {finalizedSlotNumber !== undefined && (

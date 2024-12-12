@@ -8,7 +8,6 @@ export type Quirks = {
   commit?: string;
 };
 
-
 type ZilliqaVersion = {
   Commit: string;
   Version: string;
@@ -20,7 +19,7 @@ export const useQuirks = (provider: JsonRpcApiProvider): Quirks => {
   return {
     isZilliqa1: !!isZilliqa1,
     version: version?.Version,
-    commit: version?.Commit
+    commit: version?.Commit,
   };
 };
 

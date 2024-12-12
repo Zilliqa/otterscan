@@ -1,7 +1,3 @@
-import { useEffect, useMemo } from "react";
-import useSWRImmutable from "swr/immutable";
-import { jsonFetcherWithErrorHandling } from "./fetcher";
-
 /** Defines a chain you can connect to
  */
 export type ChainConnection = {
@@ -220,7 +216,7 @@ export type OtterscanConfig = {
 
   /** Version number
    */
-   version: string;
+  version: string;
 
   /** Chain connections
    */
@@ -235,11 +231,16 @@ export const DEFAULT_CONFIG_FILE = "/config.json";
 /** Stores the connection with the given name in local storage - issuing a page reload will then
  * get us to use it.
  */
-export const chooseConnection = async (config : OtterscanConfig, connection: string): Promise<bool> => {
-  var storage = window["localStorage"]
-  var storageConfiguration = JSON.parse(storage.getItem("otterscanConfig") ?? {});
+export const chooseConnection = async (
+  config: OtterscanConfig,
+  connection: string,
+): Promise<bool> => {
+  var storage = window["localStorage"];
+  var storageConfiguration = JSON.parse(
+    storage.getItem("otterscanConfig") ?? {},
+  );
   if (!(storageConfiguration instanceof Object)) {
-    storageConfiguration = {}
+    storageConfiguration = {};
   }
   console.log("storage " + storageConfiguration);
   for (var chain of config.connections) {
@@ -254,8 +255,7 @@ export const chooseConnection = async (config : OtterscanConfig, connection: str
     }
   }
   return false;
-}
-  
+};
 
 /**
  * Loads the global configuration according to the following criteria:
@@ -316,11 +316,13 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
       // The version import doesn't exist - we're probably a development version.
     }
     console.log(JSON.stringify(config));
-    var storageConfiguration = { }
+    var storageConfiguration = {};
     try {
       var storage = window["localStorage"];
       if (storage !== undefined) {
-        storageConfiguration = JSON.parse(storage.getItem("otterscanConfig") ?? "{}");
+        storageConfiguration = JSON.parse(
+          storage.getItem("otterscanConfig") ?? "{}",
+        );
         console.log("storage Config " + JSON.stringify(storageConfiguration));
       }
     } catch (err) {
@@ -335,7 +337,8 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
         console.log("has network");
         const url = params.get("network");
         storageConfiguration["erigonURL"] = url;
-        var connections = storageConfiguration["connections"] ?? config.connections;
+        var connections =
+          storageConfiguration["connections"] ?? config.connections;
         console.log("conn " + connections);
         var found = false;
         for (var c of connections) {
@@ -346,7 +349,7 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
           }
         }
         if (!found) {
-          connections.push({ menuName: url,  url })
+          connections.push({ menuName: url, url });
         }
         storageConfiguration["connections"] = connections;
         console.log("sc = " + JSON.stringify(storageConfiguration));
@@ -359,12 +362,15 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
     try {
       var storage = window["localStorage"];
       if (storage !== undefined) {
-        storage.setItem("otterscanConfig", JSON.stringify(storageConfiguration));
+        storage.setItem(
+          "otterscanConfig",
+          JSON.stringify(storageConfiguration),
+        );
       }
     } catch (err) {
       console.log(`Error storing back to local storage - ${err}`);
     }
-    config = { ... config, ... storageConfiguration };
+    config = { ...config, ...storageConfiguration };
     console.log(JSON.stringify(config));
     console.info("Loaded app config");
     console.info(config);

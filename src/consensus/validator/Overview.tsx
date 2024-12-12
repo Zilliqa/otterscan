@@ -5,7 +5,7 @@ import HexValue from "../../components/HexValue";
 import InfoRow from "../../components/InfoRow";
 import NativeTokenAmountAndFiat from "../../components/NativeTokenAmountAndFiat";
 import Timestamp from "../../components/Timestamp";
-import { useEpochTimestamp, useValidator } from "../../useConsensus";
+import { useValidator } from "../../useConsensus";
 import { usePageTitle } from "../../useTitle";
 import { commify } from "../../utils/utils";
 import EpochLink from "../components/EpochLink";
