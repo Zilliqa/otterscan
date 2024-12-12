@@ -42,11 +42,10 @@ const Header: FC<HeaderProps> = ({ sourcifyPresent }) => {
               </span>
             </div>
       </Link>
-    <NetworkMenu />
-          <div className="inline sm:hidden">
-            {sourcifyPresent && <SourcifyMenu />}
-          </div>
         </div>
+      <div className="pt-2 flex items-center justify-center">
+      <NetworkMenu />
+         </div>
         <div className="flex items-baseline gap-x-3">
           {(provider._network.chainId === 1n ||
             config.priceOracleInfo?.nativeTokenPrice?.ethUSDOracleAddress) && (

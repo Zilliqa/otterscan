@@ -4,7 +4,10 @@ import { JsonRpcApiProvider } from "ethers";
 export type Quirks = {
   // Zilliqa 1 has so many odd quirks that we just have to declare it ..
   isZilliqa1: boolean;
+  version?: string;
+  commit?: string;
 };
+
 
 type ZilliqaVersion = {
   Commit: string;
@@ -16,6 +19,8 @@ export const useQuirks = (provider: JsonRpcApiProvider): Quirks => {
   const isZilliqa1 = version?.Version.match(/^v9.[0-9]+/);
   return {
     isZilliqa1: !!isZilliqa1,
+    version: version?.Version,
+    commit: version?.Commit
   };
 };
 

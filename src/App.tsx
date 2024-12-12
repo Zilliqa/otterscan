@@ -254,12 +254,13 @@ const Layout: FC = () => {
               config.experimentalFixedChainId === undefined && (
                 <ConnectionErrorPanel
                   connStatus={ConnectionStatus.CONNECTING}
-                  nodeURL={config.erigonURL!}
+                nodeURL={config.erigonURL!}
+                config={config}
                 />
               )
             }
           >
-            <Await resolve={data.rt} errorElement={<ProbeErrorHandler />}>
+            <Await resolve={data.rt} errorElement={<ProbeErrorHandler config={config} />}>
               {(runtime) => (
                 // App is healthy from here
                 <QueryClientProvider client={queryClient}>
