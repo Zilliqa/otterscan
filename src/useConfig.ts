@@ -229,7 +229,11 @@ export type OtterscanConfig = {
 export const DEFAULT_CONFIG_FILE = "/config.json";
 
 /** Stash a connection and go to it */
-export const newConnection = async (config: OtterscanConfig, name: string, connection: string): Promise<boolean> => {
+export const newConnection = async (
+  config: OtterscanConfig,
+  name: string,
+  connection: string,
+): Promise<boolean> => {
   var storage = window["localStorage"];
   var storageConfiguration = JSON.parse(
     storage.getItem("otterscanConfig") ?? "{}",
@@ -239,13 +243,13 @@ export const newConnection = async (config: OtterscanConfig, name: string, conne
   }
   console.log("newConnection storage " + storageConfiguration);
   var conn = storageConfiguration["connections"] ?? config.connections;
-  conn = conn.filter((val) => val.menuName !== name);
-  conn.push( { menuName: name, url: connection });
+  conn = conn.filter((val: ChainConnection) => val.menuName !== name);
+  conn.push({ menuName: name, url: connection });
   storageConfiguration["connections"] = conn;
   console.log("storing " + JSON.stringify(storageConfiguration));
   storage.setItem("otterscanConfig", JSON.stringify(storageConfiguration));
   return true;
-}
+};
 
 /** Stores the connection with the given name in local storage - issuing a page reload will then
  * get us to use it.
@@ -262,7 +266,8 @@ export const chooseConnection = async (
     storageConfiguration = {};
   }
   console.log("storage " + storageConfiguration);
-  let connections = storageConfiguration["connections"] ?? config.connections ?? [];
+  let connections =
+    storageConfiguration["connections"] ?? config.connections ?? [];
   for (var chain of connections) {
     if (chain.menuName === connection) {
       console.log(`Changing to ${chain.menuName}, URL ${chain.url} .. `);
@@ -278,8 +283,9 @@ export const chooseConnection = async (
 };
 
 export const deleteParametersFromLocation = async (): Promise<boolean> => {
-  window.location.search = '';
-}
+  window.location.search = "";
+  return true;
+};
 
 /**
  * Loads the global configuration according to the following criteria:
@@ -370,9 +376,12 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
           if (c.url === url) {
             if (params.has("name")) {
               let name = params.get("name");
-              connections = connections.map((c) =>
-                {
-                  if (c.url == url) { c.menuName = name; }; return c; } );
+              connections = connections.map((c: ChainConnection) => {
+                if (c.url == url) {
+                  c.menuName = name!;
+                }
+                return c;
+              });
             }
             found = true;
             break;
@@ -384,7 +393,7 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
         }
         storageConfiguration["connections"] = connections;
         console.log("sc = " + JSON.stringify(storageConfiguration));
-        }
+      }
     } catch (err) {
       console.log(`Error parsing parameters - ${err}`);
     }
