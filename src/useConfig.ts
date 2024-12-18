@@ -9,6 +9,8 @@ export type ChainConnection = {
   url?: string;
   /** Faucet URL */
   faucets?: string[];
+  /** Hostname prefixes that default to this connection */
+  hostnames?: string[];
 };
 
 /**
@@ -287,6 +289,11 @@ export const deleteParametersFromLocation = async (): Promise<boolean> => {
   return true;
 };
 
+export const forgetLocalStorage = async (): Promise<boolean> => {
+  window["localStorage"].removeItem("otterscanConfig");
+  return true;
+}
+
 /**
  * Loads the global configuration according to the following criteria:
  *
@@ -359,20 +366,38 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
       console.log(`Failed to get localStorage config - ${err}`);
     }
 
+    // Default by hostname
+    try {
+      var host = window.location.host;
+      var connections =
+        storageConfiguration["connections"] ?? config.connections;
+      for (var c of connections) {
+        const hosts = c.hostnames;
+        if (hosts !== undefined) {
+          for (var h of hosts) {
+            if (host.startsWith(h)) {
+              if (!("erigonURL" in storageConfiguration)) {
+                storageConfiguration["erigonURL"] = c.url;
+              }
+            }
+          }
+        }
+      }
+    } catch (err) {
+      throw new Error(`Error setting URL from hostname: ${err}`);
+    }
+
     // Set up URL parameters.
     try {
       var params = new URLSearchParams(window.location.search);
       // Historical - this is the parameter devex used to use.
       if (params.has("network")) {
-        console.log("has network");
         const url = params.get("network");
         storageConfiguration["erigonURL"] = url;
         var connections =
           storageConfiguration["connections"] ?? config.connections;
-        console.log("conn " + connections);
         var found = false;
         for (var c of connections) {
-          console.log("c = " + c + " url " + url);
           if (c.url === url) {
             if (params.has("name")) {
               let name = params.get("name");
