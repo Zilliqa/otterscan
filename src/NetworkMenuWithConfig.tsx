@@ -49,7 +49,7 @@ const NetworkMenuWithConfig: FC<NetworkMenuWithConfigProps> = ({ config }) => {
 
   async function forgetBrowserSettings() {
     console.log("Forget browser settings");
-    await forgetLocalStorage(config);
+    await forgetLocalStorage();
     window.location.reload();
   }
   
@@ -175,7 +175,7 @@ type RemoveConfigItemProps = {
 };
 
 
-export const RemoveConfigItem: React.FS<RemoveConfigItemProps> = ({ onClick}) => {
+export const RemoveConfigItem: React.FC<RemoveConfigItemProps> = ({ onClick}) => {
   return (
     <MenuItem>
       {({ focus }) => (
