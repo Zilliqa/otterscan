@@ -1,20 +1,25 @@
 import {
+  faBarsProgress,
   faCheckCircle,
   faClock,
   faTimesCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FC, PropsWithChildren, memo } from "react";
+import NetworkMenuWithConfig from "./NetworkMenuWithConfig";
 import { ConnectionStatus } from "./types";
+import { OtterscanConfig } from "./useConfig";
 
 type ConnectionErrorPanelProps = {
   connStatus: ConnectionStatus;
   nodeURL: string;
+  config: OtterscanConfig;
 };
 
 const ConnectionErrorPanel: FC<ConnectionErrorPanelProps> = ({
   connStatus,
   nodeURL,
+  config,
 }) => {
   return (
     <div className="flex h-screen flex-col font-sans">
@@ -51,13 +56,19 @@ const ConnectionErrorPanel: FC<ConnectionErrorPanelProps> = ({
             </Step>
           </>
         )}
+        <div className="flex space-x-2 mt-2">
+          <span className="text-blue-600">
+            <FontAwesomeIcon icon={faBarsProgress} size="1x" />
+          </span>
+          <NetworkMenuWithConfig config={config} />
+        </div>
       </div>
     </div>
   );
 };
 
 type StepProps = {
-  type: "wait" | "ok" | "error";
+  type: "wait" | "ok" | "error" | "change";
   msg: string;
 };
 
@@ -78,6 +89,11 @@ const Step: FC<PropsWithChildren<StepProps>> = memo(
         {type === "error" && (
           <span className="text-red-600">
             <FontAwesomeIcon icon={faTimesCircle} size="1x" />
+          </span>
+        )}
+        {type === "change" && (
+          <span className="text-blue-600">
+            <FontAwesomeIcon icon={faBarsProgress} size="1x" />
           </span>
         )}
         <span>{msg}</span>

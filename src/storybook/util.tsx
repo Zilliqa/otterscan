@@ -5,8 +5,9 @@ import { SourcifySource } from "../sourcify/useSourcify";
 import { AppConfigContext } from "../useAppConfig";
 import { OtterscanConfig } from "../useConfig";
 import { RuntimeContext } from "../useRuntime";
+import { createZilliqa } from "../useZilliqa";
 
-const mockConfig: OtterscanConfig = {};
+const mockConfig: OtterscanConfig = { version: "unknown" };
 
 // Mock ETH node at localhost@4242; with mock chain ID 424242
 const mockProvider: JsonRpcProvider = new JsonRpcProvider(
@@ -19,7 +20,11 @@ const mockProvider: JsonRpcProvider = new JsonRpcProvider(
 
 export const runtimeDecorator: Decorator<unknown> = (Story) => (
   <RuntimeContext.Provider
-    value={{ config: mockConfig, provider: mockProvider }}
+    value={{
+      config: mockConfig,
+      provider: mockProvider,
+      zilliqa: createZilliqa("http://127.0.0.1:4242")!,
+    }}
   >
     <AppConfigContext.Provider
       value={{

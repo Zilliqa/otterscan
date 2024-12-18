@@ -1,4 +1,10 @@
 {
   "erigonURL": "http://localhost:8545",
-  "assetsURLPrefix": "http://localhost:5175"
+  "assetsURLPrefix": "http://localhost:5175",
+  "connections": [
+    { "menuName": "zq1-mainnet", "url": "https://mainnet-v934-fireblocks.mainnet-20240103-ase1.zq1.network" },
+    { "menuName": "zq1-testnet", "url": "https://testnet-v932-fireblocks.testnet-ase1.zq1.dev" },
+    { "menuName": "zq2-prototestnet", "url": "https://api.zq2-prototestnet.zilliqa.com" },
+    { "menuName": "zq2-protomainnet", "url": "https://api.zq2-protomainnet.zilliqa.com" }
+  ]
 }

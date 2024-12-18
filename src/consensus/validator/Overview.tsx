@@ -5,7 +5,7 @@ import HexValue from "../../components/HexValue";
 import InfoRow from "../../components/InfoRow";
 import NativeTokenAmountAndFiat from "../../components/NativeTokenAmountAndFiat";
 import Timestamp from "../../components/Timestamp";
-import { useEpochTimestamp, useValidator } from "../../useConsensus";
+import { useValidator } from "../../useConsensus";
 import { usePageTitle } from "../../useTitle";
 import { commify } from "../../utils/utils";
 import EpochLink from "../components/EpochLink";
@@ -22,16 +22,10 @@ const Overview: FC<OverviewProps> = ({ validatorIndex }) => {
 
   usePageTitle(validator ? `Validator #${validator.data.index}` : undefined);
 
-  const eligibleTimestamp = useEpochTimestamp(
-    validator?.data.validator.activation_eligibility_epoch,
-  );
-  const activationTimestamp = useEpochTimestamp(
-    validator?.data.validator.activation_epoch,
-  );
-  const exitTimestamp = useEpochTimestamp(validator?.data.validator.exit_epoch);
-  const withdrawableTimestamp = useEpochTimestamp(
-    validator?.data.validator.withdrawable_epoch,
-  );
+  const eligibleTimestamp = 0;
+  const activationTimestamp = 0;
+  const exitTimestamp = 0;
+  const withdrawableTimestamp = 0;
 
   return (
     <ContentFrame tabs>

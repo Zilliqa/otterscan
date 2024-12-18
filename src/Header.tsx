@@ -2,6 +2,7 @@ import { faQrcode, faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FC, lazy, memo, useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import NetworkMenu from "./NetworkMenu";
 import PriceBox from "./PriceBox";
 import SourcifyMenu from "./SourcifyMenu";
 import InlineCode from "./components/InlineCode";
@@ -41,9 +42,9 @@ const Header: FC<HeaderProps> = ({ sourcifyPresent }) => {
               </span>
             </div>
           </Link>
-          <div className="inline sm:hidden">
-            {sourcifyPresent && <SourcifyMenu />}
-          </div>
+        </div>
+        <div className="pt-2 flex items-center justify-center">
+          <NetworkMenu />
         </div>
         <div className="flex items-baseline gap-x-3">
           {(provider._network.chainId === 1n ||

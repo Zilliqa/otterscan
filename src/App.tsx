@@ -255,11 +255,15 @@ const Layout: FC = () => {
                 <ConnectionErrorPanel
                   connStatus={ConnectionStatus.CONNECTING}
                   nodeURL={config.erigonURL!}
+                  config={config}
                 />
               )
             }
           >
-            <Await resolve={data.rt} errorElement={<ProbeErrorHandler />}>
+            <Await
+              resolve={data.rt}
+              errorElement={<ProbeErrorHandler config={config} />}
+            >
               {(runtime) => (
                 // App is healthy from here
                 <QueryClientProvider client={queryClient}>

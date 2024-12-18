@@ -1,3 +1,16 @@
+/** Defines a chain you can connect to
+ */
+export type ChainConnection = {
+  /** Chain Info - if not present, we will assume it is null */
+  info?: ChainInfo;
+  /** Name to put in the menu */
+  menuName: string;
+  /** URL to connect to */
+  url?: string;
+  /** Faucet URL */
+  faucets?: string[];
+};
+
 /**
  * Defines a set of metadata for a certain chain.
  *
@@ -203,13 +216,76 @@ export type OtterscanConfig = {
 
   /** Version number
    */
-  version?: string;
+  version: string;
+
+  /** Chain connections
+   */
+  connections?: ChainConnection[];
 };
 
 /**
  * Default location for fetching the config file.
  */
 export const DEFAULT_CONFIG_FILE = "/config.json";
+
+/** Stash a connection and go to it */
+export const newConnection = async (
+  config: OtterscanConfig,
+  name: string,
+  connection: string,
+): Promise<boolean> => {
+  var storage = window["localStorage"];
+  var storageConfiguration = JSON.parse(
+    storage.getItem("otterscanConfig") ?? "{}",
+  );
+  if (!(storageConfiguration instanceof Object)) {
+    storageConfiguration = {};
+  }
+  console.log("newConnection storage " + storageConfiguration);
+  var conn = storageConfiguration["connections"] ?? config.connections;
+  conn = conn.filter((val: ChainConnection) => val.menuName !== name);
+  conn.push({ menuName: name, url: connection });
+  storageConfiguration["connections"] = conn;
+  console.log("storing " + JSON.stringify(storageConfiguration));
+  storage.setItem("otterscanConfig", JSON.stringify(storageConfiguration));
+  return true;
+};
+
+/** Stores the connection with the given name in local storage - issuing a page reload will then
+ * get us to use it.
+ */
+export const chooseConnection = async (
+  config: OtterscanConfig,
+  connection: string,
+): Promise<boolean> => {
+  var storage = window["localStorage"];
+  var storageConfiguration = JSON.parse(
+    storage.getItem("otterscanConfig") ?? "{}",
+  );
+  if (!(storageConfiguration instanceof Object)) {
+    storageConfiguration = {};
+  }
+  console.log("storage " + storageConfiguration);
+  let connections =
+    storageConfiguration["connections"] ?? config.connections ?? [];
+  for (var chain of connections) {
+    if (chain.menuName === connection) {
+      console.log(`Changing to ${chain.menuName}, URL ${chain.url} .. `);
+      storageConfiguration["erigonURL"] = chain.url;
+      storageConfiguration["faucets"] = chain.faucets;
+      storageConfiguration["info"] = chain.info;
+      storage.setItem("otterscanConfig", JSON.stringify(storageConfiguration));
+      console.log("stash " + JSON.stringify(storageConfiguration));
+      return true;
+    }
+  }
+  return false;
+};
+
+export const deleteParametersFromLocation = async (): Promise<boolean> => {
+  window.location.search = "";
+  return true;
+};
 
 /**
  * Loads the global configuration according to the following criteria:
@@ -236,11 +312,12 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
   // We fetch the config file from the deployment site, optionally overriding
   // some keys during development time
   const configURL = DEFAULT_CONFIG_FILE;
+
   try {
     const res = await fetch(configURL);
     const data = await res.json();
     // Override config for local dev
-    const config: OtterscanConfig = { ...data };
+    var config: OtterscanConfig = { ...data };
     if (import.meta.env.DEV) {
       config.erigonURL = import.meta.env.VITE_ERIGON_URL ?? config.erigonURL;
       config.beaconAPI =
@@ -268,7 +345,73 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
     } catch (e) {
       // The version import doesn't exist - we're probably a development version.
     }
+    console.log(JSON.stringify(config));
+    var storageConfiguration: any = {};
+    try {
+      var storage = window["localStorage"];
+      if (storage !== undefined) {
+        storageConfiguration = JSON.parse(
+          storage.getItem("otterscanConfig") ?? "{}",
+        );
+        console.log("storage Config " + JSON.stringify(storageConfiguration));
+      }
+    } catch (err) {
+      console.log(`Failed to get localStorage config - ${err}`);
+    }
 
+    // Set up URL parameters.
+    try {
+      var params = new URLSearchParams(window.location.search);
+      // Historical - this is the parameter devex used to use.
+      if (params.has("network")) {
+        console.log("has network");
+        const url = params.get("network");
+        storageConfiguration["erigonURL"] = url;
+        var connections =
+          storageConfiguration["connections"] ?? config.connections;
+        console.log("conn " + connections);
+        var found = false;
+        for (var c of connections) {
+          console.log("c = " + c + " url " + url);
+          if (c.url === url) {
+            if (params.has("name")) {
+              let name = params.get("name");
+              connections = connections.map((c: ChainConnection) => {
+                if (c.url == url) {
+                  c.menuName = name!;
+                }
+                return c;
+              });
+            }
+            found = true;
+            break;
+          }
+        }
+        if (!found) {
+          var name = params.get("name") ?? url;
+          connections.push({ menuName: name, url });
+        }
+        storageConfiguration["connections"] = connections;
+        console.log("sc = " + JSON.stringify(storageConfiguration));
+      }
+    } catch (err) {
+      console.log(`Error parsing parameters - ${err}`);
+    }
+
+    // Stash
+    try {
+      var storage = window["localStorage"];
+      if (storage !== undefined) {
+        storage.setItem(
+          "otterscanConfig",
+          JSON.stringify(storageConfiguration),
+        );
+      }
+    } catch (err) {
+      console.log(`Error storing back to local storage - ${err}`);
+    }
+    config = { ...config, ...storageConfiguration };
+    console.log(JSON.stringify(config));
     console.info("Loaded app config");
     console.info(config);
     return config;
