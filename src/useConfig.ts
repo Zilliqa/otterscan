@@ -218,7 +218,7 @@ export type OtterscanConfig = {
 
   /** Version number
    */
-  version: string;
+  version?: string;
 
   /** Chain connections
    */
@@ -371,13 +371,15 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
       var host = window.location.host;
       var connections =
         storageConfiguration["connections"] ?? config.connections;
-      for (var c of connections) {
-        const hosts = c.hostnames;
-        if (hosts !== undefined) {
-          for (var h of hosts) {
-            if (host.startsWith(h)) {
-              if (!("erigonURL" in storageConfiguration)) {
-                storageConfiguration["erigonURL"] = c.url;
+      if (connections !== undefined) {
+        for (var c of connections) {
+          const hosts = c.hostnames;
+          if (hosts !== undefined) {
+            for (var h of hosts) {
+              if (host.startsWith(h)) {
+                if (!("erigonURL" in storageConfiguration)) {
+                  storageConfiguration["erigonURL"] = c.url;
+                }
               }
             }
           }
