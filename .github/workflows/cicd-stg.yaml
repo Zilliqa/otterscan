@@ -9,7 +9,6 @@ on:
   push:
     branches:
       - main
-      - users/richard/76-docker-build-and-host-dependency
 
 jobs:
   build-makefile:
@@ -89,7 +88,7 @@ jobs:
       id-token: write
       contents: write
     runs-on: ubuntu-22.04
-    if: github.actor != 'dependabot[bot]' # && github.ref_name == 'main'
+    if: github.actor != 'dependabot[bot]' && github.ref_name == 'main'
     strategy:
       fail-fast: false
       matrix:
