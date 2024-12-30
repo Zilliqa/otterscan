@@ -16,7 +16,7 @@ jobs:
     permissions:
       id-token: write
       contents: write
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     # To test deployments, remove the github.ref_name clause: see devops/docs/z2-testing-apps.md - rrw 2024-04-12
     # && github.ref_name == 'main'
     if: github.actor != 'dependabot[bot]'
