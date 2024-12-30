@@ -15,9 +15,10 @@ endif
 HERE=$(shell pwd)
 
 IMAGE_TAG ?= otterscan:latest
-
+export IMAGE_TAG
 
 .PHONY: image/build-and-push
 image/build-and-push:
 	./scripts/gen-version.sh autogen/version.ts
-	docker buildx build -f Dockerfile.zilliqa . -t $(IMAGE_TAG)
+	docker buildx build -f Dockerfile.zilliqa . -t "${IMAGE_TAG}"
+	docker push "${IMAGE_TAG}"
