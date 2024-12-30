@@ -1,0 +1,11 @@
+apiVersion: networking.gke.io/v1beta1
+kind: FrontendConfig
+metadata:
+  name: developer-portal
+  namespace: developer-portal
+  labels:
+    app.kubernetes.io/name: "otterscan"
+spec:
+  redirectToHttps:
+    enabled: true
+    responseCodeName: RESPONSE_CODE

@@ -352,7 +352,7 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
     } catch (e) {
       // The version import doesn't exist - we're probably a development version.
     }
-    console.log(JSON.stringify(config));
+    //console.log(JSON.stringify(config));
     var storageConfiguration: any = {};
     try {
       var storage = window["localStorage"];
@@ -360,7 +360,7 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
         storageConfiguration = JSON.parse(
           storage.getItem("otterscanConfig") ?? "{}",
         );
-        console.log("storage Config " + JSON.stringify(storageConfiguration));
+        // console.log("storage Config " + JSON.stringify(storageConfiguration));
       }
     } catch (err) {
       console.log(`Failed to get localStorage config - ${err}`);
@@ -387,6 +387,21 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
       }
     } catch (err) {
       throw new Error(`Error setting URL from hostname: ${err}`);
+    }
+
+    // If we've still not got a connection, use the first one.
+    try {
+      if (config.erigonURL === undefined || config.erigonURL == null) {
+        var connections = storageConfiguration["connections"] ?? config.connections;
+        if (connections !== undefined) {
+          if (!("erigonURL" in storageConfiguration)) {
+            console.log("No URL; using first connection " + connections[0].url);
+            storageConfiguration["erigonURL"] = connections[0].url;
+          }
+        }
+      }
+    } catch (err) {
+      throw new Error(`Error setting default connection`);
     }
 
     // Set up URL parameters.
