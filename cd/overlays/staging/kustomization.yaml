@@ -30,6 +30,6 @@ patches:
 configMapGenerator:
   - name: config
     files:
-      - config.yaml
+      - config.json
 
 namespace: otterscan-stg

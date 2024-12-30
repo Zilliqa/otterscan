@@ -25,6 +25,7 @@ spec:
               value: yes
           volumeMounts:
             - name: config-vol
+              subPath: config.json
               mountPath: /usr/share/nginx/html/config.json
           ports:
             - containerPort: 80
@@ -35,7 +36,7 @@ spec:
               memory: 100Mi
           readinessProbe:
             httpGet:
-              path: /health
+              path: /
               port: 80
       volumes:
         - name: config-vol
