@@ -5,8 +5,8 @@ import {
   OtterscanConfig,
   chooseConnection,
   deleteParametersFromLocation,
+  forgetLocalStorage,
   newConnection,
-  forgetLocalStorage
 } from "./useConfig";
 
 type NetworkMenuWithConfigProps = {
@@ -52,7 +52,7 @@ const NetworkMenuWithConfig: FC<NetworkMenuWithConfigProps> = ({ config }) => {
     await forgetLocalStorage();
     window.location.reload();
   }
-  
+
   var legend =
     connections.find((elem) => elem?.url == config?.erigonURL)?.menuName ??
     "Networks";
@@ -76,8 +76,8 @@ const NetworkMenuWithConfig: FC<NetworkMenuWithConfigProps> = ({ config }) => {
           </MenuButton>
           <MenuItems className="absolute left-0 mt-1 flex min-w-max flex-col rounded-b border bg-white p-1 text-sm">
             {connectionItems}
-          <NetworkSetItem onClick={() => setGoToOpen(true)} />
-      <RemoveConfigItem onClick={() => forgetBrowserSettings()} />
+            <NetworkSetItem onClick={() => setGoToOpen(true)} />
+            <RemoveConfigItem onClick={() => forgetBrowserSettings()} />
           </MenuItems>
         </div>
       </Menu>
@@ -160,7 +160,7 @@ const NetworkMenuWithConfig: FC<NetworkMenuWithConfigProps> = ({ config }) => {
                   }}
                 >
                   Connect
-        </button>
+                </button>
               </div>
             </div>
           </div>
@@ -174,8 +174,9 @@ type RemoveConfigItemProps = {
   onClick: (event?: any) => void;
 };
 
-
-export const RemoveConfigItem: React.FC<RemoveConfigItemProps> = ({ onClick}) => {
+export const RemoveConfigItem: React.FC<RemoveConfigItemProps> = ({
+  onClick,
+}) => {
   return (
     <MenuItem>
       {({ focus }) => (
@@ -185,11 +186,11 @@ export const RemoveConfigItem: React.FC<RemoveConfigItemProps> = ({ onClick}) =>
           } transition-colors transition-transform duration-75`}
         >
           <button name="Forget" onClick={onClick}>
-          Forget Browser Settings
+            Forget Browser Settings
           </button>
         </div>
       )}
-      </MenuItem>
+    </MenuItem>
   );
 };
 

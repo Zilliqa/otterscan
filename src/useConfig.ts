@@ -292,7 +292,7 @@ export const deleteParametersFromLocation = async (): Promise<boolean> => {
 export const forgetLocalStorage = async (): Promise<boolean> => {
   window["localStorage"].removeItem("otterscanConfig");
   return true;
-}
+};
 
 /**
  * Loads the global configuration according to the following criteria:
