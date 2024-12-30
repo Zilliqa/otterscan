@@ -22,7 +22,7 @@ spec:
           name: otterscan
           env:
             - name: DISABLE_CONFIG_OVERWRITE
-              value: "yes"
+              value: "disable"
           volumeMounts:
             - name: config-vol
               subPath: config.json
