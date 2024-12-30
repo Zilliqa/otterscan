@@ -392,7 +392,8 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
     // If we've still not got a connection, use the first one.
     try {
       if (config.erigonURL === undefined || config.erigonURL == null) {
-        var connections = storageConfiguration["connections"] ?? config.connections;
+        var connections =
+          storageConfiguration["connections"] ?? config.connections;
         if (connections !== undefined) {
           if (!("erigonURL" in storageConfiguration)) {
             console.log("No URL; using first connection " + connections[0].url);
