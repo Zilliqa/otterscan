@@ -9,6 +9,8 @@ export type ChainConnection = {
   url?: string;
   /** Faucet URL */
   faucets?: string[];
+  /** Hostname prefixes that default to this connection */
+  hostnames?: string[];
 };
 
 /**
@@ -216,7 +218,7 @@ export type OtterscanConfig = {
 
   /** Version number
    */
-  version: string;
+  version?: string;
 
   /** Chain connections
    */
@@ -287,6 +289,11 @@ export const deleteParametersFromLocation = async (): Promise<boolean> => {
   return true;
 };
 
+export const forgetLocalStorage = async (): Promise<boolean> => {
+  window["localStorage"].removeItem("otterscanConfig");
+  return true;
+};
+
 /**
  * Loads the global configuration according to the following criteria:
  *
@@ -345,7 +352,7 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
     } catch (e) {
       // The version import doesn't exist - we're probably a development version.
     }
-    console.log(JSON.stringify(config));
+    //console.log(JSON.stringify(config));
     var storageConfiguration: any = {};
     try {
       var storage = window["localStorage"];
@@ -353,10 +360,49 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
         storageConfiguration = JSON.parse(
           storage.getItem("otterscanConfig") ?? "{}",
         );
-        console.log("storage Config " + JSON.stringify(storageConfiguration));
+        // console.log("storage Config " + JSON.stringify(storageConfiguration));
       }
     } catch (err) {
       console.log(`Failed to get localStorage config - ${err}`);
+    }
+
+    // Default by hostname
+    try {
+      var host = window.location.host;
+      var connections =
+        storageConfiguration["connections"] ?? config.connections;
+      if (connections !== undefined) {
+        for (var c of connections) {
+          const hosts = c.hostnames;
+          if (hosts !== undefined) {
+            for (var h of hosts) {
+              if (host.startsWith(h)) {
+                if (!("erigonURL" in storageConfiguration)) {
+                  storageConfiguration["erigonURL"] = c.url;
+                }
+              }
+            }
+          }
+        }
+      }
+    } catch (err) {
+      throw new Error(`Error setting URL from hostname: ${err}`);
+    }
+
+    // If we've still not got a connection, use the first one.
+    try {
+      if (config.erigonURL === undefined || config.erigonURL == null) {
+        var connections =
+          storageConfiguration["connections"] ?? config.connections;
+        if (connections !== undefined) {
+          if (!("erigonURL" in storageConfiguration)) {
+            console.log("No URL; using first connection " + connections[0].url);
+            storageConfiguration["erigonURL"] = connections[0].url;
+          }
+        }
+      }
+    } catch (err) {
+      throw new Error(`Error setting default connection`);
     }
 
     // Set up URL parameters.
@@ -364,15 +410,12 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
       var params = new URLSearchParams(window.location.search);
       // Historical - this is the parameter devex used to use.
       if (params.has("network")) {
-        console.log("has network");
         const url = params.get("network");
         storageConfiguration["erigonURL"] = url;
         var connections =
           storageConfiguration["connections"] ?? config.connections;
-        console.log("conn " + connections);
         var found = false;
         for (var c of connections) {
-          console.log("c = " + c + " url " + url);
           if (c.url === url) {
             if (params.has("name")) {
               let name = params.get("name");

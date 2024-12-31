@@ -5,6 +5,7 @@ import {
   OtterscanConfig,
   chooseConnection,
   deleteParametersFromLocation,
+  forgetLocalStorage,
   newConnection,
 } from "./useConfig";
 
@@ -45,6 +46,13 @@ const NetworkMenuWithConfig: FC<NetworkMenuWithConfigProps> = ({ config }) => {
       //window.location.reload();
     }
   }
+
+  async function forgetBrowserSettings() {
+    console.log("Forget browser settings");
+    await forgetLocalStorage();
+    window.location.reload();
+  }
+
   var legend =
     connections.find((elem) => elem?.url == config?.erigonURL)?.menuName ??
     "Networks";
@@ -69,6 +77,7 @@ const NetworkMenuWithConfig: FC<NetworkMenuWithConfigProps> = ({ config }) => {
           <MenuItems className="absolute left-0 mt-1 flex min-w-max flex-col rounded-b border bg-white p-1 text-sm">
             {connectionItems}
             <NetworkSetItem onClick={() => setGoToOpen(true)} />
+            <RemoveConfigItem onClick={() => forgetBrowserSettings()} />
           </MenuItems>
         </div>
       </Menu>
@@ -158,6 +167,30 @@ const NetworkMenuWithConfig: FC<NetworkMenuWithConfigProps> = ({ config }) => {
         </div>
       )}
     </>
+  );
+};
+
+type RemoveConfigItemProps = {
+  onClick: (event?: any) => void;
+};
+
+export const RemoveConfigItem: React.FC<RemoveConfigItemProps> = ({
+  onClick,
+}) => {
+  return (
+    <MenuItem>
+      {({ focus }) => (
+        <div
+          className={`px-2 py-1 text-left text-sm ${
+            focus ? "border-zq-lightblue text-gray-500" : "text-gray-400"
+          } transition-colors transition-transform duration-75`}
+        >
+          <button name="Forget" onClick={onClick}>
+            Forget Browser Settings
+          </button>
+        </div>
+      )}
+    </MenuItem>
   );
 };
 
