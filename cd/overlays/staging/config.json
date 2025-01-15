@@ -19,6 +19,11 @@
       "menuName": "zq2-protomainnet",
       "url": "https://api.zq2-protomainnet.zilliqa.com",
       "hostnames": ["explorer.zq2-protomainnet.zilliqa.com"]
+    },
+    {
+      "menuName": "zq2-infratest",
+      "url": "https://api.zq2-infratest.zilstg.dev",
+      "hostnames": ["explorer.zq2-infratest.zilstg.dev"]
     }
   ]
 }
