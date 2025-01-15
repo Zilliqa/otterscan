@@ -4,9 +4,7 @@ metadata:
   name: otterscan
   namespace: otterscan
   labels:
-    app.kubernetes.io/name: "otterscan"
-  annotations:
-    beta.cloud.google.com/backend-config: '{"default": "otterscan"}'
+    app.kubernetes.io/name: otterscan
 spec:
   type: ClusterIP
   ports:
@@ -15,4 +13,4 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app.kubernetes.io/name: "otterscan"
+    app.kubernetes.io/name: otterscan

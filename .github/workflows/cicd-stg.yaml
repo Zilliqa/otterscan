@@ -93,7 +93,8 @@ jobs:
       fail-fast: false
       matrix:
         application:
-          - developer-portal
+          - otterscan-dev
+          - otterscan
     env:
       APP_NAME: ${{ matrix.application }}
       Z_ENV: infra/live/gcp/non-production/prj-d-staging/z_ase1.yaml
