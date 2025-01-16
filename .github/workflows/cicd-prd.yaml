@@ -1,10 +1,9 @@
 name: "CICD production"
 
 on:
-  # On merged
-  push:
-    branches:
-      - main
+  # On release
+  release:
+    types: [published]
 
 jobs:
   build-makefile:
@@ -52,17 +51,10 @@ jobs:
           username: "oauth2accesstoken"
           password: "${{ steps.google-auth.outputs.access_token }}"
 
-      - name: Get tag version - production
-        id: set-tag
-        uses: Zilliqa/gh-actions-workflows/actions/generate-tag@v1
-        with:
-          tag: ${{ env.REGISTRY }}/${{ matrix.image_name }}
-          length: ${{ matrix.tag_length }}
-
       - name: "Build and push ${{ matrix.application }} - production"
         env:
           ENVIRONMENT: prd
-          IMAGE_TAG: ${{ steps.set-tag.outputs.tags }}
+          IMAGE_TAG: ${{ env.REGISTRY }}/${{ matrix.image_name }}:${{ github.ref_name }}
         run: |
           cd ${{ matrix.path }}
           make image/build-and-push
@@ -82,7 +74,7 @@ jobs:
       id-token: write
       contents: write
     runs-on: ubuntu-22.04
-    if: github.actor != 'dependabot[bot]' && github.ref_name == 'main'
+    if: github.event_name == 'release'
     strategy:
       fail-fast: false
       matrix:
