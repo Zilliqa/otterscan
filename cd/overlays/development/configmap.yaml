@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otterscan
+  namespace: otterscan
+  labels:
+    app.kubernetes.io/name: otterscan
+data:
+  config.json: |
+    {
+      "connections": [
+        {
+          "menuName": "zq2-infratest",
+          "url": "https://api.zq2-infratest.zilstg.dev",
+          "hostnames": ["explorer.zq2-infratest.zilstg.dev"]
+        },
+        {
+          "menuName": "zq2-perftest",
+          "url": "https://api.zq2-perftest.zilstg.dev",
+          "hostnames": ["explorer.zq2-perftest.zilstg.dev"]
+        },
+        {
+          "menuName": "zq2-uccbtest",
+          "url": "https://api.zq2-uccbtest.zilstg.dev",
+          "hostnames": ["explorer.zq2-uccbtest.zilstg.dev"]
+        },
+        {
+          "menuName": "zq2-richard",
+          "url": "https://api.zq2-richard.zilstg.dev",
+          "hostnames": ["explorer.zq2-richard.zilstg.dev"]
+        }
+      ]
+    }
