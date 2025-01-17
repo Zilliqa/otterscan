@@ -108,7 +108,7 @@ jobs:
       id-token: write
       contents: write
     runs-on: ubuntu-22.04
-    if: github.actor != 'dependabot[bot]' && github.ref_name == 'main'
+    if: github.event_name == 'release'
     strategy:
       fail-fast: false
       matrix:
