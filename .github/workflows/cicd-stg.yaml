@@ -31,8 +31,8 @@ jobs:
             tag_length: 8
             tag_latest: false
     env:
-      DOCKER_DOMAIN: asia-docker.pkg.dev
-      REGISTRY: asia-docker.pkg.dev/prj-d-devops-services-4dgwlsse/zilliqa-public
+      REGISTRY: asia-docker.pkg.dev
+      REPOSITORY: asia-docker.pkg.dev/prj-d-devops-services-4dgwlsse/zilliqa-public
     steps:
       - name: Checkout code
         uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29
@@ -54,7 +54,7 @@ jobs:
       - name: Login to the registry - staging
         uses: docker/login-action@e92390c5fb421da1463c202d546fed0ec5c39f20
         with:
-          registry: ${{ env.DOCKER_DOMAIN }}
+          registry: ${{ env.REGISTRY }}
           username: "oauth2accesstoken"
           password: "${{ steps.google-auth.outputs.access_token }}"
 
@@ -62,7 +62,7 @@ jobs:
         id: set-tag
         uses: Zilliqa/gh-actions-workflows/actions/generate-tag@v1
         with:
-          tag: ${{ env.REGISTRY }}/${{ matrix.image_name }}
+          tag: ${{ env.REPOSITORY }}/${{ matrix.image_name }}
           length: ${{ matrix.tag_length }}
 
       - name: "Build and push ${{ matrix.application }} - staging"
@@ -77,7 +77,7 @@ jobs:
         if: ${{ matrix.tag_latest == true }}
         env:
           ENVIRONMENT: stg
-          IMAGE_TAG: "${{ env.REGISTRY }}/${{ matrix.image_name }}:latest"
+          IMAGE_TAG: "${{ env.REPOSITORY }}/${{ matrix.image_name }}:latest"
         run: |
           cd ${{ matrix.path }}
           make image/build-and-push
@@ -93,7 +93,6 @@ jobs:
       fail-fast: false
       matrix:
         application:
-          - otterscan-dev
           - otterscan
     env:
       APP_NAME: ${{ matrix.application }}

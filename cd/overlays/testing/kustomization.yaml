@@ -1,0 +1,54 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: otterscan-tst
+
+resources:
+  - ../../base
+  - configmap.yaml
+  - certificate.yaml
+  - backend-config.yaml
+  - frontend-config.yaml
+
+patches:
+  - target:
+      kind: Ingress
+      name: otterscan
+    patch: |-
+      - op: replace
+        path: "/spec/rules/0/host"
+        value: otterscan.zilstg.dev
+      - op: replace
+        path: /metadata/annotations
+        value:
+          kubernetes.io/ingress.class: gce
+          kubernetes.io/ingress.global-static-ip-name: otterscan-zilstg-dev
+          networking.gke.io/managed-certificates: otterscan
+          networking.gke.io/v1beta1.FrontendConfig: otterscan
+
+  - target:
+      kind: Service
+      name: otterscan
+    patch: |-
+      - op: add
+        path: /metadata/annotations
+        value:
+          beta.cloud.google.com/backend-config: '{"default": "otterscan"}'
+
+  - target:
+      kind: Deployment
+      name: otterscan
+    patch: |-
+      - op: add
+        path: /spec/template/spec/volumes
+        value:
+          - name: network-config
+            configMap:
+              name: otterscan
+      - op: add
+        path: /spec/template/spec/containers/0/volumeMounts
+        value:
+          - mountPath: /usr/share/nginx/html/config.json
+            readOnly: true
+            name: network-config
+            subPath: config.json
