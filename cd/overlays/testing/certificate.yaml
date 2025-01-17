@@ -1,0 +1,9 @@
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: otterscan
+  labels:
+    app.kubernetes.io/name: otterscan
+spec:
+  domains:
+    - otterscan.zilstg.dev
