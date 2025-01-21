@@ -10,6 +10,36 @@ data:
     {
       "connections": [
         {
+          "menuName": "zq2-protomainnet",
+          "url": "https://api.zq2-protomainnet.zilliqa.com",
+          "hostnames": ["explorer.zq2-protomainnet.zilliqa.com"]
+        },
+        {
+          "menuName": "zq2-prototestnet",
+          "url": "https://api.zq2-prototestnet.zilliqa.com",
+          "hostnames": ["explorer.zq2-prototestnet.zilliqa.com"]
+        },
+        {
+          "menuName": "zq2-devnet",
+          "url": "https://api.zq2-devnet.zilliqa.com",
+          "hostnames": ["explorer.zq2-devnet.zilliqa.com"]
+        },
+        {
+          "menuName": "zq1-mainnet",
+          "url": "https://mainnet-v934-fireblocks.mainnet-20240103-ase1.zq1.network",
+          "hostnames": ["otterscan.zilliqa.com"]
+        },
+        {
+          "menuName": "zq1-testnet",
+          "url": "https://testnet-v932-fireblocks.testnet-ase1.zq1.dev",
+          "hostnames": ["otterscan.testnet.zilliqa.com"]
+        },
+        {
+          "menuName": "zq1-devnet",
+          "url": "https://devnet-pub-v930-otterscan.devnet-ase1.zq1.dev",
+          "hostnames": ["otterscan.devnet.zilliqa.com"]
+        },
+        {
           "menuName": "zq2-infratest",
           "url": "https://api.zq2-infratest.zilstg.dev",
           "hostnames": ["explorer.zq2-infratest.zilstg.dev"]
