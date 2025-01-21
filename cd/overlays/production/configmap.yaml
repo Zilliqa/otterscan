@@ -13,11 +13,6 @@ data:
           "menuName": "zq2-protomainnet",
           "url": "https://api.zq2-protomainnet.zilliqa.com",
           "hostnames": ["explorer.zq2-protomainnet.zilliqa.com"]
-        },
-        {
-          "menuName": "zq1-mainnet",
-          "url": "https://mainnet-v934-fireblocks.mainnet-20240103-ase1.zq1.network",
-          "hostnames": ["otterscan.zilliqa.com"]
         }
       ]
     }

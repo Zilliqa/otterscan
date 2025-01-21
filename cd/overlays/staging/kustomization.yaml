@@ -17,11 +17,63 @@ patches:
     patch: |-
       - op: replace
         path: "/spec/rules/0/host"
-        value: explorer.zq2-devnet.zilliqa.com
+        value: explorer.zq2-prototestnet.zilliqa.com
       - op: add
         path: "/spec/rules/-"
         value:
-          host: explorer.zq2-prototestnet.zilliqa.com
+          host: explorer.zq2-devnet.zilliqa.com
+          http:
+            paths:
+              - path: /
+                pathType: Prefix
+                backend:
+                  service:
+                    name: otterscan
+                    port:
+                      number: 80
+      - op: add
+        path: "/spec/rules/-"
+        value:
+          host: explorer.zq2-infratest.zilstg.dev
+          http:
+            paths:
+              - path: /
+                pathType: Prefix
+                backend:
+                  service:
+                    name: otterscan
+                    port:
+                      number: 80
+      - op: add
+        path: "/spec/rules/-"
+        value:
+          host: explorer.zq2-perftest.zilstg.dev
+          http:
+            paths:
+              - path: /
+                pathType: Prefix
+                backend:
+                  service:
+                    name: otterscan
+                    port:
+                      number: 80
+      - op: add
+        path: "/spec/rules/-"
+        value:
+          host: explorer.zq2-uccbtest.zilstg.dev
+          http:
+            paths:
+              - path: /
+                pathType: Prefix
+                backend:
+                  service:
+                    name: otterscan
+                    port:
+                      number: 80
+      - op: add
+        path: "/spec/rules/-"
+        value:
+          host: explorer.zq2-richard.zilstg.dev
           http:
             paths:
               - path: /
