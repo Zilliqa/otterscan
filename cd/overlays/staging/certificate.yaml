@@ -8,3 +8,7 @@ spec:
   domains:
     - explorer.zq2-prototestnet.zilliqa.com
     - explorer.zq2-devnet.zilliqa.com
+    - explorer.zq2-infratest.zilstg.dev
+    - explorer.zq2-perftest.zilstg.dev
+    - explorer.zq2-uccbtest.zilstg.dev
+    - explorer.zq2-richard.zilstg.dev
