@@ -192,9 +192,6 @@ export type OtterscanConfig = {
      */
     backendFormat?: string;
 
-    /** Should we display the connection menu?
-     */
-    displayConnectionMenu?: boolean;
   };
 
   /**
@@ -212,6 +209,7 @@ export type OtterscanConfig = {
      * a trailing forward slash, e.g. "https://sepolia.otterscan.io".
      */
     l1ExplorerURL?: string;
+
   };
 
   /**
@@ -227,6 +225,10 @@ export type OtterscanConfig = {
   /** Chain connections
    */
   connections?: ChainConnection[];
+
+  /** Should we display the connection menu?
+   */
+  displayConnectionMenu?: boolean;
 };
 
 /**
@@ -376,7 +378,7 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
     try {
       var host = window.location.host;
       // Ignore locally stored connections when matching hostnames.
-      var connections = config.connections;
+      var connections : ChainConnection[] | undefined = config.connections;
       if (connections !== undefined) {
         for (var c of connections) {
           const hosts = c.hostnames;
@@ -397,7 +399,7 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
     // If we've still not got a connection, use the first one.
     try {
       if (config.erigonURL === undefined || config.erigonURL == null) {
-        var connections =
+        var connections : ChainConnection[] | undefined  =
           storageConfiguration["connections"] ?? config.connections;
         if (connections !== undefined) {
           if (!("erigonURL" in storageConfiguration)) {
@@ -418,27 +420,31 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
         if (params.has("network")) {
           const url = params.get("network");
           storageConfiguration["erigonURL"] = url;
-          var connections =
+          var connections: ChainConnection[] | undefined  =
             storageConfiguration["connections"] ?? config.connections;
           var found = false;
-          for (var c of connections) {
-            if (c.url === url) {
-              if (params.has("name")) {
-                let name = params.get("name");
-                connections = connections.map((c: ChainConnection) => {
-                  if (c.url == url) {
-                    c.menuName = name!;
-                  }
-                  return c;
-                });
+          if (connections) {
+            for (var c of connections) {
+              if (c.url === url) {
+                if (params.has("name")) {
+                  let name = params.get("name");
+                  connections = connections.map((c: ChainConnection) => {
+                    if (c.url == url) {
+                      c.menuName = name!;
+                    }
+                    return c;
+                  });
+                }
+                found = true;
+                break;
               }
-              found = true;
-              break;
             }
-          }
-          if (!found) {
-            var name = params.get("name") ?? url;
-            connections.push({ menuName: name, url });
+            if (!found) {
+              var name = params.get("name") ?? url;
+              if (name && url) {
+                connections.push({ menuName: name, url });
+              }
+            }
           }
           storageConfiguration["connections"] = connections;
         }

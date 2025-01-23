@@ -1,11 +1,11 @@
-import { FC, useContext, useState, useRef } from "react";
+import { FC, useContext, useState } from "react";
 import { RuntimeContext } from "../../useRuntime";
-import { ContractState, useSmartContractState, invalidateSmartContractState } from "../../useZilliqaHooks";
+import { ContractState, useSmartContractState } from "../../useZilliqaHooks";
 
 type ScillaStateProps = {
   address: string;
-  loadContractState: boolean | undefined;
-  setLoadContractState: (arg0: boolean) => void;
+  loadContractState: number | undefined;
+  setLoadContractState: React.Dispatch<React.SetStateAction<number>>;
 };
 
 type ScillaStateRowProps = {
@@ -42,7 +42,7 @@ export const ScillaState: FC<ScillaStateProps> = ({
   const { data, isLoading } = useSmartContractState(
     loadContractState ? zilliqa : undefined,
     address,
-    loadContractState
+    loadContractState ?? 0
   );
   if (data && contractState == null) {
     setContractState(data);
@@ -53,7 +53,7 @@ export const ScillaState: FC<ScillaStateProps> = ({
       <div className="mt-6">
         <button
           className="text-link-blue hover:text-link-blue-hover"
-          onClick={() => setLoadContractState(prev => prev + 1)}
+          onClick={() => setLoadContractState((prev: number) => prev + 1)}
         >
           Load Contract State
         </button>
@@ -69,7 +69,7 @@ export const ScillaState: FC<ScillaStateProps> = ({
     <div className="mt-6">
         <button
           className="text-link-blue hover:text-link-blue-hover"
-    onClick={() => { setContractState(null); setLoadContractState(prev => prev + 1);  }}
+    onClick={() => { setContractState(null); setLoadContractState((prev : number) => prev + 1);  }}
         >
       Refresh
         </button>
