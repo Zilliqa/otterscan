@@ -11,7 +11,7 @@ type ContractProps = {
 };
 
 const ScillaContract: React.FC<ContractProps> = ({ address, content }) => {
-  let [loadContractState, setLoadContractState] = React.useState<boolean>();
+  let [loadContractState, setLoadContractState] = React.useState<number>(0);
 
   return (
     <div>

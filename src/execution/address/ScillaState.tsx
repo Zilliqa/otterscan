@@ -1,6 +1,6 @@
-import { FC, useContext, useState } from "react";
+import { FC, useContext, useState, useRef } from "react";
 import { RuntimeContext } from "../../useRuntime";
-import { ContractState, useSmartContractState } from "../../useZilliqaHooks";
+import { ContractState, useSmartContractState, invalidateSmartContractState } from "../../useZilliqaHooks";
 
 type ScillaStateProps = {
   address: string;
@@ -39,10 +39,10 @@ export const ScillaState: FC<ScillaStateProps> = ({
   const [contractState, setContractState] = useState<ContractState | null>(
     null,
   );
-
   const { data, isLoading } = useSmartContractState(
     loadContractState ? zilliqa : undefined,
     address,
+    loadContractState
   );
   if (data && contractState == null) {
     setContractState(data);
@@ -53,7 +53,7 @@ export const ScillaState: FC<ScillaStateProps> = ({
       <div className="mt-6">
         <button
           className="text-link-blue hover:text-link-blue-hover"
-          onClick={() => setLoadContractState(true)}
+          onClick={() => setLoadContractState(prev => prev + 1)}
         >
           Load Contract State
         </button>
@@ -67,6 +67,14 @@ export const ScillaState: FC<ScillaStateProps> = ({
 
   return (
     <div className="mt-6">
+        <button
+          className="text-link-blue hover:text-link-blue-hover"
+    onClick={() => { setContractState(null); setLoadContractState(prev => prev + 1);  }}
+        >
+      Refresh
+        </button>
+
+      <div className={isLoading ? "opacity-50": ""}>
       <table className="w-ful border">
         <thead>
           <tr className="grid grid-cols-12 gap-x-2 bg-gray-100 py-2 text-left">
@@ -74,7 +82,7 @@ export const ScillaState: FC<ScillaStateProps> = ({
             <th className="col-span-8 pr-1">value</th>
           </tr>
         </thead>
-        <tbody className="divide-y">
+      <tbody className="divide-y">
           {contractState
             ? Object.keys(contractState).map((val) => (
                 <ScillaStateParamRow
@@ -86,6 +94,7 @@ export const ScillaState: FC<ScillaStateProps> = ({
             : undefined}
         </tbody>
       </table>
-    </div>
+      </div>
+      </div>
   );
 };

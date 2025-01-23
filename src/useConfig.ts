@@ -191,6 +191,10 @@ export type OtterscanConfig = {
      * strings.
      */
     backendFormat?: string;
+
+    /** Should we display the connection menu?
+     */
+    displayConnectionMenu?: boolean;
   };
 
   /**
@@ -325,6 +329,7 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
     const data = await res.json();
     // Override config for local dev
     var config: OtterscanConfig = { ...data };
+    console.log(`DEV = ${import.meta.env.DEV} ${import.meta.env.VITE_ERIGON_URL}`);
     if (import.meta.env.DEV) {
       config.erigonURL = import.meta.env.VITE_ERIGON_URL ?? config.erigonURL;
       config.beaconAPI =
@@ -339,6 +344,7 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
         );
       }
     }
+    console.log(`Erigon = ${config.erigonURL}`);
     if (config.version === undefined) {
       config.version = "(unknown)";
     }
@@ -354,13 +360,13 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
     }
     //console.log(JSON.stringify(config));
     var storageConfiguration: any = {};
+    var hostForcesConnection : boolean = false;
     try {
       var storage = window["localStorage"];
       if (storage !== undefined) {
         storageConfiguration = JSON.parse(
           storage.getItem("otterscanConfig") ?? "{}",
         );
-        // console.log("storage Config " + JSON.stringify(storageConfiguration));
       }
     } catch (err) {
       console.log(`Failed to get localStorage config - ${err}`);
@@ -369,17 +375,16 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
     // Default by hostname
     try {
       var host = window.location.host;
-      var connections =
-        storageConfiguration["connections"] ?? config.connections;
+      // Ignore locally stored connections when matching hostnames.
+      var connections = config.connections;
       if (connections !== undefined) {
         for (var c of connections) {
           const hosts = c.hostnames;
           if (hosts !== undefined) {
             for (var h of hosts) {
               if (host.startsWith(h)) {
-                if (!("erigonURL" in storageConfiguration)) {
-                  storageConfiguration["erigonURL"] = c.url;
-                }
+                storageConfiguration["erigonURL"] = c.url;
+                hostForcesConnection = true;
               }
             }
           }
@@ -406,39 +411,40 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
     }
 
     // Set up URL parameters.
-    try {
-      var params = new URLSearchParams(window.location.search);
-      // Historical - this is the parameter devex used to use.
-      if (params.has("network")) {
-        const url = params.get("network");
-        storageConfiguration["erigonURL"] = url;
-        var connections =
-          storageConfiguration["connections"] ?? config.connections;
-        var found = false;
-        for (var c of connections) {
-          if (c.url === url) {
-            if (params.has("name")) {
-              let name = params.get("name");
-              connections = connections.map((c: ChainConnection) => {
-                if (c.url == url) {
-                  c.menuName = name!;
-                }
-                return c;
-              });
+    if (!hostForcesConnection) {
+      try {
+        var params = new URLSearchParams(window.location.search);
+        // Historical - this is the parameter devex used to use.
+        if (params.has("network")) {
+          const url = params.get("network");
+          storageConfiguration["erigonURL"] = url;
+          var connections =
+            storageConfiguration["connections"] ?? config.connections;
+          var found = false;
+          for (var c of connections) {
+            if (c.url === url) {
+              if (params.has("name")) {
+                let name = params.get("name");
+                connections = connections.map((c: ChainConnection) => {
+                  if (c.url == url) {
+                    c.menuName = name!;
+                  }
+                  return c;
+                });
+              }
+              found = true;
+              break;
             }
-            found = true;
-            break;
           }
+          if (!found) {
+            var name = params.get("name") ?? url;
+            connections.push({ menuName: name, url });
+          }
+          storageConfiguration["connections"] = connections;
         }
-        if (!found) {
-          var name = params.get("name") ?? url;
-          connections.push({ menuName: name, url });
-        }
-        storageConfiguration["connections"] = connections;
-        console.log("sc = " + JSON.stringify(storageConfiguration));
+      } catch (err) {
+        console.log(`Error parsing parameters - ${err}`);
       }
-    } catch (err) {
-      console.log(`Error parsing parameters - ${err}`);
     }
 
     // Stash
@@ -454,7 +460,12 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
       console.log(`Error storing back to local storage - ${err}`);
     }
     config = { ...config, ...storageConfiguration };
+    // We deliberately do not store this, so that we have a fighting chance of
+    // being able to pop the menu back up again if a connection host was in the
+    // config file and is no longer there.
+    config.displayConnectionMenu = !hostForcesConnection;
     console.log(JSON.stringify(config));
+    
     console.info("Loaded app config");
     console.info(config);
     return config;
