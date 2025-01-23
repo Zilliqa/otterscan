@@ -191,7 +191,6 @@ export type OtterscanConfig = {
      * strings.
      */
     backendFormat?: string;
-
   };
 
   /**
@@ -209,7 +208,6 @@ export type OtterscanConfig = {
      * a trailing forward slash, e.g. "https://sepolia.otterscan.io".
      */
     l1ExplorerURL?: string;
-
   };
 
   /**
@@ -331,7 +329,9 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
     const data = await res.json();
     // Override config for local dev
     var config: OtterscanConfig = { ...data };
-    console.log(`DEV = ${import.meta.env.DEV} ${import.meta.env.VITE_ERIGON_URL}`);
+    console.log(
+      `DEV = ${import.meta.env.DEV} ${import.meta.env.VITE_ERIGON_URL}`,
+    );
     if (import.meta.env.DEV) {
       config.erigonURL = import.meta.env.VITE_ERIGON_URL ?? config.erigonURL;
       config.beaconAPI =
@@ -362,7 +362,7 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
     }
     //console.log(JSON.stringify(config));
     var storageConfiguration: any = {};
-    var hostForcesConnection : boolean = false;
+    var hostForcesConnection: boolean = false;
     try {
       var storage = window["localStorage"];
       if (storage !== undefined) {
@@ -378,7 +378,7 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
     try {
       var host = window.location.host;
       // Ignore locally stored connections when matching hostnames.
-      var connections : ChainConnection[] | undefined = config.connections;
+      var connections: ChainConnection[] | undefined = config.connections;
       if (connections !== undefined) {
         for (var c of connections) {
           const hosts = c.hostnames;
@@ -399,7 +399,7 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
     // If we've still not got a connection, use the first one.
     try {
       if (config.erigonURL === undefined || config.erigonURL == null) {
-        var connections : ChainConnection[] | undefined  =
+        var connections: ChainConnection[] | undefined =
           storageConfiguration["connections"] ?? config.connections;
         if (connections !== undefined) {
           if (!("erigonURL" in storageConfiguration)) {
@@ -420,7 +420,7 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
         if (params.has("network")) {
           const url = params.get("network");
           storageConfiguration["erigonURL"] = url;
-          var connections: ChainConnection[] | undefined  =
+          var connections: ChainConnection[] | undefined =
             storageConfiguration["connections"] ?? config.connections;
           var found = false;
           if (connections) {
@@ -471,7 +471,7 @@ export const loadOtterscanConfig = async (): Promise<OtterscanConfig> => {
     // config file and is no longer there.
     config.displayConnectionMenu = !hostForcesConnection;
     console.log(JSON.stringify(config));
-    
+
     console.info("Loaded app config");
     console.info(config);
     return config;

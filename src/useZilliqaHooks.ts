@@ -8,7 +8,7 @@ import {
   DsBlockObj,
 } from "@zilliqa-js/core/dist/types/src/types";
 import { Zilliqa } from "@zilliqa-js/zilliqa";
-import { mutate, Fetcher } from "swr";
+import { Fetcher } from "swr";
 import useSWRImmutable from "swr/immutable";
 import useSWRInfinite from "swr/infinite";
 
@@ -155,7 +155,9 @@ export const useSmartContractState = (
   generation: number,
 ): { data: ContractState | undefined; isLoading: boolean } => {
   const { data, error, isLoading } = useSWRImmutable(
-    zilliqa !== undefined ? [zilliqa, "useSmartContractState", address, generation] : null,
+    zilliqa !== undefined
+      ? [zilliqa, "useSmartContractState", address, generation]
+      : null,
     smartContractStateFetcher,
     { keepPreviousData: true },
   );
@@ -164,4 +166,3 @@ export const useSmartContractState = (
   }
   return { data, isLoading };
 };
-

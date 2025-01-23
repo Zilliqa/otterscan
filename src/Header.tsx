@@ -43,9 +43,13 @@ const Header: FC<HeaderProps> = ({ sourcifyPresent }) => {
             </div>
           </Link>
         </div>
-      { config.displayConnectionMenu ? (<div className="pt-2 flex items-center justify-center">
-        <NetworkMenu />
-        </div>) : (<div />) }
+        {config.displayConnectionMenu ? (
+          <div className="pt-2 flex items-center justify-center">
+            <NetworkMenu />
+          </div>
+        ) : (
+          <div />
+        )}
         <div className="flex items-baseline gap-x-3">
           {(provider._network.chainId === 1n ||
             config.priceOracleInfo?.nativeTokenPrice?.ethUSDOracleAddress) && (
