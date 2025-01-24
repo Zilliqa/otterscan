@@ -152,9 +152,12 @@ export const smartContractStateFetcher: Fetcher<
 export const useSmartContractState = (
   zilliqa: Zilliqa | undefined,
   address: string,
+  generation: number,
 ): { data: ContractState | undefined; isLoading: boolean } => {
   const { data, error, isLoading } = useSWRImmutable(
-    zilliqa !== undefined ? [zilliqa, "useSmartContractState", address] : null,
+    zilliqa !== undefined
+      ? [zilliqa, "useSmartContractState", address, generation]
+      : null,
     smartContractStateFetcher,
     { keepPreviousData: true },
   );

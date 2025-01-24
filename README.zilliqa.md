@@ -20,6 +20,16 @@ errors due to their absence.
 You can now pass `network=` and `name=` parameters to preload a network into `localStorage`.
 For large sets of prewritten parameters, there is a list of connection objects in `config.json`.
 
+These are overridden if we select network from your hostname.
+
+## Configuration
+
+There are some extra config options - see `public/config.json` for an example. In particular, `connections` is a list of potential connections, each of which is a dictionary:
+
+- `menuName` - name that will appear in the connection menu for this option
+- `url` - the URL to query
+- `hostnames` - an array of hostnames. If the `window.location` hostname has one of these as a prefix, the `url` will be force-selected and the connections menu will not appear.
+
 ## Starting for development
 
 .. because I keep forgetting!

@@ -56,12 +56,16 @@ const ConnectionErrorPanel: FC<ConnectionErrorPanelProps> = ({
             </Step>
           </>
         )}
-        <div className="flex space-x-2 mt-2">
-          <span className="text-blue-600">
-            <FontAwesomeIcon icon={faBarsProgress} size="1x" />
-          </span>
-          <NetworkMenuWithConfig config={config} />
-        </div>
+        {config?.displayConnectionMenu ? (
+          <div className="flex space-x-2 mt-2">
+            <span className="text-blue-600">
+              <FontAwesomeIcon icon={faBarsProgress} size="1x" />
+            </span>
+            <NetworkMenuWithConfig config={config} />
+          </div>
+        ) : (
+          <div />
+        )}
       </div>
     </div>
   );
