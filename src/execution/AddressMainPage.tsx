@@ -98,7 +98,6 @@ const AddressMainPage: React.FC = () => {
   );
 
   const eip1967ProxyAttrs = useERC1967ProxyAttributes(provider, checksummedAddress);
-  console.log(`eip1967ProxyAttrs = ${JSON.stringify(eip1967ProxyAttrs)}`);
   
   return (
     <StandardFrame>
