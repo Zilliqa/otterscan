@@ -11,7 +11,7 @@ import ContentFrame from "../../components/ContentFrame";
 import { addressURL } from "../../url.ts";
 
 const AddressReadContractAsProxy: FC = () => {
-  const { address, outerMatch, outerWhatsabiMatch } =
+  const { address } =
     useOutletContext() as AddressOutletContext;
   const { config, provider } = useContext(RuntimeContext);
   const proxyAttributes = useERC1967ProxyAttributes(provider, address);
@@ -29,7 +29,7 @@ const AddressReadContractAsProxy: FC = () => {
       <p className="py-6" > Reading ERC-1967 proxy
       <NavLink className="rounded-lg bg-link-blue/10 px-2 py-1 text-xs text-link-blue hover:bg-link-blue/100 hover:text-white" to={addressURL(address)}>{address}</NavLink>
       whose implementation is at
-      <NavLink className="rounded-lg bg-link-blue/10 px-2 py-1 text-xs text-link-blue hover:bg-link-blue/100 hover:text-white" to={addressURL(proxyAttributes?.delegate)}>{proxyAttributes?.delegate}</NavLink>.
+      <NavLink className="rounded-lg bg-link-blue/10 px-2 py-1 text-xs text-link-blue hover:bg-link-blue/100 hover:text-white" to={addressURL(proxyAttributes!.delegate)}>{proxyAttributes?.delegate}</NavLink>.
       </p>
       </div>
       <ReadContract checksummedAddress={address} match={match ?? whatsabiMatch} />
