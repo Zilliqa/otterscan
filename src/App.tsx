@@ -56,6 +56,9 @@ const AddressContract = lazy(
 const AddressReadContract = lazy(
   () => import("./execution/address/AddressReadContract"),
 );
+const AddressReadContractAsProxy = lazy(
+  () => import("./execution/address/AddressReadContractAsProxy"),
+);
 const AddressERC20Results = lazy(
   () => import("./execution/address/AddressERC20Results"),
 );
@@ -352,6 +355,10 @@ const router = createBrowserRouter(
             loader={addressContractLoader}
           />
           <Route path="readContract" element={<AddressReadContract />} />
+          <Route
+            path="readContractAs1967Proxy"
+            element={<AddressReadContractAsProxy />}
+          />
           <Route
             path="proxyLogicContract"
             element={<ProxyContract />}

@@ -19,6 +19,7 @@ import SourcifyLogo from "../sourcify/SourcifyLogo";
 import { Match, useSourcifyMetadata } from "../sourcify/useSourcify";
 import { useWhatsabiMetadata } from "../sourcify/useWhatsabi";
 import { ChecksummedAddress } from "../types";
+import { useERC1967ProxyAttributes } from "../useERC1967";
 import { useHasCode } from "../useErigonHooks";
 import { useAddressOrENS } from "../useResolvedAddresses";
 import { RuntimeContext } from "../useRuntime";
@@ -96,6 +97,11 @@ const AddressMainPage: React.FC = () => {
     config.assetsURLPrefix,
   );
 
+  const eip1967ProxyAttrs = useERC1967ProxyAttributes(
+    provider,
+    checksummedAddress,
+  );
+
   return (
     <StandardFrame>
       {error ? (
@@ -170,6 +176,16 @@ const AddressMainPage: React.FC = () => {
                         </span>
                       </NavTab>
                     )}
+                    {(match || whatsabiMatch) &&
+                      eip1967ProxyAttrs?.delegate && (
+                        <NavTab
+                          href={`/address/${addressOrName}/readContractAs1967Proxy`}
+                        >
+                          <span className={`flex items-baseline space-x-2`}>
+                            <span>Read As Proxy</span>
+                          </span>
+                        </NavTab>
+                      )}
                   </>
                 )}
                 {config?.experimental && (
