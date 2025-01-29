@@ -15,6 +15,7 @@ import AddressOrENSNameNotFound from "../components/AddressOrENSNameNotFound";
 import NavTab from "../components/NavTab";
 import StandardFrame from "../components/StandardFrame";
 import { useProxyAttributes } from "../ots2/usePrototypeTransferHooks";
+import { useERC1967ProxyAttributes } from "../useERC1967";
 import SourcifyLogo from "../sourcify/SourcifyLogo";
 import { Match, useSourcifyMetadata } from "../sourcify/useSourcify";
 import { useWhatsabiMetadata } from "../sourcify/useWhatsabi";
@@ -96,6 +97,9 @@ const AddressMainPage: React.FC = () => {
     config.assetsURLPrefix,
   );
 
+  const eip1967ProxyAttrs = useERC1967ProxyAttributes(provider, checksummedAddress);
+  console.log(`eip1967ProxyAttrs = ${JSON.stringify(eip1967ProxyAttrs)}`);
+  
   return (
     <StandardFrame>
       {error ? (
@@ -167,6 +171,13 @@ const AddressMainPage: React.FC = () => {
                       <NavTab href={`/address/${addressOrName}/readContract`}>
                         <span className={`flex items-baseline space-x-2`}>
                           <span>Read Contract</span>
+                        </span>
+                      </NavTab>
+                    )}
+                  {((match || whatsabiMatch) && eip1967ProxyAttrs?.delegate) && (
+                    <NavTab href={`/address/${addressOrName}/readContractAs1967Proxy`}>
+                        <span className={`flex items-baseline space-x-2`}>
+                          <span>Read As Proxy</span>
                         </span>
                       </NavTab>
                     )}

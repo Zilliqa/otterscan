@@ -45,5 +45,8 @@ export const transactionURL = (txHash: string) => `/tx/${txHash}`;
 export const addressByNonceURL = (address: ChecksummedAddress, nonce: bigint) =>
   `/address/${address}?nonce=${nonce}`;
 
+export const addressURL = (address: ChecksummedAddress) =>
+  `/address/${address}`;
+
 export const openInRemixURL = (checksummedAddress: string, networkId: bigint) =>
   `https://remix.ethereum.org/#activate=sourcify&call=sourcify//fetchAndSave//${checksummedAddress}//${networkId}`;
