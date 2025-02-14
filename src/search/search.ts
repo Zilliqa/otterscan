@@ -251,6 +251,7 @@ export const parseSearch = (q: string): string | undefined => {
   // Cleanup
   q = q.trim();
 
+  console.log(`parseSearch q = ${q}`);
   let maybeAddress = q;
   let maybeIndex = "";
   const sepIndex = q.lastIndexOf(":");
@@ -260,7 +261,10 @@ export const parseSearch = (q: string): string | undefined => {
     maybeIndex = !isNaN(parseInt(afterAddress))
       ? parseInt(afterAddress).toString()
       : "";
+    console.log(`2 = ${maybeAddress}`);
   }
+
+  console.log(`3 = ${maybeAddress}`);
 
   // Parse URLs for other block explorers
   try {
@@ -274,7 +278,9 @@ export const parseSearch = (q: string): string | undefined => {
     const slotMatch = pathname.match(/^\/slot\/(.*)$/);
     const validatorMatch = pathname.match(/^\/validator\/(.*)$/);
     if (addressMatch) {
+
       maybeAddress = addressMatch[1];
+      console.log(`maybeAddress from ${pathname} -> ${maybeAddress}`);
       // The URL might use a different port number
       maybeIndex = "";
     } else if (txMatch) {
@@ -309,18 +315,26 @@ export const parseSearch = (q: string): string | undefined => {
   } catch (e) {
     console.log(`search: Not a bech32 address`);
   }
-
+  console.log(`4 = ${maybeAddress}`);
+  
   // The type checker is convinced that ethers:isAddress() will never say that a string > 40 characters
   // long is not an address. I'm not sure why...
   if (!isAddress(maybeAddress)) {
     let typeCheckerIsWrong = maybeAddress as string;
-    if (typeCheckerIsWrong.length > 40) {
+    // remove any leading 0x
+    console.log(`typeCheckerIsWrong ${typeCheckerIsWrong}`);
+    if (typeCheckerIsWrong.startsWith("0x")) {
+      typeCheckerIsWrong = typeCheckerIsWrong.substr(2);
+    }
+    console.log(`rem ${typeCheckerIsWrong} ${typeCheckerIsWrong.length}`);
+    if (typeCheckerIsWrong.length >= 40) {
       try {
         maybeAddress =
           "0x" +
           typeCheckerIsWrong
             .substr(typeCheckerIsWrong.length - 40)
             .toLowerCase();
+        console.log(`rem2 ${maybeAddress}`);
       } catch (e) {
         // Obviously not.
       }
@@ -329,7 +343,7 @@ export const parseSearch = (q: string): string | undefined => {
 
   // Plain address?
   if (isAddress(maybeAddress)) {
-    console.log(`search: maybeAddress ${maybeAddress} is an address ..`);
+    console.log(`search: maybeAddress ${maybeAddress} is an address XXX ..`);
     return `/address/${maybeAddress}${maybeIndex !== "" ? `?nonce=${maybeIndex}` : ""}`;
   }
 

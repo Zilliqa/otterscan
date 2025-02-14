@@ -2,6 +2,7 @@ import { Tab } from "@headlessui/react";
 import React from "react";
 import SwitchTab from "../../components/SwitchTab";
 import { SyntaxHighlighter, docco } from "../../highlight-init";
+import { HighlightedCode } from "../../components/HighlightedCode";
 import { ScillaInitParams } from "./ScillaInitParams";
 import { ScillaState } from "./ScillaState";
 
@@ -23,14 +24,10 @@ const ScillaContract: React.FC<ContractProps> = ({ address, content }) => {
         </Tab.List>
         <Tab.Panels>
           <Tab.Panel>
-            <SyntaxHighlighter
-              className="mt-4 h-full w-full border font-code text-base"
-              language="scilla"
-              style={docco}
-              showLineNumbers
-            >
-              {content ?? ""}
-            </SyntaxHighlighter>
+      <HighlightedCode
+    language="scilla"
+    content = {content ?? ""}
+      />
           </Tab.Panel>
           <Tab.Panel>
             {" "}

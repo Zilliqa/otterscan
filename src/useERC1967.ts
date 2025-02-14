@@ -41,9 +41,6 @@ export const useERC1967ProxyAttributes = (
     return addr;
   }
 
-  if (address === undefined) {
-    return undefined;
-  }
   const { data: delegateData } = useQuery(
     GetStorageQuery(provider, address, DELEGATE_STORAGE_LOCATION),
   );

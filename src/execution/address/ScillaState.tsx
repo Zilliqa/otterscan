@@ -1,6 +1,8 @@
 import { FC, useContext, useState } from "react";
 import { RuntimeContext } from "../../useRuntime";
 import { ContractState, useSmartContractState } from "../../useZilliqaHooks";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCopy } from '@fortawesome/free-solid-svg-icons';
 
 type ScillaStateProps = {
   address: string;
@@ -27,7 +29,11 @@ const ScillaStateParamRow: FC<ScillaStateRowProps> = ({ name, value }) => {
 };
 
 const formatJsonValue = (value: any): string => {
-  return JSON.stringify(value, null, 2);
+  if (typeof(value)=="object") {
+    return JSON.stringify(value, null, 2);
+  } else {
+    return value
+  }
 };
 
 export const ScillaState: FC<ScillaStateProps> = ({
@@ -65,6 +71,10 @@ export const ScillaState: FC<ScillaStateProps> = ({
     return <div className="mt-6"> Loading contract state </div>;
   }
 
+  const handleCopy = () => {
+    navigator.clipboard.writeText(JSON.stringify(contractState) ?? "");
+  };
+  
   return (
     <div className="mt-6">
       <button
@@ -75,6 +85,16 @@ export const ScillaState: FC<ScillaStateProps> = ({
         }}
       >
         Refresh
+      </button>
+
+      <div className="inline-block w-16"></div>
+      <button
+    className="absolute hover:bg-skin-button-hover-fill focus:outline-none"
+    type="button"
+    onClick={handleCopy}
+    title="Copy to clipboard"
+      >
+      <FontAwesomeIcon icon={faCopy} />
       </button>
 
       <div className={isLoading ? "opacity-50" : ""}>

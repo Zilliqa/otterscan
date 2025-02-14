@@ -1,5 +1,6 @@
 import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
 
+import { faCopy } from "@fortawesome/free-solid-svg-icons";
 // @ts-ignore
 import hljs from "highlight.js/lib/core";
 
