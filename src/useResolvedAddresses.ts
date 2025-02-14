@@ -68,7 +68,9 @@ export const useAddressOrENS = (
           setENS(false);
           setError(false);
           setChecksummedAddress(_unsummedAddress);
-          console.log(`_unsummed = ${_unsummedAddress} is ${isAddress(_unsummedAddress)}`);
+          console.log(
+            `_unsummed = ${_unsummedAddress} is ${isAddress(_unsummedAddress)}`,
+          );
         } else {
           setENS(false);
           setError(true);

@@ -55,7 +55,7 @@ const DecodedScillaParamsTable: FC<DecodedScillaParamsTableProps> = ({
             key={val["vname"]}
             name={val["vname"]}
             valueType={val["type"]}
-          value={valueOf(val["value"])}
+            value={valueOf(val["value"])}
           />
         ))}
       </tbody>

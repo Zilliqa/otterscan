@@ -1,8 +1,8 @@
+import { faCopy } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FC, useContext } from "react";
 import { RuntimeContext } from "../../useRuntime";
 import { useSmartContractInit } from "../../useZilliqaHooks";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCopy } from '@fortawesome/free-solid-svg-icons';
 
 type ScillaInitParamsProps = {
   address: string;
@@ -15,10 +15,10 @@ type ScillaInitParamRowProps = {
 };
 
 const formatJsonValue = (value: any): string => {
-  if (typeof(value)=="object") {
+  if (typeof value == "object") {
     return JSON.stringify(value, null, 2);
   } else {
-    return value
+    return value;
   }
 };
 
@@ -34,7 +34,7 @@ const ScillaInitParamRow: FC<ScillaInitParamRowProps> = ({
           <span className="text-gray-600">{name}</span>
         </td>
         <td className="col-span-1 text-gray-500">{valueType}</td>
-      <td className="col-span-8 text-gray-500">{formatJsonValue(value)}</td>
+        <td className="col-span-8 text-gray-500">{formatJsonValue(value)}</td>
       </tr>
     </>
   );
@@ -56,15 +56,15 @@ export const ScillaInitParams: FC<ScillaInitParamsProps> = ({ address }) => {
   } else {
     return (
       <div className="mt-6">
-      <button
-    className="absolute hover:bg-skin-button-hover-fill focus:outline-none"
-    type="button"
-    onClick={handleCopy}
-    title="Copy to clipboard"
-      >
-      <FontAwesomeIcon icon={faCopy} />
+        <button
+          className="absolute hover:bg-skin-button-hover-fill focus:outline-none"
+          type="button"
+          onClick={handleCopy}
+          title="Copy to clipboard"
+        >
+          <FontAwesomeIcon icon={faCopy} />
         </button>
-       <div className='h-8'></div>
+        <div className="h-8"></div>
 
         <table className="w-ful border">
           <thead>

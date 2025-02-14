@@ -278,7 +278,6 @@ export const parseSearch = (q: string): string | undefined => {
     const slotMatch = pathname.match(/^\/slot\/(.*)$/);
     const validatorMatch = pathname.match(/^\/validator\/(.*)$/);
     if (addressMatch) {
-
       maybeAddress = addressMatch[1];
       console.log(`maybeAddress from ${pathname} -> ${maybeAddress}`);
       // The URL might use a different port number
@@ -316,7 +315,7 @@ export const parseSearch = (q: string): string | undefined => {
     console.log(`search: Not a bech32 address`);
   }
   console.log(`4 = ${maybeAddress}`);
-  
+
   // The type checker is convinced that ethers:isAddress() will never say that a string > 40 characters
   // long is not an address. I'm not sure why...
   if (!isAddress(maybeAddress)) {
