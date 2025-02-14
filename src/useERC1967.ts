@@ -25,7 +25,7 @@ export const GetStorageQuery = (
     queryKey: ["getStorageAt", address, slot],
     queryFn: () => {
       if (address === undefined) {
-        return Promise.resolve("0");
+        return Promise.resolve(undefined);
       } else {
         return provider.getStorage(address, slot);
       }
