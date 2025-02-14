@@ -59,11 +59,31 @@ export const useAddressOrENS = (
           setChecksummedAddress(undefined);
         }
       };
-      resolveName();
     } else {
-      setENS(false);
-      setError(true);
-      setChecksummedAddress(undefined);
+      // Would it be an address if we lowercased it and removed anything other than the leading 0x and the hex chars?
+      try {
+        console.log(`trying with ${addressOrName}`);
+        // typescript thinks that addressOrName is never here, but it isn't ..
+        const _unsummedAddress = getAddress(
+          (addressOrName as string).toLowerCase(),
+        );
+        if (isAddress(_unsummedAddress)) {
+          setENS(false);
+          setError(false);
+          setChecksummedAddress(_unsummedAddress);
+          console.log(
+            `_unsummed = ${_unsummedAddress} is ${isAddress(_unsummedAddress)}`,
+          );
+        } else {
+          setENS(false);
+          setError(true);
+          setChecksummedAddress(undefined);
+        }
+      } catch (e) {
+        setENS(false);
+        setError(true);
+        setChecksummedAddress(undefined);
+      }
     }
   }, [provider, addressOrName, urlFixer]);
 

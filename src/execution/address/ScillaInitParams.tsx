@@ -1,3 +1,5 @@
+import { faCopy } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FC, useContext } from "react";
 import { RuntimeContext } from "../../useRuntime";
 import { useSmartContractInit } from "../../useZilliqaHooks";
@@ -12,6 +14,14 @@ type ScillaInitParamRowProps = {
   value: string;
 };
 
+const formatJsonValue = (value: any): string => {
+  if (typeof value == "object") {
+    return JSON.stringify(value, null, 2);
+  } else {
+    return value;
+  }
+};
+
 const ScillaInitParamRow: FC<ScillaInitParamRowProps> = ({
   name,
   valueType,
@@ -24,7 +34,7 @@ const ScillaInitParamRow: FC<ScillaInitParamRowProps> = ({
           <span className="text-gray-600">{name}</span>
         </td>
         <td className="col-span-1 text-gray-500">{valueType}</td>
-        <td className="col-span-8 text-gray-500">{value}</td>
+        <td className="col-span-8 text-gray-500">{formatJsonValue(value)}</td>
       </tr>
     </>
   );
@@ -33,6 +43,10 @@ const ScillaInitParamRow: FC<ScillaInitParamRowProps> = ({
 export const ScillaInitParams: FC<ScillaInitParamsProps> = ({ address }) => {
   const { zilliqa } = useContext(RuntimeContext);
   const { data, isLoading } = useSmartContractInit(zilliqa, address);
+  const handleCopy = () => {
+    navigator.clipboard.writeText(JSON.stringify(data) ?? "");
+  };
+
   if (isLoading) {
     return (
       <div className="mt-6">
@@ -42,6 +56,16 @@ export const ScillaInitParams: FC<ScillaInitParamsProps> = ({ address }) => {
   } else {
     return (
       <div className="mt-6">
+        <button
+          className="absolute hover:bg-skin-button-hover-fill focus:outline-none"
+          type="button"
+          onClick={handleCopy}
+          title="Copy to clipboard"
+        >
+          <FontAwesomeIcon icon={faCopy} />
+        </button>
+        <div className="h-8"></div>
+
         <table className="w-ful border">
           <thead>
             <tr className="grid grid-cols-12 gap-x-2 bg-gray-100 py-2 text-left">

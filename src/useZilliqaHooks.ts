@@ -145,8 +145,8 @@ export const smartContractStateFetcher: Fetcher<
   [Zilliqa, string, string]
 > = async ([zilliqa, methodName, address]) => {
   const contract = zilliqa.contracts.at(address);
-  const initParams = await contract.getState();
-  return initParams as any;
+  const state = await contract.getState();
+  return state as any;
 };
 
 export const useSmartContractState = (
