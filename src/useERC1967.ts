@@ -18,13 +18,17 @@ export type ERC1967ProxyAttributes = {
 
 export const GetStorageQuery = (
   provider: JsonRpcApiProvider,
-  address: Address,
+  address: Address | undefined,
   slot: string,
 ) => {
   return {
     queryKey: ["getStorageAt", address, slot],
     queryFn: () => {
-      return provider.getStorage(address, slot);
+      if (address === undefined) {
+        return Promise.resolve("0");
+      } else {
+        return provider.getStorage(address, slot);
+      }
     },
   };
 };

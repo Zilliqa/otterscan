@@ -28,11 +28,17 @@ const DecodedScillaParamRow: FC<DecodedScillaParamRowProps> = ({
   );
 };
 
-function valueOf(val: string): string {
+function valueOf(val: any): string {
   if (val instanceof Object) {
     return JSON.stringify(val);
   } else {
-    return val;
+    if (val === null) {
+      return "null";
+    }
+    if (val === undefined) {
+      return "undefined";
+    }
+    return val.toString();
   }
 }
 

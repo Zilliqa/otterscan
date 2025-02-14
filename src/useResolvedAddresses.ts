@@ -63,7 +63,10 @@ export const useAddressOrENS = (
       // Would it be an address if we lowercased it and removed anything other than the leading 0x and the hex chars?
       try {
         console.log(`trying with ${addressOrName}`);
-        const _unsummedAddress = getAddress(addressOrName.toLowerCase());
+        // typescript thinks that addressOrName is never here, but it isn't ..
+        const _unsummedAddress = getAddress(
+          (addressOrName as string).toLowerCase(),
+        );
         if (isAddress(_unsummedAddress)) {
           setENS(false);
           setError(false);
