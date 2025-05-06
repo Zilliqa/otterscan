@@ -17,7 +17,20 @@ patches:
     patch: |-
       - op: replace
         path: "/spec/rules/0/host"
-        value: explorer.zq2-prototestnet.zilliqa.com
+        value: explorer.zq2-testnet.zilliqa.com
+      - op: add
+        path: "/spec/rules/-"
+        value:
+          host: explorer.zq2-prototestnet.zilliqa.com
+          http:
+            paths:
+              - path: /
+                pathType: Prefix
+                backend:
+                  service:
+                    name: otterscan
+                    port:
+                      number: 80
       - op: add
         path: "/spec/rules/-"
         value:

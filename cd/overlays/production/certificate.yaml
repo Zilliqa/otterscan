@@ -6,4 +6,5 @@ metadata:
     app.kubernetes.io/name: otterscan
 spec:
   domains:
+    - explorer.zq2-mainnet.zilliqa.com
     - explorer.zq2-protomainnet.zilliqa.com

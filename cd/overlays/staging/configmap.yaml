@@ -10,6 +10,11 @@ data:
     {
       "connections": [
         {
+          "menuName": "zq2-testnet",
+          "url": "https://api.zq2-testnet.zilliqa.com",
+          "hostnames": ["explorer.zq2-testnet.zilliqa.com"]
+        },
+        {
           "menuName": "zq2-prototestnet",
           "url": "https://api.zq2-prototestnet.zilliqa.com",
           "hostnames": ["explorer.zq2-prototestnet.zilliqa.com"]
