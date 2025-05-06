@@ -35,9 +35,9 @@ data:
           "hostnames": ["explorer.zq2-perftest.zilstg.dev"]
         },
         {
-          "menuName": "zq2-uccbtest",
-          "url": "https://api.zq2-uccbtest.zilstg.dev",
-          "hostnames": ["explorer.zq2-uccbtest.zilstg.dev"]
+          "menuName": "zq2-persistence",
+          "url": "https://api.zq2-persistence.zilstg.dev",
+          "hostnames": ["explorer.zq2-persistence.zilstg.dev"]
         },
         {
           "menuName": "zq2-richard",

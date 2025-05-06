@@ -73,7 +73,7 @@ patches:
       - op: add
         path: "/spec/rules/-"
         value:
-          host: explorer.zq2-uccbtest.zilstg.dev
+          host: explorer.zq2-persistence.zilstg.dev
           http:
             paths:
               - path: /
