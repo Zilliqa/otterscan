@@ -23,6 +23,7 @@ import { useERC1967ProxyAttributes } from "../useERC1967";
 import { useHasCode } from "../useErigonHooks";
 import { useAddressOrENS } from "../useResolvedAddresses";
 import { RuntimeContext } from "../useRuntime";
+import { useQuirks } from "../useQuirks";
 import AddressSubtitle from "./address/AddressSubtitle";
 import { AddressAwareComponentProps } from "./types";
 
@@ -101,6 +102,8 @@ const AddressMainPage: React.FC = () => {
     provider,
     checksummedAddress,
   );
+  
+  const quirks = useQuirks(provider);
 
   return (
     <StandardFrame>
@@ -131,6 +134,11 @@ const AddressMainPage: React.FC = () => {
                     <NavTab href={`/address/${addressOrName}/erc721`}>
                       ERC721 Transfers
                     </NavTab>
+                    {quirks?.isZilliqa1 && (
+                      <NavTab href={`/address/${addressOrName}/zrc2`}>
+                        ZRC2 Transfers
+                      </NavTab>
+                    )}
                     <NavTab href={`/address/${addressOrName}/tokens`}>
                       Token Balances
                     </NavTab>

@@ -65,6 +65,9 @@ const AddressERC20Results = lazy(
 const AddressERC721Results = lazy(
   () => import("./execution/address/AddressERC721Results"),
 );
+const AddressZRC2Results = lazy(
+  () => import("./execution/address/AddressZRC2Results"),
+);
 const AddressTokens = lazy(() => import("./execution/address/AddressTokens"));
 const AddressWithdrawals = lazy(
   () => import("./execution/address/AddressWithdrawals"),
@@ -333,6 +336,10 @@ const router = createBrowserRouter(
             path="erc721"
             element={<AddressERC721Results />}
             loader={addressOts2List("ERC721Transfer")}
+          />
+          <Route
+            path="zrc2"
+            element={<AddressZRC2Results />}
           />
           <Route
             path="tokens"
