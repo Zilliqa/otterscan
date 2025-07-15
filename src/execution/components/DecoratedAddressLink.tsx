@@ -6,6 +6,7 @@ import {
   faStar,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { toBech32Address } from "@zilliqa-js/crypto";
 import { FC, memo, useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { resolverRendererRegistry } from "../../api/address-resolver";
@@ -19,7 +20,6 @@ import AddressAttributes from "../address/AddressAttributes";
 import { VerifiedContractRenderer } from "../address/renderer/VerifiedContractName";
 import { AddressAwareComponentProps } from "../types";
 import PlainAddress from "./PlainAddress";
-import { toBech32Address } from "@zilliqa-js/crypto";
 
 export type DecoratedAddressLinkProps = AddressAwareComponentProps & {
   selectedAddress?: ChecksummedAddress | undefined;
@@ -55,14 +55,12 @@ const DecoratedAddressLink: FC<DecoratedAddressLinkProps> = ({
   const mint = addressCtx === AddressContext.FROM && address === ZERO_ADDRESS;
   const burn = addressCtx === AddressContext.TO && address === ZERO_ADDRESS;
 
-  const bech32Address = (
-    () => {
-      if (displayAsBech32) {
-        return toBech32Address(address);;
-      }
-      return undefined;
+  const bech32Address = (() => {
+    if (displayAsBech32) {
+      return toBech32Address(address);
     }
-  )()
+    return undefined;
+  })();
 
   return (
     <div
@@ -156,7 +154,7 @@ const ResolvedAddress: FC<ResolvedAddressProps> = ({
   address,
   selectedAddress,
   dontOverrideColors,
-  bech32Address
+  bech32Address,
 }) => {
   const { provider } = useContext(RuntimeContext);
   const resolvedAddress = useResolvedAddress(provider, address);

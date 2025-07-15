@@ -29,6 +29,8 @@ import RelativePosition from "../../components/RelativePosition";
 import StandardTextarea from "../../components/StandardTextarea";
 import Timestamp from "../../components/Timestamp";
 import TransactionType from "../../components/TransactionType";
+import ZRC2TransferItem from "../../scilla/ZRC2TransferItem";
+import { useZRC2Transfers } from "../../scilla/useZRC2Hooks";
 import {
   useError,
   useSourcifyMetadata,
@@ -58,8 +60,6 @@ import RewardSplit from "./RewardSplit";
 import TokenTransferItem from "./TokenTransferItem";
 import DecodedParamsTable from "./decoder/DecodedParamsTable";
 import InputDecoder from "./decoder/InputDecoder";
-import ZRC2TransferItem from "../../scilla/ZRC2TransferItem";
-import { useZRC2Transfers } from "../../scilla/useZRC2Hooks";
 
 type DetailsProps = {
   txData: TransactionData;
@@ -329,11 +329,11 @@ const Details: FC<DetailsProps> = ({ txData }) => {
           ))}
         </InfoRow>
       )}
-      {(zrc2Transfers == undefined) ? (
+      {zrc2Transfers == undefined ? (
         <InfoRow title="ZRC2 Tokens Transferred">
           <span className="italic text-gray-400">Loading</span>
         </InfoRow>
-      ) : (zrc2Transfers.length) > 0 ? (
+      ) : zrc2Transfers.length > 0 ? (
         <InfoRow title={`ZRC2 Tokens Transferred (${zrc2Transfers!.length})`}>
           {zrc2Transfers!.map((t, i) => (
             <ZRC2TransferItem key={i} transfer={t} />
@@ -341,7 +341,9 @@ const Details: FC<DetailsProps> = ({ txData }) => {
         </InfoRow>
       ) : (
         <InfoRow title="ZRC2 Tokens Transferred">
-          <span className="italic text-gray-400">No ZRC2 tokens transferred</span>
+          <span className="italic text-gray-400">
+            No ZRC2 tokens transferred
+          </span>
         </InfoRow>
       )}
       <InfoRow title="Value">

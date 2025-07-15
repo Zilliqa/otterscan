@@ -1,11 +1,10 @@
 import { faCaretRight, faSackDollar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FC, memo, useContext } from "react";
-import FormattedBalanceHighlighter from "../selection/FormattedBalanceHighlighter";
-import { AddressContext } from "../types";
-import { RuntimeContext } from "../useRuntime";
 import TransactionAddress from "../execution/components/TransactionAddress";
-import { ZRC2Transfer } from "../types";
+import FormattedBalanceHighlighter from "../selection/FormattedBalanceHighlighter";
+import { AddressContext, ZRC2Transfer } from "../types";
+import { RuntimeContext } from "../useRuntime";
 import { useZRC2Metadata } from "./useZRC2Hooks";
 
 type ZRC2TransferItemProps = {
@@ -18,14 +17,17 @@ const ZRC2TransferItem: FC<ZRC2TransferItemProps> = ({ transfer }) => {
 
   return (
     <div className="flex items-baseline space-x-2 truncate px-2 py-1 hover:bg-gray-100">
-      <div className="grid w-full items-baseline gap-x-1" style={{ gridTemplateColumns: "auto 1fr 1fr 1fr" }}>
+      <div
+        className="grid w-full items-baseline gap-x-1"
+        style={{ gridTemplateColumns: "auto 1fr 1fr 1fr" }}
+      >
         {/* ZRC2 Transfer Label */}
         <div className="flex items-baseline space-x-1">
           <span className="text-xs font-medium text-purple-600 bg-purple-100 px-2 py-1 rounded">
             ZRC2
           </span>
         </div>
-        
+
         {/* From Address */}
         <div className="flex items-baseline space-x-1">
           <TransactionAddress
@@ -35,7 +37,7 @@ const ZRC2TransferItem: FC<ZRC2TransferItemProps> = ({ transfer }) => {
             displayAsBech32={true}
           />
         </div>
-        
+
         {/* To Address */}
         <div className="flex items-baseline space-x-1">
           <span className="text-gray-500">
@@ -48,7 +50,7 @@ const ZRC2TransferItem: FC<ZRC2TransferItemProps> = ({ transfer }) => {
             displayAsBech32={true}
           />
         </div>
-        
+
         {/* Amount and Token */}
         <div className="col-span-1 flex items-baseline space-x-1">
           <span className="text-gray-500">
