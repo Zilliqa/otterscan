@@ -14,6 +14,7 @@ export type TransactionAddressProps = AddressAwareComponentProps & {
   creation?: boolean | undefined;
   miner?: boolean | undefined;
   showCodeIndicator?: boolean;
+  displayAsBech32?: boolean;
 };
 
 const TransactionAddress: FC<TransactionAddressProps> = ({
@@ -23,6 +24,7 @@ const TransactionAddress: FC<TransactionAddressProps> = ({
   creation,
   miner,
   showCodeIndicator = false,
+  displayAsBech32 = false,
 }) => {
   const txData = useSelectedTransaction();
   // TODO: push down creation coloring logic into DecoratedAddressLink
@@ -62,6 +64,7 @@ const TransactionAddress: FC<TransactionAddressProps> = ({
               : undefined
             : undefined
         }
+        displayAsBech32={displayAsBech32}
       />
     </AddressHighlighter>
   );

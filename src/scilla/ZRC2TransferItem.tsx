@@ -15,10 +15,7 @@ type ZRC2TransferItemProps = {
 const ZRC2TransferItem: FC<ZRC2TransferItemProps> = ({ transfer }) => {
   const { zilliqa } = useContext(RuntimeContext);
   const tokenMeta = useZRC2Metadata(zilliqa, transfer.token);
-  
-  // Note: You may want to implement USD price oracle for ZRC2 tokens
-  // For now, we'll skip the price display
-  
+
   return (
     <div className="flex items-baseline space-x-2 truncate px-2 py-1 hover:bg-gray-100">
       <div className="grid w-full items-baseline gap-x-1" style={{ gridTemplateColumns: "auto 1fr 1fr 1fr" }}>
@@ -35,6 +32,7 @@ const ZRC2TransferItem: FC<ZRC2TransferItemProps> = ({ transfer }) => {
             address={transfer.from}
             addressCtx={AddressContext.FROM}
             showCodeIndicator
+            displayAsBech32={true}
           />
         </div>
         
@@ -47,6 +45,7 @@ const ZRC2TransferItem: FC<ZRC2TransferItemProps> = ({ transfer }) => {
             address={transfer.to}
             addressCtx={AddressContext.TO}
             showCodeIndicator
+            displayAsBech32={true}
           />
         </div>
         
@@ -64,7 +63,7 @@ const ZRC2TransferItem: FC<ZRC2TransferItemProps> = ({ transfer }) => {
           <span className="text-sm text-gray-600">
             {tokenMeta?.symbol || "Unknown"}
           </span>
-          <TransactionAddress address={transfer.token} />
+          <TransactionAddress address={transfer.token} displayAsBech32={true} />
         </div>
       </div>
     </div>

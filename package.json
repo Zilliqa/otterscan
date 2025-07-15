@@ -27,6 +27,7 @@
     "@types/react-dom": "^18.3.0",
     "@types/react-syntax-highlighter": "^15.5.11",
     "@zilliqa-js/zilliqa": "^3.5.0",
+    "@zilliqa-js/crypto": "^3.5.0",
     "@zxing/browser": "^0.1.5",
     "@zxing/library": "^0.21.3",
     "chart.js": "^4.4.4",
