@@ -6,6 +6,7 @@ import {
   faStar,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { toBech32Address } from "@zilliqa-js/crypto";
 import { FC, memo, useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { resolverRendererRegistry } from "../../api/address-resolver";
@@ -32,6 +33,7 @@ export type DecoratedAddressLinkProps = AddressAwareComponentProps & {
 
   // Ignore all address resolvers and display the plain address
   plain?: boolean | undefined;
+  displayAsBech32?: boolean | undefined;
 };
 
 const DecoratedAddressLink: FC<DecoratedAddressLinkProps> = ({
@@ -45,12 +47,20 @@ const DecoratedAddressLink: FC<DecoratedAddressLinkProps> = ({
   txTo,
   eoa,
   plain,
+  displayAsBech32 = false,
 }) => {
   const { config, provider } = useContext(RuntimeContext);
   const match = useSourcifyMetadata(address, provider._network.chainId);
 
   const mint = addressCtx === AddressContext.FROM && address === ZERO_ADDRESS;
   const burn = addressCtx === AddressContext.TO && address === ZERO_ADDRESS;
+
+  const bech32Address = (() => {
+    if (displayAsBech32) {
+      return toBech32Address(address);
+    }
+    return undefined;
+  })();
 
   return (
     <div
@@ -104,12 +114,14 @@ const DecoratedAddressLink: FC<DecoratedAddressLinkProps> = ({
       {plain ? (
         <PlainAddress
           address={address}
+          bech32Address={bech32Address}
           linkable={address !== selectedAddress}
           dontOverrideColors={mint || burn}
         />
       ) : (
         <ResolvedAddress
           address={address}
+          bech32Address={bech32Address}
           selectedAddress={selectedAddress}
           dontOverrideColors={mint || burn}
         />
@@ -142,6 +154,7 @@ const ResolvedAddress: FC<ResolvedAddressProps> = ({
   address,
   selectedAddress,
   dontOverrideColors,
+  bech32Address,
 }) => {
   const { provider } = useContext(RuntimeContext);
   const resolvedAddress = useResolvedAddress(provider, address);
@@ -165,6 +178,7 @@ const ResolvedAddress: FC<ResolvedAddressProps> = ({
     return (
       <PlainAddress
         address={address}
+        bech32Address={bech32Address}
         linkable={linkable}
         dontOverrideColors={dontOverrideColors}
       />
@@ -177,6 +191,7 @@ const ResolvedAddress: FC<ResolvedAddressProps> = ({
     return (
       <PlainAddress
         address={address}
+        bech32Address={bech32Address}
         linkable={linkable}
         dontOverrideColors={dontOverrideColors}
       />

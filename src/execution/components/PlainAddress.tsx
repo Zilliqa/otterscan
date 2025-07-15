@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 
 type PlainAddressProps = {
   address: string;
+  bech32Address?: string | undefined;
   linkable: boolean;
   dontOverrideColors: boolean | undefined;
 };
@@ -11,6 +12,7 @@ const PlainAddress: FC<PlainAddressProps> = ({
   address,
   linkable,
   dontOverrideColors,
+  bech32Address,
 }) => {
   if (linkable) {
     return (
@@ -21,7 +23,7 @@ const PlainAddress: FC<PlainAddressProps> = ({
         to={`/address/${address}`}
         title={address}
       >
-        {address}
+        {bech32Address || address}
       </NavLink>
     );
   }

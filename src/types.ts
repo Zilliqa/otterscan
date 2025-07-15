@@ -117,3 +117,20 @@ export type TokenMeta = {
 };
 
 export type TokenMetas = Record<string, TokenMeta | null | undefined>;
+
+export type ZRC2Transfer = {
+  token: string;
+  from: string;
+  to: string;
+  value: bigint;
+  contractAddress: string;
+  transitionName: string;
+};
+
+export type ZRC2Meta = {
+  name: string;
+  symbol: string;
+  decimals: number;
+  contractAddress: string;
+  version?: string;
+};

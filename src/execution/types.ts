@@ -5,6 +5,7 @@ import { ChecksummedAddress } from "../types";
  */
 export type AddressAwareComponentProps = {
   address: ChecksummedAddress;
+  bech32Address?: string | undefined;
 };
 
 /**
