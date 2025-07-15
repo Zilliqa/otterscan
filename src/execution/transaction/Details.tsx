@@ -58,6 +58,8 @@ import RewardSplit from "./RewardSplit";
 import TokenTransferItem from "./TokenTransferItem";
 import DecodedParamsTable from "./decoder/DecodedParamsTable";
 import InputDecoder from "./decoder/InputDecoder";
+import ZRC2TransferItem from "../../scilla/ZRC2TransferItem";
+import { useZRC2Transfers } from "../../scilla/useZRC2Hooks";
 
 type DetailsProps = {
   txData: TransactionData;
@@ -86,6 +88,7 @@ const Details: FC<DetailsProps> = ({ txData }) => {
   );
 
   const tokenTransfers = useTokenTransfers(txData);
+  const zrc2Transfers = useZRC2Transfers(provider, txData?.transactionHash);
 
   const match = useSourcifyMetadata(txData?.to, provider._network.chainId);
   const metadata = match?.metadata;
@@ -320,10 +323,25 @@ const Details: FC<DetailsProps> = ({ txData }) => {
         </InfoRow>
       )}
       {tokenTransfers && tokenTransfers.length > 0 && (
-        <InfoRow title={`Tokens Transferred (${tokenTransfers.length})`}>
+        <InfoRow title={`ERC20 Tokens Transferred (${tokenTransfers.length})`}>
           {tokenTransfers.map((t, i) => (
             <TokenTransferItem key={i} t={t} />
           ))}
+        </InfoRow>
+      )}
+      {(zrc2Transfers == undefined) ? (
+        <InfoRow title="ZRC2 Tokens Transferred">
+          <span className="italic text-gray-400">Loading</span>
+        </InfoRow>
+      ) : (zrc2Transfers.length) > 0 ? (
+        <InfoRow title={`ZRC2 Tokens Transferred (${zrc2Transfers!.length})`}>
+          {zrc2Transfers!.map((t, i) => (
+            <ZRC2TransferItem key={i} transfer={t} />
+          ))}
+        </InfoRow>
+      ) : (
+        <InfoRow title="ZRC2 Tokens Transferred">
+          <span className="italic text-gray-400">No ZRC2 tokens transferred</span>
         </InfoRow>
       )}
       <InfoRow title="Value">
