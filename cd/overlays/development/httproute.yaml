@@ -7,7 +7,7 @@ metadata:
 spec:
   parentRefs:
     - name: gke-gateway
-      namespace: gke-gateway-prd
+      namespace: gke-gateway-stg
       sectionName: https
   hostnames:
     - otterscan.zilstg.dev
