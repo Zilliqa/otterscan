@@ -5,6 +5,7 @@ namespace: otterscan-dev
 
 resources:
   - ../../base
+  - backendpolicy.yaml
   - configmap.yaml
   - httproute.yaml
 
