@@ -9,6 +9,12 @@ resources:
   - configmap.yaml
   - httproute.yaml
 
+# Kept deployable but idle: production Otterscan covers mainnet and testnet, and a bot pulled this copy's
+# bundle through the uncached GKE Gateway (~5 GiB/day of inter-region egress). Scale up when needed.
+replicas:
+  - name: otterscan
+    count: 0
+
 patches:
   # Autopilot bills requests: explicit CPU and memory (measured use ~1m CPU)
   - target:
